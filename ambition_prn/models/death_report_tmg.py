@@ -1,14 +1,12 @@
 from django.db import models
 from django.db.models.deletion import PROTECT
-from edc_action_item.model_mixins import ActionItemModelMixin
+from edc_action_item.model_mixins import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel, ReportStatusModelMixin
 from edc_base.model_validators.date import datetime_not_future
 from edc_base.sites import CurrentSiteManager, SiteModelMixin
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO
-from edc_identifier.model_mixins import NonUniqueSubjectIdentifierFieldMixin
-from edc_identifier.model_mixins import TrackingIdentifierModelMixin
 from edc_protocol.validators import datetime_not_before_study_start
 
 from ..action_items import DeathReportTmgAction
@@ -23,8 +21,7 @@ class DeathReportTmgManager(models.Manager):
         return self.get(death_report__subject_identifier=subject_identifier)
 
 
-class DeathReportTmg(ActionItemModelMixin, TrackingIdentifierModelMixin,
-                     NonUniqueSubjectIdentifierFieldMixin, ReportStatusModelMixin,
+class DeathReportTmg(ActionModelMixin, ReportStatusModelMixin,
                      SiteModelMixin, BaseUuidModel):
 
     action_cls = DeathReportTmgAction

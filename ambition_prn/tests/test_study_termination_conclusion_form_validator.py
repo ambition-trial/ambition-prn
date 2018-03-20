@@ -98,7 +98,6 @@ class TestStudyTerminationConclusionFormValidator(TestCase):
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('readmission_date', form_validator._errors)
 
-    @tag('1')
     def test_died_no_death_date_invalid(self):
         DeathReport.objects.create(
             subject_identifier=self.subject_identifier,
@@ -113,7 +112,6 @@ class TestStudyTerminationConclusionFormValidator(TestCase):
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('death_date', form_validator._errors)
 
-    @tag('1')
     def test_died_death_date_mismatch(self):
         DeathReport.objects.create(
             subject_identifier=self.subject_identifier,
@@ -128,7 +126,6 @@ class TestStudyTerminationConclusionFormValidator(TestCase):
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('death_date', form_validator._errors)
 
-    @tag('1')
     def test_died_death_date_ok(self):
         dte = get_utcnow()
         DeathReport.objects.create(

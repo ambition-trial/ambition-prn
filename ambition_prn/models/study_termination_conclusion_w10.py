@@ -1,10 +1,9 @@
 from django.db import models
-from edc_action_item.model_mixins import ActionItemModelMixin
+from edc_action_item.model_mixins import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import date_not_future
 from edc_identifier.managers import SubjectIdentifierManager
-from edc_identifier.model_mixins import TrackingIdentifierModelMixin
 from edc_base.sites import CurrentSiteManager
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
@@ -12,11 +11,15 @@ from ..action_items import StudyTerminationConclusionW10Action
 from ..choices import REASON_STUDY_TERMINATED_W10
 
 
-class StudyTerminationConclusionW10(OffScheduleModelMixin, ActionItemModelMixin,
-                                    TrackingIdentifierModelMixin, BaseUuidModel):
+class StudyTerminationConclusionW10(OffScheduleModelMixin, ActionModelMixin,
+                                    BaseUuidModel):
 
     action_cls = StudyTerminationConclusionW10Action
     tracking_identifier_prefix = 'ST'
+
+    subject_identifier = models.CharField(
+        max_length=50,
+        unique=True)
 
     last_study_fu_date = models.DateField(
         verbose_name='Date of last research follow up (if different):',

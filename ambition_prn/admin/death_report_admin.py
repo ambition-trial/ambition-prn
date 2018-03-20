@@ -37,7 +37,8 @@ class DeathReportAdmin(ModelAdminMixin, admin.ModelAdmin):
         'tb_site': admin.VERTICAL}
 
     list_display = (
-        'subject_identifier', 'dashboard', 'report_datetime', 'cause_of_death', 'death_datetime')
+        'subject_identifier', 'dashboard', 'report_datetime',
+        'cause_of_death', 'death_datetime')
 
     list_filter = ('report_datetime', 'death_datetime', 'cause_of_death')
 
