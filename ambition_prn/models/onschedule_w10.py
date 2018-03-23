@@ -9,7 +9,6 @@ class OnScheduleW10(OnScheduleModelMixin, BaseUuidModel):
 
     """A model used by the system. Auto-completed by the signal.
     """
-
     on_site = CurrentSiteManager()
 
     objects = SubjectIdentifierManager()

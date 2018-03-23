@@ -7,12 +7,12 @@ from edc_base.model_validators.date import datetime_not_future
 from edc_base.sites import CurrentSiteManager, SiteModelMixin
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO
+from edc_constants.constants import NOT_APPLICABLE
 from edc_protocol.validators import datetime_not_before_study_start
 
-from ..action_items import DeathReportTmgAction
+from ..action_items import DEATH_REPORT_TMG_ACTION
 from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
 from .death_report import DeathReport
-from edc_constants.constants import NOT_APPLICABLE
 
 
 class DeathReportTmgManager(models.Manager):
@@ -24,7 +24,8 @@ class DeathReportTmgManager(models.Manager):
 class DeathReportTmg(ActionModelMixin, ReportStatusModelMixin,
                      SiteModelMixin, BaseUuidModel):
 
-    action_cls = DeathReportTmgAction
+    action_name = DEATH_REPORT_TMG_ACTION
+
     tracking_identifier_prefix = 'DR'
 
     death_report = models.ForeignKey(DeathReport, on_delete=PROTECT)

@@ -11,14 +11,14 @@ from edc_constants.constants import NOT_APPLICABLE
 from edc_identifier.managers import SubjectIdentifierManager
 from edc_protocol.validators import datetime_not_before_study_start
 
-from ..action_items import DeathReportAction
+from ..action_items import DEATH_REPORT_ACTION
 from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
 
 
 class DeathReport(SiteModelMixin,
                   ActionModelMixin, BaseUuidModel):
 
-    action_cls = DeathReportAction
+    action_name = DEATH_REPORT_ACTION
 
     tracking_identifier_prefix = 'DR'
 

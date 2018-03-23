@@ -8,16 +8,16 @@ from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO, NOT_APPLICABLE
 from edc_identifier.managers import TrackingIdentifierManager
 
-from ..action_items import ProtocolDeviationViolationAction
+from ..action_items import PROTOCOL_DEVIATION_VIOLATION_ACTION
 from ..choices import PROTOCOL_VIOLATION, ACTION_REQUIRED, DEVIATION_VIOLATION, REPORT_STATUS
 
 
 class ProtocolDeviationViolation(SiteModelMixin,
                                  ActionModelMixin, BaseUuidModel):
 
-    tracking_identifier_prefix = 'PD'
+    action_name = PROTOCOL_DEVIATION_VIOLATION_ACTION
 
-    action_cls = ProtocolDeviationViolationAction
+    tracking_identifier_prefix = 'PD'
 
     report_datetime = models.DateTimeField(
         verbose_name="Report Date and Time",

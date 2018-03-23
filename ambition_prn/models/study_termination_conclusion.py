@@ -9,14 +9,14 @@ from edc_identifier.managers import SubjectIdentifierManager
 from edc_base.sites import CurrentSiteManager
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
-from ..action_items import StudyTerminationConclusionAction
+from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION
 from ..choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
 from ..choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
 
 
 class StudyTerminationConclusion(OffScheduleModelMixin, ActionModelMixin, BaseUuidModel):
 
-    action_cls = StudyTerminationConclusionAction
+    action_name = STUDY_TERMINATION_CONCLUSION_ACTION
 
     tracking_identifier_prefix = 'ST'
 

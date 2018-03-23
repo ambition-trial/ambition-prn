@@ -7,14 +7,15 @@ from edc_identifier.managers import SubjectIdentifierManager
 from edc_base.sites import CurrentSiteManager
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
-from ..action_items import StudyTerminationConclusionW10Action
+from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION_W10
 from ..choices import REASON_STUDY_TERMINATED_W10
 
 
 class StudyTerminationConclusionW10(OffScheduleModelMixin, ActionModelMixin,
                                     BaseUuidModel):
 
-    action_cls = StudyTerminationConclusionW10Action
+    action_name = STUDY_TERMINATION_CONCLUSION_ACTION_W10
+
     tracking_identifier_prefix = 'ST'
 
     subject_identifier = models.CharField(

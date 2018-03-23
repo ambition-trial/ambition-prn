@@ -1,9 +1,8 @@
-from edc_action_item import Action, HIGH_PRIORITY, site_action_items
-from edc_constants.constants import CLOSED
-
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils.safestring import mark_safe
+from edc_action_item import Action, HIGH_PRIORITY, site_action_items
+from edc_constants.constants import CLOSED
 
 
 DEATH_REPORT_ACTION = 'submit-death-report'
@@ -73,7 +72,8 @@ class DeathReportTmgAction(Action):
     name = DEATH_REPORT_TMG_ACTION
     display_name = 'TMG Death Report pending'
     reference_model = 'ambition_prn.deathreporttmg'
-    parent_reference_model_fk_attr = 'death_report'
+    related_reference_model = 'ambition_prn.deathreport'
+    related_reference_model_fk_attr = 'death_report'
     priority = HIGH_PRIORITY
     create_by_user = False
     color_style = 'info'
