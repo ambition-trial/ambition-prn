@@ -1,3 +1,4 @@
+from ambition_rando.tests import AmbitionTestCaseMixin
 from django import forms
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
@@ -8,7 +9,7 @@ from ..constants import DEVIATION, VIOLATION, MEDICATION_NONCOMPLIANCE
 from ..form_validators import ProtocolDeviationViolationFormValidator
 
 
-class TestDeviationViolationFormValidator(TestCase):
+class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
 
     def test_report_type(self):
         """ violation_datetime is not required if it's

@@ -1,4 +1,4 @@
-from ambition_rando.tests.ambition_test_case_mixin import AmbitionTestCaseMixin
+from ambition_rando.tests import AmbitionTestCaseMixin
 from django.test import TestCase, tag
 from edc_action_item import SingletonActionItemError
 from edc_action_item.models.action_item import ActionItem
@@ -13,6 +13,7 @@ from ..action_items import DeathReportAction
 class TestDeathReport(AmbitionTestCaseMixin, TestCase):
 
     def setUp(self):
+        super().setUp()
         import_holidays()
         self.subject_identifier = '12345'
         RegisteredSubject.objects.create(

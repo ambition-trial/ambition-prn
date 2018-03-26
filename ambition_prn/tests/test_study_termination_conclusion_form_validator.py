@@ -1,3 +1,4 @@
+from ambition_rando.tests import AmbitionTestCaseMixin
 from datetime import date
 from django import forms
 from django.core.exceptions import ValidationError
@@ -12,7 +13,7 @@ from ..form_validators import StudyTerminationConclusionFormValidator
 from ..models import DeathReport
 
 
-class TestStudyTerminationConclusionFormValidator(TestCase):
+class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCase):
 
     @classmethod
     def setUpClass(cls):
