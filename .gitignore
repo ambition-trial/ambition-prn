@@ -1,10 +1,25 @@
+etc/
+
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+
+# Temporary
+.netrwhist
+*~
+# Auto-generated tag files
+tags
+
 .pydevproject
 .project
 .settings/
 db.sqlite3
-etc/
 .DS_Store
-geckodriver.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

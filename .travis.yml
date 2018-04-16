@@ -1,0 +1,29 @@
+language: python
+
+python:
+  - "3.6"
+
+addons:
+  apt_packages:
+     - libcups2-dev
+
+services:
+  - mysql
+
+install:
+  - pip3 install --upgrade pip setuptools
+  - pip3 install flake8
+  - pip3 install coveralls
+  - pip3 install mysqlclient
+  - pip3 install -e .
+  - pip3 install -q -r requirements.txt
+
+before_script:
+  - flake8 ambition_prn
+  - mysql -e 'create database edc character set utf8;'
+
+script: 
+  - coverage run --source=ambition_prn manage.py test
+
+after_success:
+  - coveralls
