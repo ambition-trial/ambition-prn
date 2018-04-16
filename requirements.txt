@@ -1,7 +1,6 @@
 git+https://github.com/ambition-study/ambition.git@develop#egg=ambition
 git+https://github.com/ambition-study/ambition-rando.git@develop#egg=ambition_rando
 git+https://github.com/ambition-study/ambition-ae.git@develop#egg=ambition_ae
-git+https://github.com/ambition-study/ambition-prn.git@develop#egg=ambition_prn
 git+https://github.com/clinicedc/edc-action-item@develop#egg=edc_action_item
 git+https://github.com/clinicedc/edc-appointment.git@develop#egg=edc_appointment
 git+https://github.com/clinicedc/edc-base.git@develop#egg=edc_base
