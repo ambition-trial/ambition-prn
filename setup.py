@@ -16,7 +16,7 @@ setup(
     author_email='ew2789@gmail.com',
     packages=find_packages(),
     include_package_data=True,
-    url='https://github.com/ambition-study/ambition-prn',
+    url='https://github.com/ambition-trial/ambition-prn',
     license='GPL license, see LICENSE',
     description='PRN forms such as offstudy, protocol violation, etc',
     long_description=README,
