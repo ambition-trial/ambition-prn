@@ -1,5 +1,5 @@
-git+https://github.com/ambition-trail/ambition-rando@develop#egg=ambition_rando
-git+https://github.com/ambition-trail/ambition-ae@develop#egg=ambition_ae
+git+https://github.com/ambition-trial/ambition-rando@develop#egg=ambition_rando
+git+https://github.com/ambition-trial/ambition-ae@develop#egg=ambition_ae
 git+https://github.com/clinicedc/edc-action-item@develop#egg=edc_action_item
 git+https://github.com/clinicedc/edc-appointment@develop#egg=edc_appointment
 git+https://github.com/clinicedc/edc-base@develop#egg=edc_base
