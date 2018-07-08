@@ -8,6 +8,7 @@ from edc_registration.models import RegisteredSubject
 from model_mommy import mommy
 
 from ..action_items import DeathReportAction
+from django.db.utils import IntegrityError
 
 
 class TestDeathReport(AmbitionTestCaseMixin, TestCase):
@@ -34,18 +35,18 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         self.assertEqual(action.action_identifier,
                          death_report.action_identifier)
 
-        # try to fill in another death report, raises
-        self.assertRaises(
-            SingletonActionItemError,
-            mommy.make_recipe,
-            'ambition_prn.deathreport',
-            subject_identifier=self.subject_identifier)
-
         # attempt to create a new action
         action = DeathReportAction(subject_identifier=self.subject_identifier)
         # show it just picks up existing action
         self.assertEqual(action.action_identifier,
                          action_item.action_identifier)
+
+        # try to fill in another death report, raises IntegrityError
+        self.assertRaises(
+            IntegrityError,
+            mommy.make_recipe,
+            'ambition_prn.deathreport',
+            subject_identifier=self.subject_identifier)
 
     def test_death_report_action_urls(self):
 
@@ -53,8 +54,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         action_item = ActionItem.objects.get(
             action_identifier=action.action_identifier)
         self.assertEqual(
-            action.reference_model_url(
-                action_item=action_item, reference_model_obj=None),
+            action.reference_url(
+                action_item=action_item, reference_obj=None),
             f'/admin/ambition_prn/deathreport/add/')
 
         death_report = mommy.make_recipe(
@@ -65,8 +66,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             subject_identifier=self.subject_identifier)
 
         self.assertEqual(
-            action.reference_model_url(
-                action_item=action_item, reference_model_obj=death_report),
+            action.reference_url(
+                action_item=action_item, reference_obj=death_report),
             f'/admin/ambition_prn/deathreport/{str(death_report.pk)}/change/')
 
     def test_death_report_action_creates_next_actions(self):
