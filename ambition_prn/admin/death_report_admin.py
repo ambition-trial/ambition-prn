@@ -1,5 +1,5 @@
 from django.contrib import admin
-from edc_action_item import action_fieldset
+from edc_action_item import action_fieldset_tuple, action_fields
 from edc_model_admin import audit_fieldset_tuple
 
 from ..admin_site import ambition_prn_admin
@@ -28,7 +28,7 @@ class DeathReportAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'cause_of_death_other',
                 'tb_site',
                 'narrative')}),
-        action_fieldset,
+        action_fieldset_tuple,
         audit_fieldset_tuple)
 
     radio_fields = {
@@ -47,7 +47,7 @@ class DeathReportAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
-        fields = ('tracking_identifier', 'action_identifier') + fields
+        fields = action_fields + fields
         if obj:
             fields = fields + ('subject_identifier', )
         return fields
