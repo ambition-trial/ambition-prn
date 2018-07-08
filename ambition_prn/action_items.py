@@ -22,7 +22,7 @@ class ProtocolDeviationViolationAction(Action):
     priority = HIGH_PRIORITY
 
     def close_action_item_on_save(self):
-        return self.reference_model_obj.report_status == CLOSED
+        return self.reference_obj.report_status == CLOSED
 
 
 class StudyTerminationConclusionAction(Action):
@@ -73,7 +73,7 @@ class DeathReportTmgAction(Action):
     display_name = 'TMG Death Report pending'
     reference_model = 'ambition_prn.deathreporttmg'
     related_reference_model = 'ambition_prn.deathreport'
-    related_reference_model_fk_attr = 'death_report'
+    related_reference_fk_attr = 'death_report'
     priority = HIGH_PRIORITY
     create_by_user = False
     color_style = 'info'
@@ -84,20 +84,20 @@ class DeathReportTmgAction(Action):
 
     def close_action_item_on_save(self):
         self.delete_if_new(action_cls=self)
-        return self.reference_model_obj.report_status == CLOSED
+        return self.reference_obj.report_status == CLOSED
 
     def get_next_actions(self):
         next_actions = []
         self.delete_if_new(action_cls=self)
         try:
             self.reference_model_cls().objects.get(
-                death_report=self.reference_model_obj.death_report)
+                death_report=self.reference_obj.death_report)
         except MultipleObjectsReturned:
             pass
         else:
-            if self.reference_model_obj.report_status == CLOSED:
-                if (self.reference_model_obj.death_report.cause_of_death
-                        != self.reference_model_obj.cause_of_death):
+            if self.reference_obj.report_status == CLOSED:
+                if (self.reference_obj.death_report.cause_of_death
+                        != self.reference_obj.cause_of_death):
                     next_actions = [self]
         return next_actions
 
