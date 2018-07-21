@@ -1,26 +1,28 @@
 from django.db import models
-from edc_action_item.model_mixins import ActionItemModelMixin
-from edc_base.model_fields.custom_fields import OtherCharField
+from edc_action_item.models import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import date_not_future
-from edc_constants.choices import YES_NO, YES_NO_NA, NOT_APPLICABLE
-from edc_identifier.model_mixins import TrackingIdentifierModelMixin
-from edc_identifier.managers import SubjectIdentifierManager
 from edc_base.sites import CurrentSiteManager
+from edc_constants.choices import YES_NO, YES_NO_NA, NOT_APPLICABLE
+from edc_identifier.managers import SubjectIdentifierManager
+from edc_model_fields.fields import OtherCharField
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
-from ..action_items import StudyTerminationConclusionAction
+from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION
 from ..choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
 from ..choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
 
 
-class StudyTerminationConclusion(OffScheduleModelMixin, ActionItemModelMixin,
-                                 TrackingIdentifierModelMixin, BaseUuidModel):
+class StudyTerminationConclusion(OffScheduleModelMixin, ActionModelMixin, BaseUuidModel):
 
-    action_cls = StudyTerminationConclusionAction
+    action_name = STUDY_TERMINATION_CONCLUSION_ACTION
 
     tracking_identifier_prefix = 'ST'
+
+    subject_identifier = models.CharField(
+        max_length=50,
+        unique=True)
 
     last_study_fu_date = models.DateField(
         verbose_name='Date of last research follow up (if different):',

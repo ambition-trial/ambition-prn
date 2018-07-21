@@ -1,3 +1,4 @@
+from ambition_rando.tests import AmbitionTestCaseMixin
 from dateutil.relativedelta import relativedelta
 from django import forms
 from django.core.exceptions import ValidationError
@@ -10,7 +11,7 @@ from ..form_validators import DeathReportFormValidator
 from ..constants import TUBERCULOSIS
 
 
-class TestDeathFormValidations(TestCase):
+class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
 
     def test_tb_site_missing(self):
         cleaned_data = {

@@ -1,30 +1,15 @@
-from django import forms
-from django.apps import apps as django_apps
-from django.core.exceptions import ObjectDoesNotExist
 from edc_form_validators import FormValidator
 from edc_constants.constants import DEAD
 
 from ..constants import CONSENT_WITHDRAWAL
+from .validate_death_report_mixin import ValidateDeathReportMixin
 
 
-class StudyTerminationConclusionW10FormValidator(FormValidator):
-
-    death_report_model = 'ambition_prn.deathreport'
-
-    @property
-    def death_report_model_cls(self):
-        return django_apps.get_model(self.death_report_model)
+class StudyTerminationConclusionW10FormValidator(ValidateDeathReportMixin, FormValidator):
 
     def clean(self):
 
-        if self.cleaned_data.get('termination_reason') == DEAD:
-            try:
-                self.death_report_model_cls.objects.get(
-                    subject_identifier=self.cleaned_data.get('subject_identifier'))
-            except ObjectDoesNotExist:
-                raise forms.ValidationError({
-                    'termination_reason':
-                    'Patient is deceased, please complete death form first.'})
+        self.validate_death_report_if_deceased()
 
         self.required_if(
             DEAD,

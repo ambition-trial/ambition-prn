@@ -1,5 +1,5 @@
 from django.db import models
-from edc_action_item.model_mixins import ActionItemModelMixin
+from edc_action_item.models import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.sites import CurrentSiteManager, SiteModelMixin
@@ -7,20 +7,17 @@ from edc_base.model_validators import datetime_not_future
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO, NOT_APPLICABLE
 from edc_identifier.managers import TrackingIdentifierManager
-from edc_identifier.model_mixins import NonUniqueSubjectIdentifierFieldMixin
-from edc_identifier.model_mixins import TrackingIdentifierModelMixin
 
-from ..action_items import ProtocolDeviationViolationAction
+from ..action_items import PROTOCOL_DEVIATION_VIOLATION_ACTION
 from ..choices import PROTOCOL_VIOLATION, ACTION_REQUIRED, DEVIATION_VIOLATION, REPORT_STATUS
 
 
-class ProtocolDeviationViolation(NonUniqueSubjectIdentifierFieldMixin, SiteModelMixin,
-                                 ActionItemModelMixin, TrackingIdentifierModelMixin,
-                                 BaseUuidModel):
+class ProtocolDeviationViolation(SiteModelMixin,
+                                 ActionModelMixin, BaseUuidModel):
+
+    action_name = PROTOCOL_DEVIATION_VIOLATION_ACTION
 
     tracking_identifier_prefix = 'PD'
-
-    action_cls = ProtocolDeviationViolationAction
 
     report_datetime = models.DateTimeField(
         verbose_name="Report Date and Time",

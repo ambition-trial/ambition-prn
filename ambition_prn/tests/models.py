@@ -1,6 +1,7 @@
 from django.db import models
-from edc_base.model_mixins.base_uuid_model import BaseUuidModel
 from django.db.models.deletion import PROTECT
+from edc_base.model_mixins.base_uuid_model import BaseUuidModel
+from edc_visit_tracking.model_mixins import VisitModelMixin
 
 
 class SubjectConsent(models.Model):
@@ -10,10 +11,13 @@ class SubjectConsent(models.Model):
     subject_identifier = models.CharField(max_length=50)
 
 
-class SubjectVisit(BaseUuidModel):
+class SubjectVisit(VisitModelMixin, BaseUuidModel):
 
     subject_identifier = models.CharField(
         max_length=50)
+
+    class Meta(VisitModelMixin.Meta):
+        pass
 
 
 class PatientHistory(BaseUuidModel):

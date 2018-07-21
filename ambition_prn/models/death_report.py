@@ -1,34 +1,36 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from edc_action_item.model_mixins import ActionItemModelMixin
+from edc_action_item.models import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import datetime_not_future
 from edc_base.sites import CurrentSiteManager, SiteModelMixin
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO
+from edc_constants.constants import NOT_APPLICABLE
 from edc_identifier.managers import SubjectIdentifierManager
-from edc_identifier.model_mixins import TrackingIdentifierModelMixin
-from edc_identifier.model_mixins import UniqueSubjectIdentifierFieldMixin
 from edc_protocol.validators import datetime_not_before_study_start
 
-from ..action_items import DeathReportAction
+from ..action_items import DEATH_REPORT_ACTION
 from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
-from edc_constants.constants import NOT_APPLICABLE
 
 
-class DeathReport(UniqueSubjectIdentifierFieldMixin, SiteModelMixin,
-                  ActionItemModelMixin, TrackingIdentifierModelMixin,
-                  BaseUuidModel):
+class DeathReport(SiteModelMixin,
+                  ActionModelMixin, BaseUuidModel):
 
-    action_cls = DeathReportAction
+    action_name = DEATH_REPORT_ACTION
+
     tracking_identifier_prefix = 'DR'
+
+    subject_identifier = models.CharField(
+        max_length=50,
+        unique=True)
 
     report_datetime = models.DateTimeField(
         verbose_name='Report Date',
         validators=[
             datetime_not_before_study_start,
-            datetime_not_future, ],
+            datetime_not_future],
         default=get_utcnow)
 
     death_datetime = models.DateTimeField(
