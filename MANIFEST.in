@@ -1,2 +1,2 @@
-include AUTHORS CHANGES README.md LICENCE
+include AUTHORS CHANGES README LICENCE VERSION
 recursive-include ambition_prn/templates *
