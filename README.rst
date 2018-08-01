@@ -9,8 +9,8 @@ PRN forms such as offstudy, protocol violation, etc
 .. |pypi| image:: https://img.shields.io/pypi/v/ambition-prn.svg
     :target: https://pypi.python.org/pypi/ambition-prn
     
-.. |travis| image:: https://travis-ci.org/clinicedc/ambition-prn.svg?branch=develop
-    :target: https://travis-ci.org/clinicedc/ambition-prn
+.. |travis| image:: https://travis-ci.com/ambition-trial/ambition-prn.svg?branch=develop
+    :target: https://travis-ci.com/ambition-trial/ambition-prn
     
-.. |coverage| image:: https://coveralls.io/repos/github/clinicedc/ambition-prn/badge.svg?branch=develop
-    :target: https://coveralls.io/github/clinicedc/ambition-prn?branch=develop
+.. |coverage| image:: https://coveralls.io/repos/github/ambition-trial/ambition-prn/badge.svg?branch=develop
+    :target: https://coveralls.io/github/ambition-trial/ambition-prn?branch=develop
