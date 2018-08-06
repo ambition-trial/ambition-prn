@@ -36,8 +36,9 @@ class StudyTerminationConclusionW10Admin(ModelAdminMixin, admin.ModelAdmin):
 
     list_filter = ('offschedule_datetime', 'last_study_fu_date')
 
-    search_fields = ('tracking_identifier',
-                     'subject_identifier', 'action_identifier')
+    search_fields = ('subject_identifier',
+                     'action_identifier',
+                     'tracking_identifier')
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)

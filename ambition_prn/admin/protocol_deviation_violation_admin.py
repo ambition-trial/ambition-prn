@@ -70,8 +70,10 @@ class ProtocolDeviationViolationAdmin(ModelAdminMixin, admin.ModelAdmin):
     list_filter = ('action_required', 'report_status',
                    'report_type')
 
-    search_fields = ('tracking_identifier', 'short_description',
-                     'subject_identifier', 'action_identifier')
+    search_fields = ['subject_identifier',
+                     'action_identifier',
+                     'short_description',
+                     'tracking_identifier']
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
