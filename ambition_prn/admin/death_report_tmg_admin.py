@@ -43,8 +43,9 @@ class DeathReportTmgAdmin(ModelAdminMixin, admin.ModelAdmin):
     list_filter = ('report_datetime', 'report_status',
                    'cause_of_death_agreed', 'cause_of_death')
 
-    search_fields = ['action_identifier',
-                     'tracking_identifier', 'subject_identifier',
+    search_fields = ['subject_identifier',
+                     'action_identifier',
+                     'tracking_identifier',
                      'death_report__action_identifier',
                      'death_report__tracking_identifier']
 
