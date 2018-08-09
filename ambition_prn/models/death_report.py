@@ -9,6 +9,7 @@ from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO
 from edc_constants.constants import NOT_APPLICABLE
 from edc_identifier.managers import SubjectIdentifierManager
+from edc_identifier.model_mixins import TrackingModelMixin
 from edc_protocol.validators import datetime_not_before_study_start
 
 from ..action_items import DEATH_REPORT_ACTION
@@ -16,7 +17,7 @@ from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
 
 
 class DeathReport(SiteModelMixin,
-                  ActionModelMixin, BaseUuidModel):
+                  ActionModelMixin, TrackingModelMixin, BaseUuidModel):
 
     action_name = DEATH_REPORT_ACTION
 
