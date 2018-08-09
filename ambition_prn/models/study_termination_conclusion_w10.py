@@ -3,8 +3,9 @@ from edc_action_item.models import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import date_not_future
-from edc_identifier.managers import SubjectIdentifierManager
 from edc_base.sites import CurrentSiteManager
+from edc_identifier.managers import SubjectIdentifierManager
+from edc_identifier.model_mixins import TrackingModelMixin
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
 from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION_W10
@@ -12,7 +13,7 @@ from ..choices import REASON_STUDY_TERMINATED_W10
 
 
 class StudyTerminationConclusionW10(OffScheduleModelMixin, ActionModelMixin,
-                                    BaseUuidModel):
+                                    TrackingModelMixin, BaseUuidModel):
 
     action_name = STUDY_TERMINATION_CONCLUSION_ACTION_W10
 

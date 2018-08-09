@@ -6,6 +6,7 @@ from edc_base.model_validators import date_not_future
 from edc_base.sites import CurrentSiteManager
 from edc_constants.choices import YES_NO, YES_NO_NA, NOT_APPLICABLE
 from edc_identifier.managers import SubjectIdentifierManager
+from edc_identifier.model_mixins import TrackingModelMixin
 from edc_model_fields.fields import OtherCharField
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
@@ -14,7 +15,8 @@ from ..choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
 from ..choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
 
 
-class StudyTerminationConclusion(OffScheduleModelMixin, ActionModelMixin, BaseUuidModel):
+class StudyTerminationConclusion(OffScheduleModelMixin, ActionModelMixin,
+                                 TrackingModelMixin, BaseUuidModel):
 
     action_name = STUDY_TERMINATION_CONCLUSION_ACTION
 
