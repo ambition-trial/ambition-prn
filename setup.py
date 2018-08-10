@@ -25,6 +25,12 @@ setup(
     long_description=README,
     zip_safe=False,
     keywords='django ambition edc PRN',
+    install_requires=[
+        'django_collect_offline',
+        'django_collect_offline-files',
+        'edc-action-item',
+        'edc-base',
+    ],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
