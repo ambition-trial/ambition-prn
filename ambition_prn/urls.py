@@ -8,7 +8,7 @@ app_name = 'ambition_prn'
 
 urlpatterns = [
     path('admin/', ambition_prn_admin.urls),
-    path('', RedirectView.as_view(url='admin/'), name='home_url'),
+    path('', RedirectView.as_view(url='/ambition_prn/admin/'), name='home_url'),
 ]
 
 

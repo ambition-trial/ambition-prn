@@ -1,8 +1,11 @@
+import arrow
+
 from ambition_rando.tests import AmbitionTestCaseMixin
 from datetime import date
 from django import forms
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
+from django.test.utils import override_settings
 from edc_base.utils import get_utcnow
 from edc_constants.constants import YES, NO, OTHER, NOT_APPLICABLE, DEAD
 from edc_list_data import site_list_data
@@ -127,16 +130,21 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('death_date', form_validator._errors)
 
+    @override_settings(TIME_ZONE='Africa/Kampala')
     def test_died_death_date_ok(self):
-        dte = get_utcnow()
+        from dateutil import tz
+        from datetime import datetime
+        dte1 = arrow.get(datetime(2018, 8, 12, 0, 0, 0),
+                         tz.tzutc())
+        dte2 = date(2018, 8, 12)
         DeathReport.objects.create(
             subject_identifier=self.subject_identifier,
-            death_datetime=get_utcnow(),
+            death_datetime=dte1.datetime,
             study_day=1)
 
         cleaned_data = {'subject_identifier': self.subject_identifier,
                         'termination_reason': DEAD,
-                        'death_date': dte.date()}
+                        'death_date': dte2}
         form_validator = StudyTerminationConclusionFormValidator(
             cleaned_data=cleaned_data)
         try:

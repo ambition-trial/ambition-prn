@@ -1,3 +1,6 @@
+import arrow
+
+from dateutil import tz
 from django import forms
 from django.apps import apps as django_apps
 from django.conf import settings
@@ -18,6 +21,8 @@ class ValidateDeathReportMixin:
         """Validates death report exists of termination_reason
         is "DEAD.
 
+        Death "date" is the naive date of the settings.TIME_ZONE datetime.
+
         Note: uses __date field lookup. If using mysql don't forget
         to load timezone info.
         """
@@ -33,17 +38,16 @@ class ValidateDeathReportMixin:
                     'termination_reason':
                     'Patient is deceased, please complete death report form first.'})
         else:
-            if self.cleaned_data.get('death_date'):
-                try:
-                    self.death_report_model_cls.objects.get(
-                        subject_identifier=subject_identifier,
-                        death_datetime__date=self.cleaned_data.get('death_date'))
-                except ObjectDoesNotExist:
-                    expected = death_report.death_datetime.strftime(
-                        convert_php_dateformat(settings.SHORT_DATE_FORMAT))
-                    got = self.cleaned_data.get('death_date').strftime(
-                        convert_php_dateformat(settings.SHORT_DATE_FORMAT))
-                    raise forms.ValidationError({
-                        'death_date':
-                        'Date does not match Death Report. '
-                        f'Expected {expected}. Got {got}.'})
+            local_death_datetime = arrow.get(
+                death_report.death_datetime, tz.gettz(settings.TIME_ZONE))
+            if (self.cleaned_data.get('death_date')
+                    and (local_death_datetime.date() != self.cleaned_data.get(
+                        'death_date'))):
+                expected = local_death_datetime.date().strftime(
+                    convert_php_dateformat(settings.SHORT_DATE_FORMAT))
+                got = self.cleaned_data.get('death_date').strftime(
+                    convert_php_dateformat(settings.SHORT_DATE_FORMAT))
+                raise forms.ValidationError({
+                    'death_date':
+                    'Date does not match Death Report. '
+                    f'Expected {expected}. Got {got}.'})
