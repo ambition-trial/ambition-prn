@@ -5,6 +5,7 @@ from django.conf import settings
 class AppConfig(DjangoApponfig):
     name = 'ambition_prn'
     verbose_name = 'Ambition Subject PRN Forms'
+    has_exportable_data = True
 
     def ready(self):
         from .signals import study_termination_conclusion_on_post_save
