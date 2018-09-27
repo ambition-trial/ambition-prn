@@ -53,7 +53,6 @@ class DeathReportAction(Action):
     admin_site_name = 'ambition_prn_admin'
     priority = HIGH_PRIORITY
     singleton = True
-    email_contacts = [settings.EMAIL_CONTACTS.get('tmg')]
 
     def get_next_actions(self):
         self.delete_if_new(action_cls=DeathReportTmgAction)

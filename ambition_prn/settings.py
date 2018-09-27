@@ -156,8 +156,10 @@ DASHBOARD_URL_NAMES = {
 COUNTRY = 'botswana'
 HOLIDAY_FILE = os.path.join(BASE_DIR, APP_NAME, 'tests', 'holidays.csv')
 
-EMAIL_CONTACTS = {}
-
+EMAIL_CONTACTS = {'data_request': 'someone@example.com',
+                  'data_manager': 'someone@example.com',
+                  'tmg': 'someone@example.com'}
+EMAIL_ENABLED = False
 if 'test' in sys.argv:
 
     class DisableMigrations:
