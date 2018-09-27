@@ -156,6 +156,7 @@ DASHBOARD_URL_NAMES = {
 COUNTRY = 'botswana'
 HOLIDAY_FILE = os.path.join(BASE_DIR, APP_NAME, 'tests', 'holidays.csv')
 
+EMAIL_CONTACTS = {}
 
 if 'test' in sys.argv:
 

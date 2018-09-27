@@ -5,6 +5,7 @@ from .constants import AZT_3TC_with_ATZ_r_or_Lopinavir_r
 from .constants import AZT_3TC_with_EFV_NVP_or_DTG, TDF_3TC_FTC_with_ATZ_r_or_Lopinavir_r
 from .constants import TDF_3TC_FTC_with_EFV_or_NVP
 from .constants import TUBERCULOSIS, DEVIATION, VIOLATION, CONSENT_WITHDRAWAL
+from .constants import CRYTOCOCCAL_MENINGITIS, MALIGNANCY
 
 ACTION_REQUIRED = (
     ('remain_on_study', 'Participant to remain on trial'),
@@ -15,13 +16,13 @@ ACTION_REQUIRED = (
 
 
 CAUSE_OF_DEATH = (
-    ('cryptococcal_meningitis', 'Cryptococcal meningitis'),
+    (CRYTOCOCCAL_MENINGITIS, 'Cryptococcal meningitis'),
     ('Cryptococcal_meningitis_relapse_IRIS',
      'Cryptococcal meningitis relapse/IRIS'),
     (TUBERCULOSIS, 'TB'),
     ('bacteraemia', 'Bacteraemia'),
     ('bacterial_pneumonia', 'Bacterial pneumonia'),
-    ('malignancy', 'Malignancy'),
+    (MALIGNANCY, 'Malignancy'),
     ('art_toxicity', 'ART toxicity'),
     ('IRIS_non_CM', 'IRIS non-CM'),
     ('diarrhea_wasting', 'Diarrhea/wasting'),
