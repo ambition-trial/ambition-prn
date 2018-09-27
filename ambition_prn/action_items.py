@@ -1,4 +1,5 @@
 from django.apps import apps as django_apps
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils.safestring import mark_safe
 from edc_action_item import Action, HIGH_PRIORITY, site_action_items
@@ -52,10 +53,18 @@ class DeathReportAction(Action):
     admin_site_name = 'ambition_prn_admin'
     priority = HIGH_PRIORITY
     singleton = True
+    email_contacts = [settings.EMAIL_CONTACTS.get('tmg')]
 
     def get_next_actions(self):
         self.delete_if_new(action_cls=DeathReportTmgAction)
-        next_actions = [DeathReportTmgAction]
+
+        if self.action_item_model_cls().objects.filter(
+                related_reference_identifier=self.reference_obj.action_identifier,
+                action_type__name=DeathReportTmgAction.name).count() < 2:
+            next_actions = [DeathReportTmgAction]
+        else:
+            next_actions = []
+
         on_schedule_w10_model_cls = django_apps.get_model(
             'ambition_prn.onschedulew10')
         try:
@@ -81,24 +90,34 @@ class DeathReportTmgAction(Action):
     admin_site_name = 'ambition_prn_admin'
     instructions = mark_safe(
         f'This report is to be completed by the TMG only.')
+    email_recipients = [settings.EMAIL_CONTACTS.get('tmg')]
 
     def close_action_item_on_save(self):
         self.delete_if_new(action_cls=self)
         return self.reference_obj.report_status == CLOSED
 
     def get_next_actions(self):
+        """Returns a next DeathReportTmgAction if the
+        submitted report does not match the cause of death
+        of the original death report.
+
+        Also, no more than two DeathReportTmgAction can exist.
+        """
         next_actions = []
         self.delete_if_new(action_cls=self)
-        try:
-            self.reference_model_cls().objects.get(
-                death_report=self.reference_obj.death_report)
-        except MultipleObjectsReturned:
-            pass
-        else:
-            if self.reference_obj.report_status == CLOSED:
-                if (self.reference_obj.death_report.cause_of_death
-                        != self.reference_obj.cause_of_death):
-                    next_actions = [self]
+        if self.action_item_model_cls().objects.filter(
+                action_identifier=self.reference_obj.action_identifier,
+                action_type__name=self.name).count() < 2:
+            try:
+                self.reference_model_cls().objects.get(
+                    death_report=self.reference_obj.death_report)
+            except MultipleObjectsReturned:
+                pass
+            else:
+                if self.reference_obj.report_status == CLOSED:
+                    if (self.reference_obj.death_report.cause_of_death
+                            != self.reference_obj.cause_of_death):
+                        next_actions = [self]
         return next_actions
 
 
