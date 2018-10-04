@@ -1,6 +1,6 @@
 from django.apps import apps as django_apps
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from edc_action_item import Action, HIGH_PRIORITY, site_action_items
 from edc_constants.constants import CLOSED
@@ -55,11 +55,14 @@ class DeathReportAction(Action):
     singleton = True
 
     def get_next_actions(self):
-        self.delete_if_new(action_cls=DeathReportTmgAction)
-
-        if self.action_item_model_cls().objects.filter(
-                related_reference_identifier=self.reference_obj.action_identifier,
-                action_type__name=DeathReportTmgAction.name).count() < 2:
+        """Adds 1 DEATHReportTMG if not yet created.
+        """
+        try:
+            self.action_item_model_cls().objects.get(
+                parent_action_identifier=self.reference_obj.action_identifier,
+                related_action_identifier=self.reference_obj.action_identifier,
+                action_type__name=DeathReportTmgAction.name)
+        except ObjectDoesNotExist:
             next_actions = [DeathReportTmgAction]
         else:
             next_actions = []
@@ -89,34 +92,43 @@ class DeathReportTmgAction(Action):
     admin_site_name = 'ambition_prn_admin'
     instructions = mark_safe(
         f'This report is to be completed by the TMG only.')
-    email_recipients = [settings.EMAIL_CONTACTS.get('tmg')]
+    try:
+        email_recipients = [settings.EMAIL_CONTACTS.get('tmg')]
+    except AttributeError:
+        email_recipients = []
 
     def close_action_item_on_save(self):
-        self.delete_if_new(action_cls=self)
+        if (self.reference_obj.death_report.cause_of_death
+                == self.reference_obj.cause_of_death):
+            self.delete_children_if_new(
+                parent_action_identifier=self.action_identifier)
         return self.reference_obj.report_status == CLOSED
 
     def get_next_actions(self):
-        """Returns a next DeathReportTmgAction if the
+        """Returns an second DeathReportTmgAction if the
         submitted report does not match the cause of death
         of the original death report.
 
         Also, no more than two DeathReportTmgAction can exist.
         """
         next_actions = []
-        self.delete_if_new(action_cls=self)
-        if self.action_item_model_cls().objects.filter(
-                action_identifier=self.reference_obj.action_identifier,
-                action_type__name=self.name).count() < 2:
-            try:
-                self.reference_model_cls().objects.get(
-                    death_report=self.reference_obj.death_report)
-            except MultipleObjectsReturned:
-                pass
-            else:
-                if self.reference_obj.report_status == CLOSED:
-                    if (self.reference_obj.death_report.cause_of_death
-                            != self.reference_obj.cause_of_death):
-                        next_actions = [self]
+        related_reference_obj = self.related_reference_model_cls().objects.get(
+            action_identifier=self.related_action_identifier)
+        related_action_identifier = related_reference_obj.action_identifier
+        try:
+            self.action_item_model_cls().objects.get(
+                parent_action_identifier=related_action_identifier,
+                related_action_identifier=related_action_identifier,
+                action_type__name=self.name)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            if (self.action_item_model_cls().objects.filter(
+                related_action_identifier=related_action_identifier,
+                    action_type__name=self.name).count() < 2):
+                if (self.reference_obj.cause_of_death
+                        != related_reference_obj.cause_of_death):
+                    next_actions = [self]
         return next_actions
 
 

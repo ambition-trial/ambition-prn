@@ -1,10 +1,11 @@
 from django.db import models
 from django.db.models.deletion import PROTECT
+from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
 from edc_action_item.models import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel, ReportStatusModelMixin
 from edc_base.model_validators.date import datetime_not_future
-from edc_base.sites import CurrentSiteManager, SiteModelMixin
+from edc_base.sites import SiteModelMixin
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO
 from edc_constants.constants import NOT_APPLICABLE
@@ -14,12 +15,6 @@ from edc_protocol.validators import datetime_not_before_study_start
 from ..action_items import DEATH_REPORT_TMG_ACTION
 from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
 from .death_report import DeathReport
-
-
-class DeathReportTmgManager(models.Manager):
-
-    def get_by_natural_key(self, subject_identifier):
-        return self.get(death_report__subject_identifier=subject_identifier)
 
 
 class DeathReportTmg(ActionModelMixin, TrackingModelMixin, ReportStatusModelMixin,
@@ -72,9 +67,9 @@ class DeathReportTmg(ActionModelMixin, TrackingModelMixin, ReportStatusModelMixi
         blank=True,
         null=True)
 
-    on_site = CurrentSiteManager()
+    on_site = ActionIdentifierSiteManager()
 
-    objects = DeathReportTmgManager()
+    objects = ActionIdentifierManager()
 
     history = HistoricalRecords()
 
@@ -86,8 +81,7 @@ class DeathReportTmg(ActionModelMixin, TrackingModelMixin, ReportStatusModelMixi
         super().save(*args, **kwargs)
 
     def natural_key(self):
-        return (self.report_datetime, ) + self.death_report.natural_key()
-    natural_key.dependencies = ['ambition_prn.deathreport', 'sites.Site']
+        return (self.action_identifier, )
 
     class Meta:
         verbose_name = 'Death Report TMG'
