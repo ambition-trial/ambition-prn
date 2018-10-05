@@ -1,14 +1,14 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
 from edc_action_item.models import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import datetime_not_future
-from edc_base.sites import CurrentSiteManager, SiteModelMixin
+from edc_base.sites import SiteModelMixin
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO
 from edc_constants.constants import NOT_APPLICABLE
-from edc_identifier.managers import SubjectIdentifierManager
 from edc_identifier.model_mixins import TrackingModelMixin
 from edc_protocol.validators import datetime_not_before_study_start
 
@@ -69,15 +69,14 @@ class DeathReport(SiteModelMixin,
     narrative = models.TextField(
         verbose_name='Narrative')
 
-    on_site = CurrentSiteManager()
+    on_site = ActionIdentifierSiteManager()
 
-    objects = SubjectIdentifierManager()
+    objects = ActionIdentifierManager()
 
     history = HistoricalRecords()
 
     def natural_key(self):
-        return (self.subject_identifier, )
-    natural_key.dependencies = ['sites.Site']
+        return (self.action_identifier, )
 
     class Meta:
         verbose_name = 'Death Report'

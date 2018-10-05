@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
+    'django_collect_offline.apps.AppConfig',
+    'django_collect_offline_files.apps.AppConfig',
+    'rest_framework',
+    'rest_framework.authtoken',
     'edc_base.apps.AppConfig',
     'edc_registration.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
@@ -59,6 +63,7 @@ INSTALLED_APPS = [
     'edc_timepoint.apps.AppConfig',
     'edc_action_item.apps.AppConfig',
     'edc_prn.apps.AppConfig',
+    'edc_visit_schedule.apps.AppConfig',
     'ambition_rando.apps.AppConfig',
     'ambition_prn.apps.EdcFacilityAppConfig',
     'ambition_prn.apps.AppConfig',
@@ -160,6 +165,12 @@ EMAIL_CONTACTS = {'data_request': 'someone@example.com',
                   'data_manager': 'someone@example.com',
                   'tmg': 'someone@example.com'}
 EMAIL_ENABLED = False
+
+DJANGO_COLLECT_OFFLINE_FILES_USER = None
+DJANGO_COLLECT_OFFLINE_FILES_REMOTE_HOST = None
+DJANGO_COLLECT_OFFLINE_FILES_USB_VOLUME = None
+
+
 if 'test' in sys.argv:
 
     class DisableMigrations:
