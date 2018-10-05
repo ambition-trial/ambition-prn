@@ -207,7 +207,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         # assert a second TMG Death Report Action is created
         # by death_report_tmg1 because the cause of death
         # does not match the death report
-        action_item_tmg2 = ActionItem.objects.get(
+        ActionItem.objects.get(
             parent_action_identifier=death_report_tmg1.action_identifier,
             related_action_identifier=death_report.action_identifier,
             action_type__name=DEATH_REPORT_TMG_ACTION)
