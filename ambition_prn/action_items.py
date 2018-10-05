@@ -3,7 +3,8 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from edc_action_item import Action, HIGH_PRIORITY, site_action_items
-from edc_constants.constants import CLOSED
+from edc_constants.constants import CLOSED, OPEN
+from django.contrib.admin.models import LogEntry
 
 
 DEATH_REPORT_ACTION = 'submit-death-report'
@@ -53,6 +54,7 @@ class DeathReportAction(Action):
     admin_site_name = 'ambition_prn_admin'
     priority = HIGH_PRIORITY
     singleton = True
+    dirty_fields = ['cause_of_death']
 
     def get_next_actions(self):
         """Adds 1 DEATHReportTMG if not yet created.

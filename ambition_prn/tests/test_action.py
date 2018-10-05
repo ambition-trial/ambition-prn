@@ -275,7 +275,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         self.assertEqual(ActionItem.objects.filter(
             action_type__name=DEATH_REPORT_TMG_ACTION).count(), 2)
 
-        action_item_tmg2 = ActionItem.objects.get(
+        ActionItem.objects.get(
             parent_action_item=action_item_tmg1,
             parent_action_identifier=death_report_tmg1.action_identifier,
             related_action_identifier=death_report.action_identifier,

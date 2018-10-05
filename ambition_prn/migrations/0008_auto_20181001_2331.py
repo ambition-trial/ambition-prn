@@ -16,15 +16,15 @@ class Migration(migrations.Migration):
         migrations.AlterModelManagers(
             name='deathreport',
             managers=[
-                ('on_site', edc_base.sites.managers.CurrentSiteManager()),
-                ('objects', edc_identifier.managers.SubjectIdentifierManager()),
+                ('on_site', ambition_prn.models.death_report.ActionIdentifierSiteManager()),
+                ('objects', ambition_prn.models.death_report.ActionIdentifierManager()),
             ],
         ),
         migrations.AlterModelManagers(
             name='deathreporttmg',
             managers=[
-                ('on_site', edc_base.sites.managers.CurrentSiteManager()),
-                ('objects', ambition_prn.models.death_report_tmg.DeathReportTmgManager()),
+                ('on_site', ambition_prn.models.death_report_tmg.ActionIdentifierSiteManager()),
+                ('objects', ambition_prn.models.death_report_tmg.ActionIdentifierManager()),
             ],
         ),
         migrations.AlterModelManagers(
@@ -44,22 +44,22 @@ class Migration(migrations.Migration):
         migrations.AlterModelManagers(
             name='protocoldeviationviolation',
             managers=[
-                ('on_site', edc_base.sites.managers.CurrentSiteManager()),
-                ('objects', edc_identifier.managers.TrackingIdentifierManager()),
+                ('on_site', ambition_prn.models.protocol_deviation_violation.ActionIdentifierSiteManager()),
+                ('objects', ambition_prn.models.protocol_deviation_violation.ActionIdentifierManager()),
             ],
         ),
         migrations.AlterModelManagers(
             name='studyterminationconclusion',
             managers=[
-                ('on_site', edc_base.sites.managers.CurrentSiteManager()),
-                ('objects', edc_identifier.managers.SubjectIdentifierManager()),
+                ('on_site', ambition_prn.models.study_termination_conclusion.ActionIdentifierSiteManager()),
+                ('objects', ambition_prn.models.study_termination_conclusion.ActionIdentifierManager()),
             ],
         ),
         migrations.AlterModelManagers(
             name='studyterminationconclusionw10',
             managers=[
-                ('on_site', edc_base.sites.managers.CurrentSiteManager()),
-                ('objects', edc_identifier.managers.SubjectIdentifierManager()),
+                ('on_site', ambition_prn.models.study_termination_conclusion_w10.ActionIdentifierSiteManager()),
+                ('objects', ambition_prn.models.study_termination_conclusion_w10.ActionIdentifierManager()),
             ],
         ),
     ]
