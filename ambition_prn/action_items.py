@@ -1,22 +1,22 @@
+from ambition_ae.constants import AE_INITIAL_ACTION, AE_FOLLOWUP_ACTION
+from ambition_subject.constants import BLOOD_RESULTS_ACTION
 from django.apps import apps as django_apps
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils.safestring import mark_safe
 from edc_action_item import Action, HIGH_PRIORITY, site_action_items
-from edc_constants.constants import CLOSED, OPEN
-from django.contrib.admin.models import LogEntry
+from edc_constants.constants import CLOSED
 
-
-DEATH_REPORT_ACTION = 'submit-death-report'
-DEATH_REPORT_TMG_ACTION = 'submit-death-report-tmg'
-PROTOCOL_DEVIATION_VIOLATION_ACTION = 'submit-protocol-deviation-violation'
-STUDY_TERMINATION_CONCLUSION_ACTION = 'submit-study-termination-conclusion'
-STUDY_TERMINATION_CONCLUSION_ACTION_W10 = 'submit-w10-study-termination-conclusion'
+from .constants import DEATH_REPORT_ACTION, DEATH_REPORT_TMG_ACTION
+from .constants import PROTOCOL_DEVIATION_VIOLATION_ACTION
+from .constants import STUDY_TERMINATION_CONCLUSION_ACTION
+from .constants import STUDY_TERMINATION_CONCLUSION_ACTION_W10
 
 
 class ProtocolDeviationViolationAction(Action):
     name = PROTOCOL_DEVIATION_VIOLATION_ACTION
     display_name = 'Submit Protocol Deviation/Violation Report'
+    parent_action_names = []
     reference_model = 'ambition_prn.protocoldeviationviolation'
     show_link_to_changelist = True
     show_link_to_add = True
@@ -30,6 +30,7 @@ class ProtocolDeviationViolationAction(Action):
 class StudyTerminationConclusionAction(Action):
     name = STUDY_TERMINATION_CONCLUSION_ACTION
     display_name = 'Submit Study Termination/Conclusion Report'
+    parent_action_names = [BLOOD_RESULTS_ACTION, DEATH_REPORT_ACTION]
     reference_model = 'ambition_prn.studyterminationconclusion'
     show_link_to_changelist = True
     admin_site_name = 'ambition_prn_admin'
@@ -39,6 +40,7 @@ class StudyTerminationConclusionAction(Action):
 class StudyTerminationConclusionW10Action(Action):
     name = STUDY_TERMINATION_CONCLUSION_ACTION_W10
     display_name = 'Submit W10 Study Termination/Conclusion Report'
+    parent_action_names = [DEATH_REPORT_ACTION]
     reference_model = 'ambition_prn.studyterminationconclusionw10'
     show_link_to_changelist = True
     admin_site_name = 'ambition_prn_admin'
@@ -49,6 +51,7 @@ class DeathReportAction(Action):
     name = DEATH_REPORT_ACTION
     display_name = 'Submit Death Report'
     reference_model = 'ambition_prn.deathreport'
+    parent_action_names = [AE_INITIAL_ACTION, AE_FOLLOWUP_ACTION]
     show_link_to_changelist = True
     show_link_to_add = True
     admin_site_name = 'ambition_prn_admin'
@@ -61,11 +64,11 @@ class DeathReportAction(Action):
         """
         try:
             self.action_item_model_cls().objects.get(
-                parent_action_identifier=self.reference_obj.action_identifier,
-                related_action_identifier=self.reference_obj.action_identifier,
-                action_type__name=DeathReportTmgAction.name)
+                parent_action_item=self.reference_obj.action_item,
+                related_action_item=self.reference_obj.action_item,
+                action_type__name=DEATH_REPORT_TMG_ACTION)
         except ObjectDoesNotExist:
-            next_actions = [DeathReportTmgAction]
+            next_actions = [DEATH_REPORT_TMG_ACTION]
         else:
             next_actions = []
 
@@ -75,15 +78,16 @@ class DeathReportAction(Action):
             on_schedule_w10_model_cls.objects.get(
                 subject_identifier=self.subject_identifier)
         except ObjectDoesNotExist:
-            next_actions.append(StudyTerminationConclusionAction)
+            next_actions.append(STUDY_TERMINATION_CONCLUSION_ACTION)
         else:
-            next_actions.append(StudyTerminationConclusionW10Action)
+            next_actions.append(STUDY_TERMINATION_CONCLUSION_ACTION_W10)
         return next_actions
 
 
 class DeathReportTmgAction(Action):
     name = DEATH_REPORT_TMG_ACTION
     display_name = 'TMG Death Report pending'
+    parent_action_names = [DEATH_REPORT_ACTION, DEATH_REPORT_TMG_ACTION]
     reference_model = 'ambition_prn.deathreporttmg'
     related_reference_model = 'ambition_prn.deathreport'
     related_reference_fk_attr = 'death_report'
@@ -102,8 +106,7 @@ class DeathReportTmgAction(Action):
     def close_action_item_on_save(self):
         if (self.reference_obj.death_report.cause_of_death
                 == self.reference_obj.cause_of_death):
-            self.delete_children_if_new(
-                parent_action_identifier=self.action_identifier)
+            self.delete_children_if_new(parent_action_item=self.action_item)
         return self.reference_obj.report_status == CLOSED
 
     def get_next_actions(self):
@@ -114,23 +117,25 @@ class DeathReportTmgAction(Action):
         Also, no more than two DeathReportTmgAction can exist.
         """
         next_actions = []
-        related_reference_obj = self.related_reference_model_cls().objects.get(
-            action_identifier=self.related_action_identifier)
-        related_action_identifier = related_reference_obj.action_identifier
         try:
             self.action_item_model_cls().objects.get(
-                parent_action_identifier=related_action_identifier,
-                related_action_identifier=related_action_identifier,
+                parent_action_item=self.related_action_item,
+                related_action_item=self.related_action_item,
                 action_type__name=self.name)
         except ObjectDoesNotExist:
             pass
+        except MultipleObjectsReturned:
+            # because more than one action item has the same
+            # parent_action_item and related_action_item. this
+            # only occurs for older data.
+            pass
         else:
             if (self.action_item_model_cls().objects.filter(
-                related_action_identifier=related_action_identifier,
+                related_action_item=self.related_action_item,
                     action_type__name=self.name).count() < 2):
                 if (self.reference_obj.cause_of_death
-                        != related_reference_obj.cause_of_death):
-                    next_actions = [self]
+                        != self.related_action_item.reference_obj.cause_of_death):
+                    next_actions = ['self']
         return next_actions
 
 

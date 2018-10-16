@@ -38,7 +38,7 @@ class DeathReportAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     list_display = (
         'subject_identifier', 'dashboard', 'report_datetime',
-        'cause_of_death', 'death_datetime')
+        'cause_of_death', 'death_datetime', 'action_item', 'parent_action_item')
 
     list_filter = ('report_datetime', 'death_datetime', 'cause_of_death')
 

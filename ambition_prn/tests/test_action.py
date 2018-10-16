@@ -1,17 +1,21 @@
 from ambition_rando.tests import AmbitionTestCaseMixin
+from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
 from django.test import TestCase, tag
 from edc_action_item.models.action_item import ActionItem
+from edc_action_item.data_fixers import fix_null_action_items
 from edc_base.utils import get_utcnow
 from edc_constants.constants import CLOSED, NEW, NO
 from edc_facility.import_holidays import import_holidays
 from edc_registration.models import RegisteredSubject
 from model_mommy import mommy
 
-from ..action_items import DeathReportAction, DEATH_REPORT_TMG_ACTION, DEATH_REPORT_ACTION
+from ..action_items import DeathReportAction, DEATH_REPORT_TMG_ACTION
+from ..action_items import DeathReportTmgAction, DEATH_REPORT_ACTION
 from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION
 from ..constants import CRYTOCOCCAL_MENINGITIS, MALIGNANCY
+from ..models import DeathReport
 
 
 class TestDeathReport(AmbitionTestCaseMixin, TestCase):
@@ -150,8 +154,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         # the death action item
         action_item_death = ActionItem.objects.get(
             action_identifier=death_report.action_identifier,
-            parent_action_identifier=None,
-            related_action_identifier=None,
+            parent_action_item=None,
+            related_action_item=None,
             action_type__name=DEATH_REPORT_ACTION)
 
         # the death action item links the two NEW action items
@@ -161,16 +165,16 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         # as well as the parent_action_identifier
         try:
             ActionItem.objects.get(
-                parent_action_identifier=action_item_death.action_identifier,
-                related_action_identifier=death_report.action_identifier,
+                parent_action_item=action_item_death,
+                related_action_item=death_report.action_item,
                 action_type__name=DEATH_REPORT_TMG_ACTION)
         except ObjectDoesNotExist:
             self.fail('Action item unexpectedly does not exist')
 
         try:
             ActionItem.objects.get(
-                parent_action_identifier=action_item_death.action_identifier,
-                related_action_identifier=None,
+                parent_action_item=action_item_death,
+                related_action_item=None,
                 action_type__name=STUDY_TERMINATION_CONCLUSION_ACTION)
         except ObjectDoesNotExist:
             self.fail('Action item unexpectedly does not exist')
@@ -188,8 +192,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         try:
             action_item_tmg1 = ActionItem.objects.get(
                 action_identifier=death_report_tmg1.action_identifier,
-                parent_action_identifier=death_report.action_identifier,
-                related_action_identifier=death_report.action_identifier,
+                parent_action_item=death_report.action_item,
+                related_action_item=death_report.action_item,
                 action_type__name=DEATH_REPORT_TMG_ACTION)
         except ObjectDoesNotExist:
             self.fail('Action item unexpectedly does not exist')
@@ -208,8 +212,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         # by death_report_tmg1 because the cause of death
         # does not match the death report
         ActionItem.objects.get(
-            parent_action_identifier=death_report_tmg1.action_identifier,
-            related_action_identifier=death_report.action_identifier,
+            parent_action_item=death_report_tmg1.action_item,
+            related_action_item=death_report.action_item,
             action_type__name=DEATH_REPORT_TMG_ACTION)
 
         self.assertEqual(ActionItem.objects.filter(
@@ -228,8 +232,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             subject_identifier=self.subject_identifier,
             death_report=death_report,
             cause_of_death=MALIGNANCY,
-            related_action_identifier=death_report_action.action_identifier,
-            parent_action_identifier=death_report_tmg1.action_identifier)
+            related_action_item=death_report_action.action_item,
+            parent_action_item=death_report_tmg1.action_item)
 
         # still 2
         self.assertEqual(ActionItem.objects.filter(
@@ -277,8 +281,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
 
         ActionItem.objects.get(
             parent_action_item=action_item_tmg1,
-            parent_action_identifier=death_report_tmg1.action_identifier,
-            related_action_identifier=death_report.action_identifier,
+            # parent_action_identifier=death_report_tmg1.action_identifier,
+            related_action_item=death_report.action_item,
             action_type__name=DEATH_REPORT_TMG_ACTION)
 
         # set the cause of death to agree
@@ -299,3 +303,81 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
 
         # attempt to delete death_report_tmg1
         # self.assertRaises(ProtectedError, death_report_tmg1.delete)
+
+    @tag('1')
+    def test_death_report_action(self):
+        ActionItem.objects.all().delete()
+        RegisteredSubject.objects.all().delete()
+        for n in range(10, 20):
+            subject_identifier = f'12345{n}'
+            RegisteredSubject.objects.create(
+                subject_identifier=subject_identifier)
+            DeathReportAction(
+                subject_identifier=subject_identifier)
+            death_report = mommy.make_recipe(
+                'ambition_prn.deathreport',
+                subject_identifier=subject_identifier,
+                cause_of_death=CRYTOCOCCAL_MENINGITIS)
+
+        self.assertEqual(ActionItem.objects.filter(
+            action_type__name=DeathReportAction.name).count(), 10)
+        self.assertEqual(ActionItem.objects.filter(
+            action_type__name=DeathReportTmgAction.name).count(), 10)
+
+        subject_identifier = (
+            RegisteredSubject.objects.all()[0].subject_identifier)
+        death_report = DeathReport.objects.get(
+            subject_identifier=subject_identifier)
+        self.assertEqual(ActionItem.objects.filter(
+            subject_identifier=subject_identifier,
+            action_type__name=DeathReportTmgAction.name).count(), 1)
+        death_report_tmg1 = mommy.make_recipe(
+            'ambition_prn.deathreporttmg',
+            subject_identifier=subject_identifier,
+            death_report=death_report,
+            cause_of_death=MALIGNANCY,
+            related_action_item=death_report.action_item,
+            parent_action_item=death_report.action_item,
+            report_status=CLOSED,
+            report_closed_datetime=get_utcnow())
+        self.assertEqual(ActionItem.objects.filter(
+            action_type__name=DeathReportTmgAction.name).count(), 11)
+        self.assertEqual(ActionItem.objects.filter(
+            subject_identifier=subject_identifier,
+            action_type__name=DeathReportTmgAction.name).count(), 2)
+        death_report_tmg2 = mommy.make_recipe(
+            'ambition_prn.deathreporttmg',
+            subject_identifier=subject_identifier,
+            death_report=death_report,
+            cause_of_death=MALIGNANCY,
+            related_action_item=death_report.action_item,
+            parent_action_item=death_report.action_item)
+        self.assertEqual(ActionItem.objects.filter(
+            subject_identifier=subject_identifier,
+            action_type__name=DeathReportTmgAction.name).count(), 2)
+        death_report_tmg2.report_status = CLOSED
+        death_report_tmg2.report_closed_datetime = get_utcnow()
+        self.assertEqual(ActionItem.objects.filter(
+            subject_identifier=subject_identifier,
+            action_type__name=DeathReportTmgAction.name).count(), 2)
+
+        fix_null_action_items(django_apps)
+        self.assertEqual(ActionItem.objects.filter(
+            action_type__name=DeathReportTmgAction.name).count(), 11)
+
+        subject_identifier = (
+            RegisteredSubject.objects.all()[1].subject_identifier)
+        death_report = DeathReport.objects.get(
+            subject_identifier=subject_identifier)
+        death_report_tmg1 = mommy.make_recipe(
+            'ambition_prn.deathreporttmg',
+            subject_identifier=subject_identifier,
+            death_report=death_report,
+            cause_of_death=CRYTOCOCCAL_MENINGITIS,
+            related_action_item=death_report.action_item,
+            parent_action_item=death_report.action_item,
+            report_status=CLOSED,
+            report_closed_datetime=get_utcnow())
+        self.assertEqual(ActionItem.objects.filter(
+            subject_identifier=subject_identifier,
+            action_type__name=DeathReportTmgAction.name).count(), 1)

@@ -9,7 +9,7 @@ from edc_identifier.model_mixins import TrackingModelMixin
 from edc_model_fields.fields import OtherCharField
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
-from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION
+from ..constants import STUDY_TERMINATION_CONCLUSION_ACTION
 from ..choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
 from ..choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
 

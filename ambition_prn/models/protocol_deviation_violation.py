@@ -9,7 +9,7 @@ from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO, NOT_APPLICABLE
 from edc_identifier.model_mixins import TrackingModelMixin
 
-from ..action_items import PROTOCOL_DEVIATION_VIOLATION_ACTION
+from ..constants import PROTOCOL_DEVIATION_VIOLATION_ACTION
 from ..choices import PROTOCOL_VIOLATION, ACTION_REQUIRED, DEVIATION_VIOLATION, REPORT_STATUS
 
 
