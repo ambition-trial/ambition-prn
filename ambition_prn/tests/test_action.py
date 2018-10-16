@@ -118,16 +118,16 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             subject_identifier=self.subject_identifier,
             death_report=death_report,
             cause_of_death=CRYTOCOCCAL_MENINGITIS,
-            related_action_identifier=death_report_action.action_identifier,
-            parent_action_identifier=death_report_action.action_identifier
+            related_action_item=death_report_action.action_item,
+            parent_action_item=death_report_action.action_item
         )
         self.assertEqual(
-            death_report_tmg.parent_action_identifier,
-            death_report.action_identifier)
+            death_report_tmg.parent_action_item,
+            death_report.action_item)
 
         self.assertEqual(
-            death_report_tmg.related_action_identifier,
-            death_report.action_identifier)
+            death_report_tmg.related_action_item,
+            death_report.action_item)
 
         # assert a second TMG Death Report Action is NOT created
         # because the cause of death matches
@@ -162,7 +162,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         self.assertEqual(ActionItem.objects.filter(
             parent_action_item=action_item_death).count(), 2)
 
-        # as well as the parent_action_identifier
+        # as well as the parent_action_item
         try:
             ActionItem.objects.get(
                 parent_action_item=action_item_death,
@@ -281,7 +281,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
 
         ActionItem.objects.get(
             parent_action_item=action_item_tmg1,
-            # parent_action_identifier=death_report_tmg1.action_identifier,
+            # parent_action_item=death_report_tmg1.action_item,
             related_action_item=death_report.action_item,
             action_type__name=DEATH_REPORT_TMG_ACTION)
 
