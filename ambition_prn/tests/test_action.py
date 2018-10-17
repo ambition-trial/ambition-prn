@@ -314,7 +314,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
                 subject_identifier=subject_identifier)
             DeathReportAction(
                 subject_identifier=subject_identifier)
-            death_report = mommy.make_recipe(
+            mommy.make_recipe(
                 'ambition_prn.deathreport',
                 subject_identifier=subject_identifier,
                 cause_of_death=CRYTOCOCCAL_MENINGITIS)
@@ -331,7 +331,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         self.assertEqual(ActionItem.objects.filter(
             subject_identifier=subject_identifier,
             action_type__name=DeathReportTmgAction.name).count(), 1)
-        death_report_tmg1 = mommy.make_recipe(
+        mommy.make_recipe(
             'ambition_prn.deathreporttmg',
             subject_identifier=subject_identifier,
             death_report=death_report,
@@ -369,7 +369,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             RegisteredSubject.objects.all()[1].subject_identifier)
         death_report = DeathReport.objects.get(
             subject_identifier=subject_identifier)
-        death_report_tmg1 = mommy.make_recipe(
+        mommy.make_recipe(
             'ambition_prn.deathreporttmg',
             subject_identifier=subject_identifier,
             death_report=death_report,
