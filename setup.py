@@ -30,6 +30,8 @@ setup(
         'django_collect_offline-files',
         'edc-action-item',
         'edc-base',
+        'ambition_ae',
+        'ambition_subject',
     ],
     classifiers=[
         'Environment :: Web Environment',
