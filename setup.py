@@ -31,6 +31,7 @@ setup(
         'edc-action-item',
         'edc-base',
         'ambition_ae',
+        'edc_notification',
         'ambition_subject',
     ],
     classifiers=[
