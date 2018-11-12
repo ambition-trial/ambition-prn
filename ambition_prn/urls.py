@@ -14,7 +14,9 @@ urlpatterns = [
 
 if settings.APP_NAME == 'ambition_prn':
     from django.contrib import admin
+    from edc_action_item.admin_site import edc_action_item_admin
 
     urlpatterns += [
         path('admin/', admin.site.urls),
+        path('admin/', edc_action_item_admin.urls),
     ]
