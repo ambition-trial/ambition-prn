@@ -9,6 +9,7 @@ class AppConfig(DjangoApponfig):
 
     def ready(self):
         from .signals import study_termination_conclusion_on_post_save
+        from .signals import update_prn_notifications_for_tmg_group
         pass
 
 

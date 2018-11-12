@@ -16,6 +16,8 @@ from ..action_items import DeathReportTmgAction, DEATH_REPORT_ACTION
 from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION
 from ..constants import CRYTOCOCCAL_MENINGITIS, MALIGNANCY
 from ..models import DeathReport
+from edc_action_item.helpers import ActionItemHelper
+from edc_action_item.model_wrappers.action_item_model_wrapper import ActionItemModelWrapper
 
 
 class TestDeathReport(AmbitionTestCaseMixin, TestCase):
@@ -60,10 +62,14 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         action = DeathReportAction(subject_identifier=self.subject_identifier)
         action_item = ActionItem.objects.get(
             action_identifier=action.action_identifier)
-        self.assertEqual(
-            action.reference_url(
-                action_item=action_item, reference_obj=None),
-            f'/admin/ambition_prn/deathreport/add/')
+        action_item_model_wrapper = ActionItemModelWrapper(action_item)
+        helper = ActionItemHelper(
+            action_item=action_item_model_wrapper.object,
+            href=action_item_model_wrapper.href)
+
+        self.assertTrue(
+            helper.reference_url.startswith(
+                f'/admin/ambition_prn/deathreport/add/'))
 
         death_report = mommy.make_recipe(
             'ambition_prn.deathreport',
@@ -72,10 +78,15 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         action = DeathReportAction(
             subject_identifier=self.subject_identifier)
 
-        self.assertEqual(
-            action.reference_url(
-                action_item=action_item, reference_obj=death_report),
-            f'/admin/ambition_prn/deathreport/{str(death_report.pk)}/change/')
+        action_item = ActionItem.objects.get(
+            action_identifier=action.action_identifier)
+        action_item_model_wrapper = ActionItemModelWrapper(action_item)
+        helper = ActionItemHelper(
+            action_item=action_item_model_wrapper.object,
+            href=action_item_model_wrapper.href)
+        self.assertTrue(
+            helper.reference_url.startswith(
+                f'/admin/ambition_prn/deathreport/{str(death_report.pk)}/change/'))
 
     def test_death_report_action_creates_next_actions(self):
         DeathReportAction(subject_identifier=self.subject_identifier)
@@ -304,7 +315,6 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         # attempt to delete death_report_tmg1
         # self.assertRaises(ProtectedError, death_report_tmg1.delete)
 
-    @tag('1')
     def test_death_report_action(self):
         ActionItem.objects.all().delete()
         RegisteredSubject.objects.all().delete()
