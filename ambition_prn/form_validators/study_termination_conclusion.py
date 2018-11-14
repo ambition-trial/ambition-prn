@@ -1,4 +1,4 @@
-from edc_constants.constants import DEAD
+from edc_constants.constants import DEAD, OTHER
 from edc_constants.constants import YES, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
@@ -76,3 +76,23 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             NOT_APPLICABLE,
             field='first_line_regimen',
             field_applicable='first_line_choice')
+
+        self.m2m_other_specify(
+            'antibiotics',
+            m2m_field='drug_intervention',
+            field_other='antibiotic')
+
+        self.m2m_other_specify(
+            OTHER,
+            m2m_field='drug_intervention',
+            field_other='drug_intervention_other')
+
+        self.m2m_other_specify(
+            OTHER,
+            m2m_field='antibiotic',
+            field_other='antibiotic_other')
+
+        self.required_if(
+            YES,
+            field='blood_received',
+            field_required='units')
