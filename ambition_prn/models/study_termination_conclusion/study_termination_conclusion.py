@@ -1,3 +1,7 @@
+from ambition_lists.models import Day14Medication
+from ambition_subject.model_mixins import BloodTransfusionModelMixin
+from ambition_subject.model_mixins import MedAndDrugInterventionModelMixin
+from ambition_subject.model_mixins import StudyMedicationModelMixin
 from django.db import models
 from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
 from edc_action_item.models import ActionModelMixin
@@ -9,12 +13,15 @@ from edc_identifier.model_mixins import TrackingModelMixin
 from edc_model_fields.fields import OtherCharField
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
-from ..constants import STUDY_TERMINATION_CONCLUSION_ACTION
-from ..choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
-from ..choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
+from ...constants import STUDY_TERMINATION_CONCLUSION_ACTION
+from ...choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
+from ...choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
 
 
-class StudyTerminationConclusion(OffScheduleModelMixin, ActionModelMixin,
+class StudyTerminationConclusion(OffScheduleModelMixin, StudyMedicationModelMixin,
+                                 MedAndDrugInterventionModelMixin,
+                                 BloodTransfusionModelMixin,
+                                 ActionModelMixin,
                                  TrackingModelMixin, BaseUuidModel):
 
     action_name = STUDY_TERMINATION_CONCLUSION_ACTION
@@ -157,6 +164,10 @@ class StudyTerminationConclusion(OffScheduleModelMixin, ActionModelMixin,
         max_length=75,
         blank=True,
         null=True)
+
+    medicines = models.ManyToManyField(
+        Day14Medication,
+        verbose_name='Medicines on study termination day:')
 
     on_site = ActionIdentifierSiteManager()
 

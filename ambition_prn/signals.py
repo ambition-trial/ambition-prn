@@ -48,13 +48,17 @@ def update_prn_notifications_for_tmg_group(
     except AttributeError:
         pass
     else:
-        tmg_death_notification = Notification.objects.get(
-            name=DEATH_REPORT_TMG_ACTION)
         try:
-            instance.groups.get(name=TMG)
+            tmg_death_notification = Notification.objects.get(
+                name=DEATH_REPORT_TMG_ACTION)
         except ObjectDoesNotExist:
-            instance.userprofile.email_notifications.remove(
-                tmg_death_notification)
+            pass
         else:
-            instance.userprofile.email_notifications.add(
-                tmg_death_notification)
+            try:
+                instance.groups.get(name=TMG)
+            except ObjectDoesNotExist:
+                instance.userprofile.email_notifications.remove(
+                    tmg_death_notification)
+            else:
+                instance.userprofile.email_notifications.add(
+                    tmg_death_notification)

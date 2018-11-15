@@ -1,11 +1,79 @@
 from django.contrib import admin
 from edc_action_item import action_fieldset_tuple, action_fields
+from edc_model_admin import TabularInlineMixin
 from edc_model_admin import audit_fieldset_tuple
 
 from ..admin_site import ambition_prn_admin
+from ..forms import AmphotericinMissedDosesForm
+from ..forms import FluconazoleMissedDosesForm
+from ..forms import FlucytosineMissedDosesForm
+from ..forms import SignificantDiagnosesForm
 from ..forms import StudyTerminationConclusionForm
+from ..models import FluconazoleMissedDoses, AmphotericinMissedDoses
+from ..models import FlucytosineMissedDoses, SignificantDiagnoses
 from ..models import StudyTerminationConclusion
 from .modeladmin_mixins import ModelAdminMixin
+
+
+class SignificantDiagnosesInline(TabularInlineMixin, admin.TabularInline):
+
+    model = SignificantDiagnoses
+    form = SignificantDiagnosesForm
+    extra = 1
+
+    fieldsets = (
+        ['Admission history', {
+            'fields': (
+                'possible_diagnoses',
+                'dx_date',
+                'dx_other')},
+         ],)
+
+
+class AmphotericinMissedDosesInline(TabularInlineMixin, admin.TabularInline):
+
+    model = AmphotericinMissedDoses
+    form = AmphotericinMissedDosesForm
+    extra = 1
+
+    fieldsets = (
+        ['Admission history', {
+            'fields': (
+                'day_missed',
+                'missed_reason',
+                'missed_reason_other')},
+         ],)
+
+
+class FluconazoleMissedDosesInline(TabularInlineMixin, admin.TabularInline):
+
+    model = FluconazoleMissedDoses
+    form = FluconazoleMissedDosesForm
+    extra = 1
+
+    fieldsets = (
+        ['Admission history', {
+            'fields': (
+                'day_missed',
+                'missed_reason',
+                'missed_reason_other')},
+         ],)
+
+
+class FlucytosineMissedDosesInline(TabularInlineMixin, admin.TabularInline):
+
+    model = FlucytosineMissedDoses
+    form = FlucytosineMissedDosesForm
+    extra = 1
+
+    fieldsets = (
+        ['Admission history', {
+            'fields': (
+                'day_missed',
+                'doses_missed',
+                'missed_reason',
+                'missed_reason_other')},
+         ],)
 
 
 @admin.register(StudyTerminationConclusion, site=ambition_prn_admin)
@@ -17,8 +85,13 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
         'Note: if the patient is deceased, complete the Death Report '
         'before completing this form. ')
 
+    inlines = [AmphotericinMissedDosesInline,
+               FluconazoleMissedDosesInline,
+               FlucytosineMissedDosesInline,
+               SignificantDiagnosesInline, ]
+
     fieldsets = (
-        [None, {
+        ['Part 1:', {
             'fields': (
                 'subject_identifier',
                 'offschedule_datetime',
@@ -35,7 +108,9 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'willing_to_complete_centre',
                 'protocol_exclusion_criterion',
                 'included_in_error',
-                'included_in_error_date',
+                'included_in_error_date')}],
+        ['Part 2:', {
+            'fields': (
                 'rifampicin_started',
                 'first_line_regimen',
                 'first_line_regimen_other',
@@ -44,6 +119,32 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'second_line_regimen_other',
                 'arvs_switch_date',
                 'arvs_delay_reason')}],
+        ['Part3: Study medication', {
+            'fields': (
+                ('ampho_start_date',
+                 'ampho_end_date'),
+                ('flucon_start_date',
+                 'flucon_stop_date'),
+                ('flucy_start_date',
+                 'flucy_stop_date'),
+                ('ambi_start_date',
+                 'ambi_stop_date'),
+            )}
+         ],
+        ['Part4: Other drugs/interventions given during first 14 days', {
+            'fields': (
+                'drug_intervention',
+                'drug_intervention_other',
+                'antibiotic',
+                'antibiotic_other',
+            )}
+         ],
+        ['Part5: Blood transfusion', {
+            'fields': (
+                'blood_received',
+                'units',
+            )}
+         ],
         action_fieldset_tuple,
         audit_fieldset_tuple
     )
@@ -58,7 +159,13 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
         'rifampicin_started': admin.VERTICAL,
         'first_line_regimen': admin.VERTICAL,
         'second_line_regimen': admin.VERTICAL,
-        'first_line_choice': admin.VERTICAL}
+        'first_line_choice': admin.VERTICAL,
+        'blood_received': admin.VERTICAL}
+
+    filter_horizontal = (
+        'antibiotic',
+        # 'medicines',
+        'drug_intervention')
 
     list_display = ('subject_identifier', 'dashboard',
                     'offschedule_datetime', 'last_study_fu_date',

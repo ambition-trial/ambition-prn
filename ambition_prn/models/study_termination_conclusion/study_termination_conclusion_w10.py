@@ -7,8 +7,8 @@ from edc_base.model_validators import date_not_future
 from edc_identifier.model_mixins import TrackingModelMixin
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
-from ..constants import STUDY_TERMINATION_CONCLUSION_ACTION_W10
-from ..choices import REASON_STUDY_TERMINATED_W10
+from ...constants import STUDY_TERMINATION_CONCLUSION_ACTION_W10
+from ...choices import REASON_STUDY_TERMINATED_W10
 
 
 class StudyTerminationConclusionW10(OffScheduleModelMixin, ActionModelMixin,

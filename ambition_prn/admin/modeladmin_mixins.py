@@ -6,11 +6,13 @@ from edc_model_admin import (
     ModelAdminReadOnlyMixin, ModelAdminInstitutionMixin,
     ModelAdminRedirectOnDeleteMixin)
 from edc_metadata import NextFormGetter
+from edc_notification import NotificationModelAdminMixin
 from edc_subject_dashboard import ModelAdminSubjectDashboardMixin
 from edc_base.sites.admin import ModelAdminSiteMixin
 
 
-class ModelAdminMixin(ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
+class ModelAdminMixin(ModelAdminNextUrlRedirectMixin,
+                      NotificationModelAdminMixin, ModelAdminFormInstructionsMixin,
                       ModelAdminFormAutoNumberMixin, ModelAdminRevisionMixin,
                       ModelAdminAuditFieldsMixin, ModelAdminReadOnlyMixin,
                       ModelAdminInstitutionMixin, ModelAdminRedirectOnDeleteMixin,
