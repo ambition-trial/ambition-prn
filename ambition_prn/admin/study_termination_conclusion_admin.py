@@ -129,7 +129,11 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
                  'flucy_stop_date'),
                 ('ambi_start_date',
                  'ambi_stop_date'),
-            )}
+            ),
+            'description': ('<h5>Special Instructions</h5>Please only '
+                            f'complete the below questions if '
+                            'the patient was terminated from the study '
+                            'before the completion of the Week 2 form.')}
          ],
         ['Part4: Other drugs/interventions given during first 14 days', {
             'fields': (
