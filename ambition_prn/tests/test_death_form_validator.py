@@ -1,9 +1,11 @@
+import arrow
+
 from ambition_rando.tests import AmbitionTestCaseMixin
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django import forms
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
-from edc_base.utils import get_utcnow
 from edc_constants.constants import OTHER
 from edc_registration.models import RegisteredSubject
 
@@ -113,12 +115,15 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
 
     def test_study_day_of_death(self):
 
+        # mid-day
+        dte = arrow.get(datetime(2013, 5, 5, 12), 'UTC').datetime
+
         RegisteredSubject.objects.create(
             subject_identifier='12345',
-            randomization_datetime=get_utcnow() - relativedelta(days=3))
+            randomization_datetime=dte - relativedelta(days=3))
         cleaned_data = {
             'subject_identifier': '12345',
-            'death_datetime': get_utcnow(),
+            'death_datetime': dte,
             'study_day': 4}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
@@ -128,7 +133,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
 
         cleaned_data = {
             'subject_identifier': '12345',
-            'death_datetime': get_utcnow(),
+            'death_datetime': dte,
             'study_day': 3}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
@@ -136,7 +141,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
 
         cleaned_data = {
             'subject_identifier': '12345',
-            'death_datetime': get_utcnow() - relativedelta(hours=1),
+            'death_datetime': dte - relativedelta(hours=1),
             'study_day': 3}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
@@ -144,7 +149,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
 
         cleaned_data = {
             'subject_identifier': '12345',
-            'death_datetime': get_utcnow() - relativedelta(hours=1),
+            'death_datetime': dte - relativedelta(hours=1),
             'study_day': 4}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:

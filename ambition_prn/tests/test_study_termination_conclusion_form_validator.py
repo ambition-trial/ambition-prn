@@ -10,10 +10,19 @@ from edc_base.utils import get_utcnow
 from edc_constants.constants import YES, NO, OTHER, NOT_APPLICABLE, DEAD
 from edc_list_data import site_list_data
 from edc_registration.models import RegisteredSubject
+from edc_form_validators import M2M_SELECTION_ONLY, M2M_INVALID_SELECTION
 
 from ..constants import CONSENT_WITHDRAWAL
-from ..form_validators import StudyTerminationConclusionFormValidator
+from ..form_validators import StudyTerminationConclusionFormValidator as Base
+from ..form_validators import week2_date_fields
 from ..models import DeathReport
+from .models import Week2, SubjectVisit
+from ambition_lists.models import OtherDrug
+
+
+class StudyTerminationConclusionFormValidator(Base):
+
+    week2_model = 'ambition_prn.week2'
 
 
 class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCase):
@@ -32,6 +41,67 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         self.subject_identifier = '12345'
         RegisteredSubject.objects.create(
             subject_identifier=self.subject_identifier)
+
+    def test_date_not_required_if_week2_complete(self):
+        subject_visit = SubjectVisit.objects.create(
+            subject_identifier=self.subject_identifier)
+        Week2.objects.create(subject_visit=subject_visit)
+        for date_field in week2_date_fields:
+            with self.subTest(date_field=date_field):
+                cleaned_data = {
+                    'subject_identifier': self.subject_identifier,
+                    date_field: get_utcnow()}
+                form_validator = StudyTerminationConclusionFormValidator(
+                    cleaned_data=cleaned_data)
+                self.assertRaises(ValidationError, form_validator.validate)
+                self.assertIn(date_field, form_validator._errors)
+
+    def test_date_required_if_week2_not_complete(self):
+        for date_field in week2_date_fields:
+            with self.subTest(date_field=date_field):
+                cleaned_data = {
+                    'subject_identifier': self.subject_identifier,
+                    date_field: None}
+                form_validator = StudyTerminationConclusionFormValidator(
+                    cleaned_data=cleaned_data)
+                self.assertRaises(ValidationError, form_validator.validate)
+                self.assertIn(date_field, form_validator._errors)
+
+    def test_m2m_not_applicable_if_week2_complete(self):
+        subject_visit = SubjectVisit.objects.create(
+            subject_identifier=self.subject_identifier)
+
+        # week 2 not complete, cannot be NOT_APPLICABLE
+        cleaned_data = {
+            'subject_identifier': self.subject_identifier,
+            'drug_intervention': OtherDrug.objects.filter(short_name=NOT_APPLICABLE)}
+        form_validator = StudyTerminationConclusionFormValidator(
+            cleaned_data=cleaned_data)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('drug_intervention', form_validator._errors)
+        self.assertIn(M2M_INVALID_SELECTION, form_validator._error_codes)
+
+        # week 2 complete, must be NOT_APPLICABLE
+        Week2.objects.create(subject_visit=subject_visit)
+        cleaned_data = {
+            'subject_identifier': self.subject_identifier,
+            'drug_intervention': OtherDrug.objects.filter(short_name=NOT_APPLICABLE)}
+        form_validator = StudyTerminationConclusionFormValidator(
+            cleaned_data=cleaned_data)
+        try:
+            form_validator.validate()
+        except ValidationError:
+            self.fail('Validation error unexpectedly raised.')
+
+        # week 2 complete, must be NOT_APPLICABLE only!
+        cleaned_data = {
+            'subject_identifier': self.subject_identifier,
+            'drug_intervention': OtherDrug.objects.all()}
+        form_validator = StudyTerminationConclusionFormValidator(
+            cleaned_data=cleaned_data)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('drug_intervention', form_validator._errors)
+        self.assertIn(M2M_SELECTION_ONLY, form_validator._error_codes)
 
     def test_termination_reason_death_no_death_form_invalid(self):
 

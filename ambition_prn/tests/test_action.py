@@ -3,8 +3,10 @@ from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
 from django.test import TestCase, tag
-from edc_action_item.models.action_item import ActionItem
 from edc_action_item.data_fixers import fix_null_action_items
+from edc_action_item.helpers import ActionItemHelper
+from edc_action_item.model_wrappers import ActionItemModelWrapper
+from edc_action_item.models.action_item import ActionItem
 from edc_base.utils import get_utcnow
 from edc_constants.constants import CLOSED, NEW, NO
 from edc_facility.import_holidays import import_holidays
@@ -16,8 +18,6 @@ from ..action_items import DeathReportTmgAction, DEATH_REPORT_ACTION
 from ..action_items import STUDY_TERMINATION_CONCLUSION_ACTION
 from ..constants import CRYTOCOCCAL_MENINGITIS, MALIGNANCY
 from ..models import DeathReport
-from edc_action_item.helpers import ActionItemHelper
-from edc_action_item.model_wrappers.action_item_model_wrapper import ActionItemModelWrapper
 
 
 class TestDeathReport(AmbitionTestCaseMixin, TestCase):
