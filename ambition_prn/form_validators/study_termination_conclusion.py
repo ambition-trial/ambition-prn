@@ -1,4 +1,6 @@
-from edc_constants.constants import DEAD, OTHER, NONE
+from django.apps import apps as django_apps
+from django.core.exceptions import ObjectDoesNotExist
+from edc_constants.constants import DEAD, NONE, OTHER
 from edc_constants.constants import YES, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
@@ -6,7 +8,16 @@ from ..constants import CONSENT_WITHDRAWAL
 from .validate_death_report_mixin import ValidateDeathReportMixin
 
 
+week2_date_fields = [
+    'ampho_start_date', 'ampho_end_date',
+    'flucon_start_date', 'flucon_stop_date',
+    'flucy_start_date', 'flucy_stop_date',
+    'ambi_start_date', 'ambi_stop_date']
+
+
 class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormValidator):
+
+    week2_model = 'ambition_subject.week2'
 
     def clean(self):
 
@@ -77,6 +88,25 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field='first_line_regimen',
             field_applicable='first_line_choice')
 
+        for field in week2_date_fields:
+            self.required_if_true(
+                not self.completed_week2,
+                field_required=field,
+                required_msg='Week two not complete. Field is required',
+                not_required_msg='Week two complete. Field is not required')
+
+        if self.completed_week2:
+            self.m2m_selection_expected(
+                NOT_APPLICABLE,
+                m2m_field='drug_intervention',
+                error_msg='Week two complete. Select "Not Applicable" only.')
+        else:
+            self.m2m_selections_not_expected(
+                NOT_APPLICABLE,
+                m2m_field='drug_intervention',
+                error_msg=('Week two not complete, selection '
+                           '"Not Applicable" is invalid.'))
+
         self.m2m_single_selection_if(
             NONE, m2m_field='drug_intervention')
 
@@ -99,3 +129,19 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             YES,
             field='blood_received',
             field_required='units')
+
+    @property
+    def week2_model_cls(self):
+        return django_apps.get_model(self.week2_model)
+
+    @property
+    def completed_week2(self):
+        """Returns True if subject has completed week2 form.
+        """
+        subject_identifier = self.cleaned_data.get('subject_identifier')
+        try:
+            completed_week2 = self.week2_model_cls.objects.get(
+                subject_visit__subject_identifier=subject_identifier)
+        except ObjectDoesNotExist:
+            completed_week2 = False
+        return completed_week2

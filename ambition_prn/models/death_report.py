@@ -16,8 +16,7 @@ from ..constants import DEATH_REPORT_ACTION
 from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
 
 
-class DeathReport(SiteModelMixin,
-                  ActionModelMixin, TrackingModelMixin, BaseUuidModel):
+class DeathReport(SiteModelMixin, ActionModelMixin, TrackingModelMixin, BaseUuidModel):
 
     action_name = DEATH_REPORT_ACTION
 

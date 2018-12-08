@@ -16,7 +16,7 @@ class StudyDayFormValidatorMixin:
                                          compare_date=None,
                                          study_day_field=None):
         """Raises an exception if study day does not match
-        calculation against import pytz.
+        calculation against pytz.
 
         Note: study-day is 1-based.
         """
