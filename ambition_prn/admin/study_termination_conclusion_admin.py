@@ -141,6 +141,8 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'drug_intervention_other',
                 'antibiotic',
                 'antibiotic_other',
+                'medicines',
+                'medicine_other',
             )}
          ],
         ['Part5: Blood transfusion', {
@@ -168,7 +170,7 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     filter_horizontal = (
         'antibiotic',
-        # 'medicines',
+        'medicines',
         'drug_intervention')
 
     list_display = ('subject_identifier', 'dashboard',

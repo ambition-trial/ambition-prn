@@ -1,3 +1,5 @@
+from ambition_rando.constants import SINGLE_DOSE, CONTROL
+from ambition_rando.utils import get_drug_assignment
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
 from edc_constants.constants import DEAD, NONE, OTHER
@@ -6,13 +8,6 @@ from edc_form_validators import FormValidator
 
 from ..constants import CONSENT_WITHDRAWAL
 from .validate_death_report_mixin import ValidateDeathReportMixin
-
-
-week2_date_fields = [
-    'ampho_start_date', 'ampho_end_date',
-    'flucon_start_date', 'flucon_stop_date',
-    'flucy_start_date', 'flucy_stop_date',
-    'ambi_start_date', 'ambi_stop_date']
 
 
 class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormValidator):
@@ -88,22 +83,61 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field='first_line_regimen',
             field_applicable='first_line_choice')
 
-        for field in week2_date_fields:
+        self.required_if_true(
+            not self.completed_week2 and self.drug_assignment == SINGLE_DOSE,
+            field_required='ambi_start_date',
+            required_msg='Field is required',
+            not_required_msg='Field is not required')
+
+        self.required_if_true(
+            not self.completed_week2 and self.drug_assignment == SINGLE_DOSE,
+            field_required='ambi_stop_date',
+            required_msg='Field is required',
+            not_required_msg='Field is not required')
+
+        self.required_if_true(
+            not self.completed_week2 and self.drug_assignment == CONTROL,
+            field_required='ampho_start_date',
+            required_msg='Field is required',
+            not_required_msg='Field is not required')
+
+        self.required_if_true(
+            not self.completed_week2 and self.drug_assignment == CONTROL,
+            field_required='ampho_end_date',
+            required_msg='Field is required',
+            not_required_msg='Field is not required')
+
+        for field in ['flucy_start_date', 'flucy_stop_date']:
             self.required_if_true(
                 not self.completed_week2,
                 field_required=field,
                 required_msg='Week two not complete. Field is required',
                 not_required_msg='Week two complete. Field is not required')
 
+        for field in ['flucon_start_date', 'flucon_stop_date']:
+            self.not_required_if_true(
+                self.completed_week2,
+                field=field,
+                msg='Week two complete. Field is not required')
+
         if self.completed_week2:
             self.m2m_selection_expected(
                 NOT_APPLICABLE,
                 m2m_field='drug_intervention',
                 error_msg='Week two complete. Select "Not Applicable" only.')
+            self.m2m_selection_expected(
+                NOT_APPLICABLE,
+                m2m_field='medicines',
+                error_msg='Week two complete. Select "Not Applicable" only.')
         else:
             self.m2m_selections_not_expected(
                 NOT_APPLICABLE,
                 m2m_field='drug_intervention',
+                error_msg=('Week two not complete, selection '
+                           '"Not Applicable" is invalid.'))
+            self.m2m_selections_not_expected(
+                NOT_APPLICABLE,
+                m2m_field='medicines',
                 error_msg=('Week two not complete, selection '
                            '"Not Applicable" is invalid.'))
 
@@ -125,6 +159,14 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             m2m_field='antibiotic',
             field_other='antibiotic_other')
 
+        self.m2m_single_selection_if(
+            NONE, m2m_field='medicines')
+
+        self.m2m_other_specify(
+            OTHER,
+            m2m_field='medicines',
+            field_other='medicine_other')
+
         self.required_if(
             YES,
             field='blood_received',
@@ -145,3 +187,13 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
         except ObjectDoesNotExist:
             completed_week2 = False
         return completed_week2
+
+    @property
+    def drug_assignment(self):
+        RandomizationList = django_apps.get_model(
+            'ambition_rando.randomizationlist')
+        subject_identifier = self.cleaned_data.get('subject_identifier')
+        obj = RandomizationList.objects.get(
+            subject_identifier=subject_identifier)
+        row = {'drug_assignment': obj.drug_assignment}
+        return get_drug_assignment(row)

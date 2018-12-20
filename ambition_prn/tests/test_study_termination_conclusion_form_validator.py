@@ -1,23 +1,26 @@
 import arrow
 
+from ambition_lists.models import OtherDrug
+from ambition_rando.constants import SINGLE_DOSE, CONTROL
+from ambition_rando.models import RandomizationList
 from ambition_rando.tests import AmbitionTestCaseMixin
 from datetime import date
 from django import forms
+from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
 from django.test.utils import override_settings
 from edc_base.utils import get_utcnow
 from edc_constants.constants import YES, NO, OTHER, NOT_APPLICABLE, DEAD
+from edc_form_validators import M2M_SELECTION_ONLY, M2M_INVALID_SELECTION
 from edc_list_data import site_list_data
 from edc_registration.models import RegisteredSubject
-from edc_form_validators import M2M_SELECTION_ONLY, M2M_INVALID_SELECTION
 
 from ..constants import CONSENT_WITHDRAWAL
 from ..form_validators import StudyTerminationConclusionFormValidator as Base
-from ..form_validators import week2_date_fields
 from ..models import DeathReport
 from .models import Week2, SubjectVisit
-from ambition_lists.models import OtherDrug
 
 
 class StudyTerminationConclusionFormValidator(Base):
@@ -39,10 +42,28 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
     def setUp(self):
 
         self.subject_identifier = '12345'
+        self.subject_identifier2 = '54321'
         RegisteredSubject.objects.create(
             subject_identifier=self.subject_identifier)
+        RegisteredSubject.objects.create(
+            subject_identifier=self.subject_identifier2)
+        self.rando = RandomizationList.objects.filter(
+            drug_assignment=SINGLE_DOSE,
+            site_name=Site.objects.get(id=settings.SITE_ID).name).order_by('sid')[0]
+        self.rando.subject_identifier = self.subject_identifier
+        self.rando.save()
+        self.rando = RandomizationList.objects.filter(
+            drug_assignment=CONTROL,
+            site_name=Site.objects.get(id=settings.SITE_ID).name).order_by('sid')[0]
+        self.rando.subject_identifier = self.subject_identifier2
+        self.rando.save()
 
     def test_date_not_required_if_week2_complete(self):
+        week2_date_fields = [
+            'ambi_start_date', 'ambi_stop_date',
+            'ampho_start_date', 'ampho_end_date',
+            'flucy_start_date', 'flucy_stop_date',
+            'flucon_start_date', 'flucon_stop_date']
         subject_visit = SubjectVisit.objects.create(
             subject_identifier=self.subject_identifier)
         Week2.objects.create(subject_visit=subject_visit)
@@ -57,10 +78,23 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
                 self.assertIn(date_field, form_validator._errors)
 
     def test_date_required_if_week2_not_complete(self):
-        for date_field in week2_date_fields:
+        subject_identifier = self.subject_identifier
+        for date_field in ['ambi_start_date', 'ambi_stop_date',
+                           'flucy_start_date', 'flucy_stop_date']:
             with self.subTest(date_field=date_field):
                 cleaned_data = {
-                    'subject_identifier': self.subject_identifier,
+                    'subject_identifier': subject_identifier,
+                    date_field: None}
+                form_validator = StudyTerminationConclusionFormValidator(
+                    cleaned_data=cleaned_data)
+                self.assertRaises(ValidationError, form_validator.validate)
+                self.assertIn(date_field, form_validator._errors)
+        subject_identifier = self.subject_identifier2
+        for date_field in ['ampho_start_date', 'ampho_end_date',
+                           'flucy_start_date', 'flucy_stop_date']:
+            with self.subTest(date_field=date_field):
+                cleaned_data = {
+                    'subject_identifier': subject_identifier,
                     date_field: None}
                 form_validator = StudyTerminationConclusionFormValidator(
                     cleaned_data=cleaned_data)
