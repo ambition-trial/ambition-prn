@@ -31,7 +31,8 @@ class StudyTerminationConclusionAction(ActionWithNotification):
     name = STUDY_TERMINATION_CONCLUSION_ACTION
     display_name = 'Submit Study Termination/Conclusion Report'
     notification_display_name = 'Study Termination/Conclusion Report'
-    parent_action_names = [BLOOD_RESULTS_ACTION, DEATH_REPORT_ACTION]
+    parent_action_names = [
+        BLOOD_RESULTS_ACTION, DEATH_REPORT_ACTION, AE_FOLLOWUP_ACTION]
     reference_model = 'ambition_prn.studyterminationconclusion'
     show_link_to_changelist = True
     admin_site_name = 'ambition_prn_admin'
