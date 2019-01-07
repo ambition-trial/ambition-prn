@@ -5,7 +5,6 @@ from ambition_subject.model_mixins import StudyMedicationModelMixin
 from django.db import models
 from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
 from edc_action_item.models import ActionModelMixin
-from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import date_not_future
 from edc_constants.choices import YES_NO, YES_NO_NA, NOT_APPLICABLE
@@ -172,8 +171,6 @@ class StudyTerminationConclusion(OffScheduleModelMixin, StudyMedicationModelMixi
     on_site = ActionIdentifierSiteManager()
 
     objects = ActionIdentifierManager()
-
-    history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
         if not self.last_study_fu_date:

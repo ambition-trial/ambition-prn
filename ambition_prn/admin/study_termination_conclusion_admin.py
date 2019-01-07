@@ -1,3 +1,4 @@
+from copy import copy
 from django.contrib import admin
 from edc_action_item import action_fieldset_tuple, action_fields
 from edc_model_admin import TabularInlineMixin
@@ -185,7 +186,9 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
-        fields = action_fields + fields
+        action_flds = copy(list(action_fields))
+        action_flds.remove('action_identifier')
+        fields = tuple(action_flds) + fields
         if obj:
             fields = fields + ('subject_identifier', )
         return fields
