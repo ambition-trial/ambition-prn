@@ -1,7 +1,6 @@
 from django.db import models
 from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
 from edc_action_item.models import ActionModelMixin
-from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.sites import SiteModelMixin
 from edc_base.model_validators import datetime_not_future
@@ -129,8 +128,6 @@ class ProtocolDeviationViolation(SiteModelMixin, ActionModelMixin,
     on_site = ActionIdentifierSiteManager()
 
     objects = ActionIdentifierManager()
-
-    history = HistoricalRecords()
 
     def natural_key(self):
         return (self.action_identifier, )
