@@ -3,7 +3,10 @@ from ambition_subject.model_mixins import BloodTransfusionModelMixin
 from ambition_subject.model_mixins import MedAndDrugInterventionModelMixin
 from ambition_subject.model_mixins import StudyMedicationModelMixin
 from django.db import models
-from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
+from edc_action_item.managers import (
+    ActionIdentifierSiteManager,
+    ActionIdentifierManager,
+)
 from edc_action_item.models import ActionModelMixin
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import date_not_future
@@ -17,156 +20,180 @@ from ...choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
 from ...choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
 
 
-class StudyTerminationConclusion(OffScheduleModelMixin, StudyMedicationModelMixin,
-                                 MedAndDrugInterventionModelMixin,
-                                 BloodTransfusionModelMixin,
-                                 ActionModelMixin,
-                                 TrackingModelMixin, BaseUuidModel):
+class StudyTerminationConclusion(
+    OffScheduleModelMixin,
+    StudyMedicationModelMixin,
+    MedAndDrugInterventionModelMixin,
+    BloodTransfusionModelMixin,
+    ActionModelMixin,
+    TrackingModelMixin,
+    BaseUuidModel,
+):
 
     action_name = STUDY_TERMINATION_CONCLUSION_ACTION
 
-    tracking_identifier_prefix = 'ST'
+    tracking_identifier_prefix = "ST"
 
-    subject_identifier = models.CharField(
-        max_length=50,
-        unique=True)
+    subject_identifier = models.CharField(max_length=50, unique=True)
 
     last_study_fu_date = models.DateField(
-        verbose_name='Date of last research follow up (if different):',
+        verbose_name="Date of last research follow up (if different):",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     discharged_after_initial_admission = models.CharField(
-        verbose_name='Was the patient discharged after initial admission?',
+        verbose_name="Was the patient discharged after initial admission?",
         max_length=6,
-        choices=YES_NO)
+        choices=YES_NO,
+    )
 
     initial_discharge_date = models.DateField(
-        verbose_name='Date of initial discharge',
+        verbose_name="Date of initial discharge",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     readmission_after_initial_discharge = models.CharField(
-        verbose_name='Was the patient re-admitted following initial discharge?',
+        verbose_name="Was the patient re-admitted following initial discharge?",
         max_length=7,
         choices=YES_NO_NA,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
     readmission_date = models.DateField(
-        verbose_name='Date of readmission',
+        verbose_name="Date of readmission",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     discharged_date = models.DateField(
-        verbose_name='Date discharged',
+        verbose_name="Date discharged",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     termination_reason = models.CharField(
-        verbose_name='Reason for study termination',
+        verbose_name="Reason for study termination",
         max_length=75,
         choices=REASON_STUDY_TERMINATED,
-        help_text=(
-            'If included in error, be sure to fill in protocol deviation form.'))
+        help_text=("If included in error, be sure to fill in protocol deviation form."),
+    )
 
     death_date = models.DateField(
-        verbose_name='Date of Death',
+        verbose_name="Date of Death",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     consent_withdrawal_reason = models.CharField(
-        verbose_name='Reason for withdrawing consent',
+        verbose_name="Reason for withdrawing consent",
         max_length=75,
         blank=True,
-        null=True)
+        null=True,
+    )
 
     willing_to_complete_10w = models.CharField(
-        verbose_name=('Is the patient willing to complete the W10 '
-                      'and W16 FU visit only?'),
+        verbose_name=(
+            "Is the patient willing to complete the W10 " "and W16 FU visit only?"
+        ),
         max_length=12,
         choices=YES_NO_NA,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
     willing_to_complete_centre = models.CharField(
-        verbose_name=('Is the patient willing to complete the W10'
-                      'and W16 FU visit only at their new care centre?'),
+        verbose_name=(
+            "Is the patient willing to complete the W10"
+            "and W16 FU visit only at their new care centre?"
+        ),
         max_length=17,
         choices=YES_NO_NA,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
     willing_to_complete_date = models.DateField(
-        verbose_name='Date the 10W FU due',
+        verbose_name="Date the 10W FU due",
         validators=[date_not_future],
         editable=False,
         null=True,
-        help_text='get value from Ambition visit schedule')
+        help_text="get value from Ambition visit schedule",
+    )
 
     protocol_exclusion_criterion = models.CharField(
-        verbose_name='Late protocol exclusion met?',
+        verbose_name="Late protocol exclusion met?",
         max_length=12,
         choices=YES_NO_NA,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
     included_in_error_date = models.DateField(
-        verbose_name='If included in error, date',
+        verbose_name="If included in error, date",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     included_in_error = models.TextField(
-        verbose_name='If included in error, narrative:',
+        verbose_name="If included in error, narrative:",
         max_length=300,
         blank=True,
-        null=True)
+        null=True,
+    )
 
     rifampicin_started = models.CharField(
-        verbose_name='Rifampicin started since week 4?',
+        verbose_name="Rifampicin started since week 4?",
         max_length=30,
-        choices=YES_NO_ALREADY)
+        choices=YES_NO_ALREADY,
+    )
 
     first_line_regimen = models.CharField(
-        verbose_name=('ART regimen started for naive patients (or regimen'
-                      ' switched for those already on ARVs)'),
+        verbose_name=(
+            "ART regimen started for naive patients (or regimen"
+            " switched for those already on ARVs)"
+        ),
         max_length=75,
         choices=FIRST_ARV_REGIMEN,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
     first_line_regimen_other = OtherCharField()
 
     second_line_regimen = models.CharField(
-        verbose_name='Second line / second switch ARV regimen',
+        verbose_name="Second line / second switch ARV regimen",
         max_length=50,
         choices=SECOND_ARV_REGIMEN,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
     second_line_regimen_other = OtherCharField()
 
     arvs_switch_date = models.DateField(
-        verbose_name='ARV switch date',
+        verbose_name="ARV switch date",
         blank=True,
         null=True,
-        validators=[date_not_future])
+        validators=[date_not_future],
+    )
 
     first_line_choice = models.CharField(
-        verbose_name='If first line:',
+        verbose_name="If first line:",
         max_length=5,
         choices=FIRST_LINE_REGIMEN,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
     arvs_delay_reason = models.CharField(
-        verbose_name='Reason ARVs not started',
-        max_length=75,
-        blank=True,
-        null=True)
+        verbose_name="Reason ARVs not started", max_length=75, blank=True, null=True
+    )
 
     medicines = models.ManyToManyField(
-        Day14Medication,
-        verbose_name='Medicines on study termination day:')
+        Day14Medication, verbose_name="Medicines on study termination day:"
+    )
 
     on_site = ActionIdentifierSiteManager()
 
@@ -178,8 +205,8 @@ class StudyTerminationConclusion(OffScheduleModelMixin, StudyMedicationModelMixi
         super().save(*args, **kwargs)
 
     def natural_key(self):
-        return (self.action_identifier, )
+        return (self.action_identifier,)
 
     class Meta:
-        verbose_name = 'Study Termination/Conclusion'
-        verbose_name_plural = 'Study Terminations/Conclusions'
+        verbose_name = "Study Termination/Conclusion"
+        verbose_name_plural = "Study Terminations/Conclusions"

@@ -8,6 +8,7 @@ class OnSchedule(OnScheduleModelMixin, BaseUuidModel):
 
     """A model used by the system. Auto-completed by subject_consent.
     """
+
     on_site = CurrentSiteManager()
 
     objects = SubjectIdentifierManager()

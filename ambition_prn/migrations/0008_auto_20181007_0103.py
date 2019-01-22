@@ -6,8 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ambition_prn', '0007_auto_20181007_0053'),
-        ('edc_registration', '0015_auto_20181006_2257'),
+        ("ambition_prn", "0007_auto_20181007_0053"),
+        ("edc_registration", "0015_auto_20181006_2257"),
     ]
 
     operations = []

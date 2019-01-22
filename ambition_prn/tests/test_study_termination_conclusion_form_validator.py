@@ -25,11 +25,10 @@ from .models import Week2, SubjectVisit
 
 class StudyTerminationConclusionFormValidator(Base):
 
-    week2_model = 'ambition_prn.week2'
+    week2_model = "ambition_prn.week2"
 
 
 class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCase):
-
     @classmethod
     def setUpClass(cls):
         site_list_data.autodiscover()
@@ -41,414 +40,513 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
 
     def setUp(self):
 
-        self.subject_identifier = '12345'
-        self.subject_identifier2 = '54321'
-        RegisteredSubject.objects.create(
-            subject_identifier=self.subject_identifier)
-        RegisteredSubject.objects.create(
-            subject_identifier=self.subject_identifier2)
+        self.subject_identifier = "12345"
+        self.subject_identifier2 = "54321"
+        RegisteredSubject.objects.create(subject_identifier=self.subject_identifier)
+        RegisteredSubject.objects.create(subject_identifier=self.subject_identifier2)
         self.rando = RandomizationList.objects.filter(
             drug_assignment=SINGLE_DOSE,
-            site_name=Site.objects.get(id=settings.SITE_ID).name).order_by('sid')[0]
+            site_name=Site.objects.get(id=settings.SITE_ID).name,
+        ).order_by("sid")[0]
         self.rando.subject_identifier = self.subject_identifier
         self.rando.save()
         self.rando = RandomizationList.objects.filter(
             drug_assignment=CONTROL,
-            site_name=Site.objects.get(id=settings.SITE_ID).name).order_by('sid')[0]
+            site_name=Site.objects.get(id=settings.SITE_ID).name,
+        ).order_by("sid")[0]
         self.rando.subject_identifier = self.subject_identifier2
         self.rando.save()
 
     def test_date_not_required_if_week2_complete(self):
         week2_date_fields = [
-            'ambi_start_date', 'ambi_stop_date',
-            'ampho_start_date', 'ampho_end_date',
-            'flucy_start_date', 'flucy_stop_date',
-            'flucon_start_date', 'flucon_stop_date']
+            "ambi_start_date",
+            "ambi_stop_date",
+            "ampho_start_date",
+            "ampho_end_date",
+            "flucy_start_date",
+            "flucy_stop_date",
+            "flucon_start_date",
+            "flucon_stop_date",
+        ]
         subject_visit = SubjectVisit.objects.create(
-            subject_identifier=self.subject_identifier)
+            subject_identifier=self.subject_identifier
+        )
         Week2.objects.create(subject_visit=subject_visit)
         for date_field in week2_date_fields:
             with self.subTest(date_field=date_field):
                 cleaned_data = {
-                    'subject_identifier': self.subject_identifier,
-                    date_field: get_utcnow()}
+                    "subject_identifier": self.subject_identifier,
+                    date_field: get_utcnow(),
+                }
                 form_validator = StudyTerminationConclusionFormValidator(
-                    cleaned_data=cleaned_data)
+                    cleaned_data=cleaned_data
+                )
                 self.assertRaises(ValidationError, form_validator.validate)
                 self.assertIn(date_field, form_validator._errors)
 
     def test_date_required_if_week2_not_complete(self):
         subject_identifier = self.subject_identifier
-        for date_field in ['ambi_start_date', 'ambi_stop_date',
-                           'flucy_start_date', 'flucy_stop_date']:
+        for date_field in [
+            "ambi_start_date",
+            "ambi_stop_date",
+            "flucy_start_date",
+            "flucy_stop_date",
+        ]:
             with self.subTest(date_field=date_field):
                 cleaned_data = {
-                    'subject_identifier': subject_identifier,
-                    date_field: None}
+                    "subject_identifier": subject_identifier,
+                    date_field: None,
+                }
                 form_validator = StudyTerminationConclusionFormValidator(
-                    cleaned_data=cleaned_data)
+                    cleaned_data=cleaned_data
+                )
                 self.assertRaises(ValidationError, form_validator.validate)
                 self.assertIn(date_field, form_validator._errors)
         subject_identifier = self.subject_identifier2
-        for date_field in ['ampho_start_date', 'ampho_end_date',
-                           'flucy_start_date', 'flucy_stop_date']:
+        for date_field in [
+            "ampho_start_date",
+            "ampho_end_date",
+            "flucy_start_date",
+            "flucy_stop_date",
+        ]:
             with self.subTest(date_field=date_field):
                 cleaned_data = {
-                    'subject_identifier': subject_identifier,
-                    date_field: None}
+                    "subject_identifier": subject_identifier,
+                    date_field: None,
+                }
                 form_validator = StudyTerminationConclusionFormValidator(
-                    cleaned_data=cleaned_data)
+                    cleaned_data=cleaned_data
+                )
                 self.assertRaises(ValidationError, form_validator.validate)
                 self.assertIn(date_field, form_validator._errors)
 
     def test_m2m_not_applicable_if_week2_complete(self):
         subject_visit = SubjectVisit.objects.create(
-            subject_identifier=self.subject_identifier)
+            subject_identifier=self.subject_identifier
+        )
 
         # week 2 not complete, cannot be NOT_APPLICABLE
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'drug_intervention': OtherDrug.objects.filter(short_name=NOT_APPLICABLE)}
+            "subject_identifier": self.subject_identifier,
+            "drug_intervention": OtherDrug.objects.filter(short_name=NOT_APPLICABLE),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('drug_intervention', form_validator._errors)
+        self.assertIn("drug_intervention", form_validator._errors)
         self.assertIn(M2M_INVALID_SELECTION, form_validator._error_codes)
 
         # week 2 complete, must be NOT_APPLICABLE
         Week2.objects.create(subject_visit=subject_visit)
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'drug_intervention': OtherDrug.objects.filter(short_name=NOT_APPLICABLE)}
+            "subject_identifier": self.subject_identifier,
+            "drug_intervention": OtherDrug.objects.filter(short_name=NOT_APPLICABLE),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except ValidationError:
-            self.fail('Validation error unexpectedly raised.')
+            self.fail("Validation error unexpectedly raised.")
 
         # week 2 complete, must be NOT_APPLICABLE only!
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'drug_intervention': OtherDrug.objects.all()}
+            "subject_identifier": self.subject_identifier,
+            "drug_intervention": OtherDrug.objects.all(),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('drug_intervention', form_validator._errors)
+        self.assertIn("drug_intervention", form_validator._errors)
         self.assertIn(M2M_SELECTION_ONLY, form_validator._error_codes)
 
     def test_termination_reason_death_no_death_form_invalid(self):
 
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': DEAD,
-                        'death_date': get_utcnow().date()}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": DEAD,
+            "death_date": get_utcnow().date(),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('termination_reason', form_validator._errors)
+        self.assertIn("termination_reason", form_validator._errors)
 
     def test_yes_discharged_after_initial_admission_none_date_discharged(self):
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'discharged_after_initial_admission': YES,
-                        'initial_discharge_date': None}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "discharged_after_initial_admission": YES,
+            "initial_discharge_date": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('initial_discharge_date', form_validator._errors)
+        self.assertIn("initial_discharge_date", form_validator._errors)
 
     def test_no_discharged_after_initial_admission_with_date_discharged(self):
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'discharged_after_initial_admission': NO,
-                        'initial_discharge_date': get_utcnow}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "discharged_after_initial_admission": NO,
+            "initial_discharge_date": get_utcnow,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('initial_discharge_date', form_validator._errors)
+        self.assertIn("initial_discharge_date", form_validator._errors)
 
     def test_no_discharged_after_initial_admission_readmission_invalid(self):
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'discharged_after_initial_admission': NO,
-                        'initial_discharge_date': None,
-                        'readmission_after_initial_discharge': YES}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "discharged_after_initial_admission": NO,
+            "initial_discharge_date": None,
+            "readmission_after_initial_discharge": YES,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn(
-            'readmission_after_initial_discharge', form_validator._errors)
+        self.assertIn("readmission_after_initial_discharge", form_validator._errors)
 
     def ttest_no_discharged_after_initial_admission_no_readmission_valid(self):
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'discharged_after_initial_admission': NO,
-                        'initial_discharge_date': None,
-                        'readmission_after_initial_discharge': NOT_APPLICABLE}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "discharged_after_initial_admission": NO,
+            "initial_discharge_date": None,
+            "readmission_after_initial_discharge": NOT_APPLICABLE,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except forms.ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_yes_readmission_none_readmission_date(self):
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'readmission_after_initial_discharge': YES,
-                        'readmission_date': None}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "readmission_after_initial_discharge": YES,
+            "readmission_date": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('readmission_date', form_validator._errors)
+        self.assertIn("readmission_date", form_validator._errors)
 
     def test_no_readmission_with_readmission_date(self):
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'readmission_after_initial_discharge': NO,
-                        'readmission_date': get_utcnow}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "readmission_after_initial_discharge": NO,
+            "readmission_date": get_utcnow,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('readmission_date', form_validator._errors)
+        self.assertIn("readmission_date", form_validator._errors)
 
     def test_died_no_death_date_invalid(self):
         DeathReport.objects.create(
             subject_identifier=self.subject_identifier,
             death_datetime=get_utcnow(),
-            study_day=1)
+            study_day=1,
+        )
 
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': DEAD,
-                        'death_date': None}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": DEAD,
+            "death_date": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('death_date', form_validator._errors)
+        self.assertIn("death_date", form_validator._errors)
 
     def test_died_death_date_mismatch(self):
         DeathReport.objects.create(
             subject_identifier=self.subject_identifier,
             death_datetime=get_utcnow(),
-            study_day=1)
+            study_day=1,
+        )
 
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': DEAD,
-                        'death_date': date(2011, 1, 1)}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": DEAD,
+            "death_date": date(2011, 1, 1),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('death_date', form_validator._errors)
+        self.assertIn("death_date", form_validator._errors)
 
-    @override_settings(TIME_ZONE='Africa/Kampala')
+    @override_settings(TIME_ZONE="Africa/Kampala")
     def test_died_death_date_ok(self):
         from dateutil import tz
         from datetime import datetime
-        dte1 = arrow.get(datetime(2018, 8, 12, 0, 0, 0),
-                         tz.tzutc())
+
+        dte1 = arrow.get(datetime(2018, 8, 12, 0, 0, 0), tz.tzutc())
         dte2 = date(2018, 8, 12)
         DeathReport.objects.create(
             subject_identifier=self.subject_identifier,
             death_datetime=dte1.datetime,
-            study_day=1)
+            study_day=1,
+        )
 
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': DEAD,
-                        'death_date': dte2}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": DEAD,
+            "death_date": dte2,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except forms.ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_died_death_date_change(self):
         dte = get_utcnow()
         DeathReport.objects.create(
             subject_identifier=self.subject_identifier,
             death_datetime=get_utcnow(),
-            study_day=1)
+            study_day=1,
+        )
 
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': DEAD,
-                        'death_date': dte.date()}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": DEAD,
+            "death_date": dte.date(),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except forms.ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_twilling_to_complete_10w_withdrawal_of_consent(self):
         """ Asserts willing_to_complete_10w when termination reason
             is consent_withdrawn.
         """
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'termination_reason': 'consent_withdrawn',
-            'consent_withdrawal_reason': 'Reason',
-            'willing_to_complete_10w': NOT_APPLICABLE}
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": "consent_withdrawn",
+            "consent_withdrawal_reason": "Reason",
+            "willing_to_complete_10w": NOT_APPLICABLE,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('willing_to_complete_10w', form_validator._errors)
+        self.assertIn("willing_to_complete_10w", form_validator._errors)
 
     def test_centre_care_transfer_willing_to_complete_in_centre_given(self):
         """ Asserts willing_to_complete_centre when termination reason
             is care_transferred_to_another_institution.
         """
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'termination_reason': 'care_transferred_to_another_institution',
-            'willing_to_complete_centre': NOT_APPLICABLE}
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": "care_transferred_to_another_institution",
+            "willing_to_complete_centre": NOT_APPLICABLE,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('willing_to_complete_centre', form_validator._errors)
+        self.assertIn("willing_to_complete_centre", form_validator._errors)
 
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'termination_reason': 'care_transferred_to_another_institution',
-            'willing_to_complete_centre': NO}
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": "care_transferred_to_another_institution",
+            "willing_to_complete_centre": NO,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except forms.ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_yes_willing_to_complete_willing_to_complete_date(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'willing_to_complete_10w': YES,
-            'willing_to_complete_date': None}
+            "subject_identifier": self.subject_identifier,
+            "willing_to_complete_10w": YES,
+            "willing_to_complete_date": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('willing_to_complete_date', form_validator._errors)
+        self.assertIn("willing_to_complete_date", form_validator._errors)
 
     def test_no_willing_tocomplete_10WFU_with_date_to_complete(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'willing_to_complete_10w': NO,
-            'willing_to_complete_date': get_utcnow()}
+            "subject_identifier": self.subject_identifier,
+            "willing_to_complete_10w": NO,
+            "willing_to_complete_date": get_utcnow(),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('willing_to_complete_date', form_validator._errors)
+        self.assertIn("willing_to_complete_date", form_validator._errors)
 
     def test_yes_willing_to_complete_centre_none_date_to_complete(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'willing_to_complete_centre': YES,
-            'willing_to_complete_date': None}
+            "subject_identifier": self.subject_identifier,
+            "willing_to_complete_centre": YES,
+            "willing_to_complete_date": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('willing_to_complete_date', form_validator._errors)
+        self.assertIn("willing_to_complete_date", form_validator._errors)
 
     def test_no_willing_to_complete_centre_none_date_to_complete(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'willing_to_complete_centre': NO,
-            'willing_to_complete_date': None}
+            "subject_identifier": self.subject_identifier,
+            "willing_to_complete_centre": NO,
+            "willing_to_complete_date": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except forms.ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_no_willing_to_complete_centreU_with_date_to_complete(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'willing_to_complete_centre': NO,
-            'willing_to_complete_date': get_utcnow()}
+            "subject_identifier": self.subject_identifier,
+            "willing_to_complete_centre": NO,
+            "willing_to_complete_date": get_utcnow(),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('willing_to_complete_date', form_validator._errors)
+        self.assertIn("willing_to_complete_date", form_validator._errors)
 
     def test_included_in_error_reason_date_provided(self):
         """ Asserts included_in_error_date when termination reason
             is error_description.
         """
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': 'included_in_error',
-                        'included_in_error': 'blah blah blah blah',
-                        'included_in_error_date': None}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": "included_in_error",
+            "included_in_error": "blah blah blah blah",
+            "included_in_error_date": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('included_in_error_date', form_validator._errors)
+        self.assertIn("included_in_error_date", form_validator._errors)
 
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': 'included_in_error',
-                        'included_in_error': 'blah blah blah blah',
-                        'included_in_error_date': get_utcnow()}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": "included_in_error",
+            "included_in_error": "blah blah blah blah",
+            "included_in_error_date": get_utcnow(),
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except forms.ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_included_in_error_reason_narrative_provided(self):
         """ Asserts included_in_error_date when termination reason
             is included_in_error.
         """
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': 'included_in_error',
-                        'included_in_error_date': get_utcnow(),
-                        'included_in_error': None}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": "included_in_error",
+            "included_in_error_date": get_utcnow(),
+            "included_in_error": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('included_in_error', form_validator._errors)
+        self.assertIn("included_in_error", form_validator._errors)
 
-        cleaned_data = {'subject_identifier': self.subject_identifier,
-                        'termination_reason': 'included_in_error',
-                        'included_in_error_date': get_utcnow(),
-                        'included_in_error': 'blah blah blah blah'}
+        cleaned_data = {
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": "included_in_error",
+            "included_in_error_date": get_utcnow(),
+            "included_in_error": "blah blah blah blah",
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except forms.ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_other_late_protocol_exclusion_none_date_to_complete(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'first_line_regimen': OTHER,
-            'first_line_regimen_other': None}
+            "subject_identifier": self.subject_identifier,
+            "first_line_regimen": OTHER,
+            "first_line_regimen_other": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('first_line_regimen_other', form_validator._errors)
+        self.assertIn("first_line_regimen_other", form_validator._errors)
 
     def test_other_second_line_regimen_none_second_line_regime_other(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'second_line_regimen': OTHER,
-            'second_line_regimen_other': None}
+            "subject_identifier": self.subject_identifier,
+            "second_line_regimen": OTHER,
+            "second_line_regimen_other": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('second_line_regimen_other', form_validator._errors)
+        self.assertIn("second_line_regimen_other", form_validator._errors)
 
     def test_consent_withdrawal_reason_invalid(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'termination_reason': CONSENT_WITHDRAWAL,
-            'consent_withdrawal_reason': None}
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": CONSENT_WITHDRAWAL,
+            "consent_withdrawal_reason": None,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('consent_withdrawal_reason', form_validator._errors)
+        self.assertIn("consent_withdrawal_reason", form_validator._errors)
 
     def test_consent_withdrawal_reason_valid(self):
         cleaned_data = {
-            'subject_identifier': self.subject_identifier,
-            'termination_reason': CONSENT_WITHDRAWAL,
-            'consent_withdrawal_reason': 'Reason'}
+            "subject_identifier": self.subject_identifier,
+            "termination_reason": CONSENT_WITHDRAWAL,
+            "consent_withdrawal_reason": "Reason",
+        }
         form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data)
+            cleaned_data=cleaned_data
+        )
         try:
             form_validator.validate()
         except ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+            self.fail(f"ValidationError unexpectedly raised. Got{e}")

@@ -5,59 +5,57 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('ambition_prn', '0011_auto_20181009_1838'),
-    ]
+    dependencies = [("ambition_prn", "0011_auto_20181009_1838")]
 
     operations = [
         migrations.AlterField(
-            model_name='deathreport',
-            name='action_identifier',
+            model_name="deathreport",
+            name="action_identifier",
             field=models.CharField(max_length=50, unique=True),
         ),
         migrations.AlterField(
-            model_name='deathreporttmg',
-            name='action_identifier',
+            model_name="deathreporttmg",
+            name="action_identifier",
             field=models.CharField(max_length=50, unique=True),
         ),
         migrations.AlterField(
-            model_name='historicaldeathreport',
-            name='action_identifier',
+            model_name="historicaldeathreport",
+            name="action_identifier",
             field=models.CharField(db_index=True, max_length=50),
         ),
         migrations.AlterField(
-            model_name='historicaldeathreporttmg',
-            name='action_identifier',
+            model_name="historicaldeathreporttmg",
+            name="action_identifier",
             field=models.CharField(db_index=True, max_length=50),
         ),
         migrations.AlterField(
-            model_name='historicalprotocoldeviationviolation',
-            name='action_identifier',
+            model_name="historicalprotocoldeviationviolation",
+            name="action_identifier",
             field=models.CharField(db_index=True, max_length=50),
         ),
         migrations.AlterField(
-            model_name='historicalstudyterminationconclusion',
-            name='action_identifier',
+            model_name="historicalstudyterminationconclusion",
+            name="action_identifier",
             field=models.CharField(db_index=True, max_length=50),
         ),
         migrations.AlterField(
-            model_name='historicalstudyterminationconclusionw10',
-            name='action_identifier',
+            model_name="historicalstudyterminationconclusionw10",
+            name="action_identifier",
             field=models.CharField(db_index=True, max_length=50),
         ),
         migrations.AlterField(
-            model_name='protocoldeviationviolation',
-            name='action_identifier',
+            model_name="protocoldeviationviolation",
+            name="action_identifier",
             field=models.CharField(max_length=50, unique=True),
         ),
         migrations.AlterField(
-            model_name='studyterminationconclusion',
-            name='action_identifier',
+            model_name="studyterminationconclusion",
+            name="action_identifier",
             field=models.CharField(max_length=50, unique=True),
         ),
         migrations.AlterField(
-            model_name='studyterminationconclusionw10',
-            name='action_identifier',
+            model_name="studyterminationconclusionw10",
+            name="action_identifier",
             field=models.CharField(max_length=50, unique=True),
         ),
     ]

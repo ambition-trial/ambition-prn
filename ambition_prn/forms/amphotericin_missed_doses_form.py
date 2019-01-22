@@ -11,4 +11,4 @@ class AmphotericinMissedDosesForm(FormValidatorMixin, forms.ModelForm):
 
     class Meta:
         model = AmphotericinMissedDoses
-        fields = '__all__'
+        fields = "__all__"

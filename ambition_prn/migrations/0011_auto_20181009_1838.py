@@ -10,19 +10,22 @@ def fix(apps, schema_editor):
 
     fix_null_action_item_fk(
         apps,
-        app_label='ambition_prn',
-        models=['deathreport',
-                'deathreporttmg',
-                'studyterminationconclusion',
-                'studyterminationconclusionw10',
-                'protocoldeviationviolation'])
+        app_label="ambition_prn",
+        models=[
+            "deathreport",
+            "deathreporttmg",
+            "studyterminationconclusion",
+            "studyterminationconclusionw10",
+            "protocoldeviationviolation",
+        ],
+    )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ambition_prn', '0010_auto_20181009_1837'),
-        ('edc_registration', '0015_auto_20181006_2257'),
+        ("ambition_prn", "0010_auto_20181009_1837"),
+        ("edc_registration", "0015_auto_20181006_2257"),
     ]
 
     operations = [migrations.RunPython(fix)]

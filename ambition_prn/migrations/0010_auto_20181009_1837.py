@@ -10,12 +10,15 @@ from ..action_items import DEATH_REPORT_ACTION
 def fix(apps, schema_editor):
 
     fix_null_historical_action_identifier(
-        app_label='ambition_prn',
-        models=['deathreport',
-                'deathreporttmg',
-                'studyterminationconclusion',
-                'studyterminationconclusionw10',
-                'protocoldeviationviolation'])
+        app_label="ambition_prn",
+        models=[
+            "deathreport",
+            "deathreporttmg",
+            "studyterminationconclusion",
+            "studyterminationconclusionw10",
+            "protocoldeviationviolation",
+        ],
+    )
 
     fix_duplicate_singleton_action_items(apps, name=DEATH_REPORT_ACTION)
 
@@ -23,8 +26,8 @@ def fix(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ambition_prn', '0009_auto_20181009_0545'),
-        ('edc_registration', '0015_auto_20181006_2257'),
+        ("ambition_prn", "0009_auto_20181009_0545"),
+        ("edc_registration", "0015_auto_20181006_2257"),
     ]
 
     operations = [migrations.RunPython(fix)]

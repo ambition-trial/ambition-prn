@@ -15,37 +15,44 @@ class StudyTerminationConclusionW10Admin(ModelAdminMixin, admin.ModelAdmin):
     form = StudyTerminationConclusionW10Form
 
     additional_instructions = (
-        'Note: if the patient is deceased, complete the Death Report '
-        'before completing this form. ')
-
-    fieldsets = (
-        [None, {
-            'fields': (
-                'subject_identifier',
-                'offschedule_datetime',
-                'last_study_fu_date',
-                'termination_reason')}],
-        action_fieldset_tuple,
-        audit_fieldset_tuple
+        "Note: if the patient is deceased, complete the Death Report "
+        "before completing this form. "
     )
 
-    radio_fields = {'termination_reason': admin.VERTICAL}
+    fieldsets = (
+        [
+            None,
+            {
+                "fields": (
+                    "subject_identifier",
+                    "offschedule_datetime",
+                    "last_study_fu_date",
+                    "termination_reason",
+                )
+            },
+        ],
+        action_fieldset_tuple,
+        audit_fieldset_tuple,
+    )
 
-    list_display = ('subject_identifier', 'dashboard',
-                    'offschedule_datetime', 'last_study_fu_date',
-                    'tracking_identifier', 'action_identifier')
+    radio_fields = {"termination_reason": admin.VERTICAL}
 
-    list_filter = ('offschedule_datetime', 'last_study_fu_date')
+    list_display = (
+        "subject_identifier",
+        "dashboard",
+        "offschedule_datetime",
+        "last_study_fu_date",
+        "tracking_identifier",
+        "action_identifier",
+    )
 
-    search_fields = ('subject_identifier',
-                     'action_identifier',
-                     'tracking_identifier')
+    list_filter = ("offschedule_datetime", "last_study_fu_date")
+
+    search_fields = ("subject_identifier", "action_identifier", "tracking_identifier")
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
         action_flds = copy(list(action_fields))
-        action_flds.remove('action_identifier')
+        action_flds.remove("action_identifier")
         fields = tuple(action_flds) + fields
-        if obj:
-            fields = fields + ('subject_identifier', )
         return fields
