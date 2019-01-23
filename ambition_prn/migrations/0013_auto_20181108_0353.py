@@ -6,44 +6,56 @@ import uuid
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('ambition_prn', '0012_auto_20181009_1848'),
-    ]
+    dependencies = [("ambition_prn", "0012_auto_20181009_1848")]
 
     operations = [
         migrations.AlterField(
-            model_name='historicaldeathreport',
-            name='history_id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="historicaldeathreport",
+            name="history_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
         migrations.AlterField(
-            model_name='historicaldeathreporttmg',
-            name='history_id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="historicaldeathreporttmg",
+            name="history_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalonschedule',
-            name='history_id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="historicalonschedule",
+            name="history_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalonschedulew10',
-            name='history_id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="historicalonschedulew10",
+            name="history_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalprotocoldeviationviolation',
-            name='history_id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="historicalprotocoldeviationviolation",
+            name="history_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalstudyterminationconclusion',
-            name='history_id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="historicalstudyterminationconclusion",
+            name="history_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalstudyterminationconclusionw10',
-            name='history_id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="historicalstudyterminationconclusionw10",
+            name="history_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
     ]

@@ -1,6 +1,9 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
+from edc_action_item.managers import (
+    ActionIdentifierSiteManager,
+    ActionIdentifierManager,
+)
 from edc_action_item.models import ActionModelMixin
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import datetime_not_future
@@ -19,60 +22,60 @@ class DeathReport(SiteModelMixin, ActionModelMixin, TrackingModelMixin, BaseUuid
 
     action_name = DEATH_REPORT_ACTION
 
-    tracking_identifier_prefix = 'DR'
+    tracking_identifier_prefix = "DR"
 
-    subject_identifier = models.CharField(
-        max_length=50,
-        unique=True)
+    subject_identifier = models.CharField(max_length=50, unique=True)
 
     report_datetime = models.DateTimeField(
-        verbose_name='Report Date',
-        validators=[
-            datetime_not_before_study_start,
-            datetime_not_future],
-        default=get_utcnow)
+        verbose_name="Report Date",
+        validators=[datetime_not_before_study_start, datetime_not_future],
+        default=get_utcnow,
+    )
 
     death_datetime = models.DateTimeField(
-        validators=[datetime_not_future],
-        verbose_name='Date and Time of Death')
+        validators=[datetime_not_future], verbose_name="Date and Time of Death"
+    )
 
     study_day = models.IntegerField(
-        validators=[MinValueValidator(1), ],
-        verbose_name='Study day')
+        validators=[MinValueValidator(1)], verbose_name="Study day"
+    )
 
     death_as_inpatient = models.CharField(
-        choices=YES_NO,
-        max_length=5,
-        verbose_name='Death as inpatient')
+        choices=YES_NO, max_length=5, verbose_name="Death as inpatient"
+    )
 
     cause_of_death = models.CharField(
         max_length=50,
         choices=CAUSE_OF_DEATH,
-        verbose_name=('Main cause of death'),
-        help_text=('Main cause of death in the opinion of the '
-                   'local study doctor and local PI'))
+        verbose_name=("Main cause of death"),
+        help_text=(
+            "Main cause of death in the opinion of the "
+            "local study doctor and local PI"
+        ),
+    )
 
     cause_of_death_other = models.CharField(
         max_length=100,
         blank=True,
         null=True,
-        verbose_name='If "Other" above, please specify')
+        verbose_name='If "Other" above, please specify',
+    )
 
     tb_site = models.CharField(
-        verbose_name='If cause of death is TB, specify site of TB disease',
+        verbose_name="If cause of death is TB, specify site of TB disease",
         max_length=25,
         choices=TB_SITE_DEATH,
-        default=NOT_APPLICABLE)
+        default=NOT_APPLICABLE,
+    )
 
-    narrative = models.TextField(
-        verbose_name='Narrative')
+    narrative = models.TextField(verbose_name="Narrative")
 
     on_site = ActionIdentifierSiteManager()
 
     objects = ActionIdentifierManager()
 
     def natural_key(self):
-        return (self.action_identifier, )
+        return (self.action_identifier,)
 
     class Meta:
-        verbose_name = 'Death Report'
+        verbose_name = "Death Report"

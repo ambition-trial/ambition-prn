@@ -11,4 +11,4 @@ class FlucytosineMissedDosesForm(FormValidatorMixin, forms.ModelForm):
 
     class Meta:
         model = FlucytosineMissedDoses
-        fields = '__all__'
+        fields = "__all__"

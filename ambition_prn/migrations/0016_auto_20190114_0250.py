@@ -6,44 +6,98 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('ambition_prn', '0015_auto_20181113_0454'),
-    ]
+    dependencies = [("ambition_prn", "0015_auto_20181113_0454")]
 
     operations = [
         migrations.AlterField(
-            model_name='historicaldeathreport',
-            name='site',
-            field=models.ForeignKey(blank=True, db_constraint=False, editable=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='sites.Site'),
+            model_name="historicaldeathreport",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="sites.Site",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicaldeathreporttmg',
-            name='site',
-            field=models.ForeignKey(blank=True, db_constraint=False, editable=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='sites.Site'),
+            model_name="historicaldeathreporttmg",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="sites.Site",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalonschedule',
-            name='site',
-            field=models.ForeignKey(blank=True, db_constraint=False, editable=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='sites.Site'),
+            model_name="historicalonschedule",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="sites.Site",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalonschedulew10',
-            name='site',
-            field=models.ForeignKey(blank=True, db_constraint=False, editable=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='sites.Site'),
+            model_name="historicalonschedulew10",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="sites.Site",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalprotocoldeviationviolation',
-            name='site',
-            field=models.ForeignKey(blank=True, db_constraint=False, editable=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='sites.Site'),
+            model_name="historicalprotocoldeviationviolation",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="sites.Site",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalstudyterminationconclusion',
-            name='site',
-            field=models.ForeignKey(blank=True, db_constraint=False, editable=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='sites.Site'),
+            model_name="historicalstudyterminationconclusion",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="sites.Site",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalstudyterminationconclusionw10',
-            name='site',
-            field=models.ForeignKey(blank=True, db_constraint=False, editable=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='sites.Site'),
+            model_name="historicalstudyterminationconclusionw10",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="sites.Site",
+            ),
         ),
     ]

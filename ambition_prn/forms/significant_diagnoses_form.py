@@ -11,4 +11,4 @@ class SignificantDiagnosesForm(FormValidatorMixin, forms.ModelForm):
 
     class Meta:
         model = SignificantDiagnoses
-        fields = '__all__'
+        fields = "__all__"

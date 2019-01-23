@@ -4,19 +4,19 @@ from django.views.generic.base import RedirectView
 
 from .admin_site import ambition_prn_admin
 
-app_name = 'ambition_prn'
+app_name = "ambition_prn"
 
 urlpatterns = [
-    path('admin/', ambition_prn_admin.urls),
-    path('', RedirectView.as_view(url='/ambition_prn/admin/'), name='home_url'),
+    path("admin/", ambition_prn_admin.urls),
+    path("", RedirectView.as_view(url="/ambition_prn/admin/"), name="home_url"),
 ]
 
 
-if settings.APP_NAME == 'ambition_prn':
+if settings.APP_NAME == "ambition_prn":
     from django.contrib import admin
     from edc_action_item.admin_site import edc_action_item_admin
 
     urlpatterns += [
-        path('admin/', admin.site.urls),
-        path('admin/', edc_action_item_admin.urls),
+        path("admin/", admin.site.urls),
+        path("admin/", edc_action_item_admin.urls),
     ]

@@ -11,9 +11,10 @@ class AmphotericinMissedDoses(MissedDosesModelMixin, BaseUuidModel):
     history = HistoricalRecords()
 
     def natural_key(self):
-        return (self.day_missed, ) + self.study_termination_conclusion.natural_key()
-    natural_key.dependencies = ['ambition_prn.study_termination_conclusion']
+        return (self.day_missed,) + self.study_termination_conclusion.natural_key()
+
+    natural_key.dependencies = ["ambition_prn.study_termination_conclusion"]
 
     class Meta:
-        verbose_name_plural = 'Amphotericin Missed Doses'
-        unique_together = ('study_termination_conclusion', 'day_missed')
+        verbose_name_plural = "Amphotericin Missed Doses"
+        unique_together = ("study_termination_conclusion", "day_missed")

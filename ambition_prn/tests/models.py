@@ -6,7 +6,9 @@ from edc_base.sites import CurrentSiteManager
 from edc_base.sites.site_model_mixin import SiteModelMixin
 from edc_visit_tracking.managers import VisitModelManager, CrfModelManager
 from edc_visit_tracking.model_mixins import CrfModelMixin
-from edc_visit_tracking.model_mixins.visit_model_mixin.visit_model_mixin import VisitModelMixin
+from edc_visit_tracking.model_mixins.visit_model_mixin.visit_model_mixin import (
+    VisitModelMixin,
+)
 
 
 class SubjectVisit(BaseUuidModel):

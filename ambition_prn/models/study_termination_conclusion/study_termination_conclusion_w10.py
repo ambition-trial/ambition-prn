@@ -1,5 +1,8 @@
 from django.db import models
-from edc_action_item.managers import ActionIdentifierSiteManager, ActionIdentifierManager
+from edc_action_item.managers import (
+    ActionIdentifierSiteManager,
+    ActionIdentifierManager,
+)
 from edc_action_item.models import ActionModelMixin
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import date_not_future
@@ -10,41 +13,43 @@ from ...constants import STUDY_TERMINATION_CONCLUSION_ACTION_W10
 from ...choices import REASON_STUDY_TERMINATED_W10
 
 
-class StudyTerminationConclusionW10(OffScheduleModelMixin, ActionModelMixin,
-                                    TrackingModelMixin, BaseUuidModel):
+class StudyTerminationConclusionW10(
+    OffScheduleModelMixin, ActionModelMixin, TrackingModelMixin, BaseUuidModel
+):
 
     action_name = STUDY_TERMINATION_CONCLUSION_ACTION_W10
 
-    tracking_identifier_prefix = 'ST'
+    tracking_identifier_prefix = "ST"
 
-    subject_identifier = models.CharField(
-        max_length=50,
-        unique=True)
+    subject_identifier = models.CharField(max_length=50, unique=True)
 
     last_study_fu_date = models.DateField(
-        verbose_name='Date of last research follow up (if different):',
+        verbose_name="Date of last research follow up (if different):",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     termination_reason = models.CharField(
-        verbose_name='Reason for study termination',
+        verbose_name="Reason for study termination",
         max_length=75,
         choices=REASON_STUDY_TERMINATED_W10,
-        help_text=(
-            'If included in error, be sure to fill in protocol deviation form.'))
+        help_text=("If included in error, be sure to fill in protocol deviation form."),
+    )
 
     death_date = models.DateField(
-        verbose_name='Date of Death',
+        verbose_name="Date of Death",
         validators=[date_not_future],
         blank=True,
-        null=True)
+        null=True,
+    )
 
     consent_withdrawal_reason = models.CharField(
-        verbose_name='Reason for withdrawing consent',
+        verbose_name="Reason for withdrawing consent",
         max_length=75,
         blank=True,
-        null=True)
+        null=True,
+    )
 
     on_site = ActionIdentifierSiteManager()
 
@@ -53,8 +58,8 @@ class StudyTerminationConclusionW10(OffScheduleModelMixin, ActionModelMixin,
     # history = HistoricalRecords()
 
     def natural_key(self):
-        return (self.action_identifier, )
+        return (self.action_identifier,)
 
     class Meta:
-        verbose_name = 'W10 Study Termination/Conclusion'
-        verbose_name_plural = 'W10 Study Terminations/Conclusions'
+        verbose_name = "W10 Study Termination/Conclusion"
+        verbose_name_plural = "W10 Study Terminations/Conclusions"

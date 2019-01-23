@@ -12,7 +12,7 @@ from .validate_death_report_mixin import ValidateDeathReportMixin
 
 class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormValidator):
 
-    week2_model = 'ambition_subject.week2'
+    week2_model = "ambition_subject.week2"
 
     def clean(self):
 
@@ -20,157 +20,169 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
         self.required_if(
             YES,
-            field='discharged_after_initial_admission',
-            field_required='initial_discharge_date')
+            field="discharged_after_initial_admission",
+            field_required="initial_discharge_date",
+        )
 
         self.applicable_if(
             YES,
-            field='discharged_after_initial_admission',
-            field_applicable='readmission_after_initial_discharge')
+            field="discharged_after_initial_admission",
+            field_applicable="readmission_after_initial_discharge",
+        )
 
         self.required_if(
             YES,
-            field='readmission_after_initial_discharge',
-            field_required='readmission_date')
+            field="readmission_after_initial_discharge",
+            field_required="readmission_date",
+        )
 
-        self.required_if(
-            DEAD,
-            field='termination_reason',
-            field_required='death_date')
+        self.required_if(DEAD, field="termination_reason", field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
-            field='termination_reason',
-            field_required='consent_withdrawal_reason')
+            field="termination_reason",
+            field_required="consent_withdrawal_reason",
+        )
 
         self.applicable_if(
             CONSENT_WITHDRAWAL,
-            field='termination_reason',
-            field_applicable='willing_to_complete_10w')
+            field="termination_reason",
+            field_applicable="willing_to_complete_10w",
+        )
 
         self.applicable_if(
-            'care_transferred_to_another_institution',
-            field='termination_reason',
-            field_applicable='willing_to_complete_centre')
+            "care_transferred_to_another_institution",
+            field="termination_reason",
+            field_applicable="willing_to_complete_centre",
+        )
 
         self.required_if_true(
             condition=(
-                self.cleaned_data.get('willing_to_complete_10w') == YES
-                or self.cleaned_data.get('willing_to_complete_centre') == YES),
-            field_required='willing_to_complete_date')
+                self.cleaned_data.get("willing_to_complete_10w") == YES
+                or self.cleaned_data.get("willing_to_complete_centre") == YES
+            ),
+            field_required="willing_to_complete_date",
+        )
 
         self.applicable_if(
-            'late_exclusion_criteria_met',
-            field='termination_reason',
-            field_applicable='protocol_exclusion_criterion')
+            "late_exclusion_criteria_met",
+            field="termination_reason",
+            field_applicable="protocol_exclusion_criterion",
+        )
 
         self.required_if(
-            'included_in_error',
-            field='termination_reason',
-            field_required='included_in_error')
+            "included_in_error",
+            field="termination_reason",
+            field_required="included_in_error",
+        )
 
         self.required_if(
-            'included_in_error',
-            field='termination_reason',
-            field_required='included_in_error_date')
+            "included_in_error",
+            field="termination_reason",
+            field_required="included_in_error_date",
+        )
 
-        self.validate_other_specify(field='first_line_regimen')
+        self.validate_other_specify(field="first_line_regimen")
 
-        self.validate_other_specify(field='second_line_regimen')
+        self.validate_other_specify(field="second_line_regimen")
 
         self.not_applicable_if(
             NOT_APPLICABLE,
-            field='first_line_regimen',
-            field_applicable='first_line_choice')
+            field="first_line_regimen",
+            field_applicable="first_line_choice",
+        )
 
         self.required_if_true(
             not self.completed_week2 and self.drug_assignment == SINGLE_DOSE,
-            field_required='ambi_start_date',
-            required_msg='Field is required',
-            not_required_msg='Field is not required')
+            field_required="ambi_start_date",
+            required_msg="Field is required",
+            not_required_msg="Field is not required",
+        )
 
         self.required_if_true(
             not self.completed_week2 and self.drug_assignment == SINGLE_DOSE,
-            field_required='ambi_stop_date',
-            required_msg='Field is required',
-            not_required_msg='Field is not required')
+            field_required="ambi_stop_date",
+            required_msg="Field is required",
+            not_required_msg="Field is not required",
+        )
 
         self.required_if_true(
             not self.completed_week2 and self.drug_assignment == CONTROL,
-            field_required='ampho_start_date',
-            required_msg='Field is required',
-            not_required_msg='Field is not required')
+            field_required="ampho_start_date",
+            required_msg="Field is required",
+            not_required_msg="Field is not required",
+        )
 
         self.required_if_true(
             not self.completed_week2 and self.drug_assignment == CONTROL,
-            field_required='ampho_end_date',
-            required_msg='Field is required',
-            not_required_msg='Field is not required')
+            field_required="ampho_end_date",
+            required_msg="Field is required",
+            not_required_msg="Field is not required",
+        )
 
-        for field in ['flucy_start_date', 'flucy_stop_date']:
+        for field in ["flucy_start_date", "flucy_stop_date"]:
             self.required_if_true(
                 not self.completed_week2,
                 field_required=field,
-                required_msg='Week two not complete. Field is required',
-                not_required_msg='Week two complete. Field is not required')
+                required_msg="Week two not complete. Field is required",
+                not_required_msg="Week two complete. Field is not required",
+            )
 
-        for field in ['flucon_start_date', 'flucon_stop_date']:
+        for field in ["flucon_start_date", "flucon_stop_date"]:
             self.not_required_if_true(
                 self.completed_week2,
                 field=field,
-                msg='Week two complete. Field is not required')
+                msg="Week two complete. Field is not required",
+            )
 
         if self.completed_week2:
             self.m2m_selection_expected(
                 NOT_APPLICABLE,
-                m2m_field='drug_intervention',
-                error_msg='Week two complete. Select "Not Applicable" only.')
+                m2m_field="drug_intervention",
+                error_msg='Week two complete. Select "Not Applicable" only.',
+            )
             self.m2m_selection_expected(
                 NOT_APPLICABLE,
-                m2m_field='medicines',
-                error_msg='Week two complete. Select "Not Applicable" only.')
+                m2m_field="medicines",
+                error_msg='Week two complete. Select "Not Applicable" only.',
+            )
         else:
             self.m2m_selections_not_expected(
                 NOT_APPLICABLE,
-                m2m_field='drug_intervention',
-                error_msg=('Week two not complete, selection '
-                           '"Not Applicable" is invalid.'))
+                m2m_field="drug_intervention",
+                error_msg=(
+                    "Week two not complete, selection " '"Not Applicable" is invalid.'
+                ),
+            )
             self.m2m_selections_not_expected(
                 NOT_APPLICABLE,
-                m2m_field='medicines',
-                error_msg=('Week two not complete, selection '
-                           '"Not Applicable" is invalid.'))
+                m2m_field="medicines",
+                error_msg=(
+                    "Week two not complete, selection " '"Not Applicable" is invalid.'
+                ),
+            )
 
-        self.m2m_single_selection_if(
-            NONE, m2m_field='drug_intervention')
-
-        self.m2m_other_specify(
-            'antibiotics',
-            m2m_field='drug_intervention',
-            field_other='antibiotic')
+        self.m2m_single_selection_if(NONE, m2m_field="drug_intervention")
 
         self.m2m_other_specify(
-            OTHER,
-            m2m_field='drug_intervention',
-            field_other='drug_intervention_other')
+            "antibiotics", m2m_field="drug_intervention", field_other="antibiotic"
+        )
 
         self.m2m_other_specify(
-            OTHER,
-            m2m_field='antibiotic',
-            field_other='antibiotic_other')
-
-        self.m2m_single_selection_if(
-            NONE, m2m_field='medicines')
+            OTHER, m2m_field="drug_intervention", field_other="drug_intervention_other"
+        )
 
         self.m2m_other_specify(
-            OTHER,
-            m2m_field='medicines',
-            field_other='medicine_other')
+            OTHER, m2m_field="antibiotic", field_other="antibiotic_other"
+        )
 
-        self.required_if(
-            YES,
-            field='blood_received',
-            field_required='units')
+        self.m2m_single_selection_if(NONE, m2m_field="medicines")
+
+        self.m2m_other_specify(
+            OTHER, m2m_field="medicines", field_other="medicine_other"
+        )
+
+        self.required_if(YES, field="blood_received", field_required="units")
 
     @property
     def week2_model_cls(self):
@@ -180,20 +192,19 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
     def completed_week2(self):
         """Returns True if subject has completed week2 form.
         """
-        subject_identifier = self.cleaned_data.get('subject_identifier')
+        subject_identifier = self.cleaned_data.get("subject_identifier")
         try:
             completed_week2 = self.week2_model_cls.objects.get(
-                subject_visit__subject_identifier=subject_identifier)
+                subject_visit__subject_identifier=subject_identifier
+            )
         except ObjectDoesNotExist:
             completed_week2 = False
         return completed_week2
 
     @property
     def drug_assignment(self):
-        RandomizationList = django_apps.get_model(
-            'ambition_rando.randomizationlist')
-        subject_identifier = self.cleaned_data.get('subject_identifier')
-        obj = RandomizationList.objects.get(
-            subject_identifier=subject_identifier)
-        row = {'drug_assignment': obj.drug_assignment}
+        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
+        subject_identifier = self.cleaned_data.get("subject_identifier")
+        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
+        row = {"drug_assignment": obj.drug_assignment}
         return get_drug_assignment(row)

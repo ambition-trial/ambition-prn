@@ -6,29 +6,25 @@ from .study_termination_conclusion import StudyTerminationConclusion
 
 
 class MissedDosesManager(models.Manager):
-
-    def get_by_natural_key(self, day_missed, missed_reason,
-                           action_identifier):
+    def get_by_natural_key(self, day_missed, missed_reason, action_identifier):
         return self.get(
             day_missed=day_missed,
             missed_reason=missed_reason,
-            action_identifier=action_identifier)
+            action_identifier=action_identifier,
+        )
 
 
 class MissedDosesModelMixin(models.Model):
 
     study_termination_conclusion = models.ForeignKey(
-        StudyTerminationConclusion, on_delete=models.PROTECT)
+        StudyTerminationConclusion, on_delete=models.PROTECT
+    )
 
-    day_missed = models.IntegerField(
-        verbose_name='Day missed:',
-        choices=DAYS_MISSED)
+    day_missed = models.IntegerField(verbose_name="Day missed:", choices=DAYS_MISSED)
 
     missed_reason = models.CharField(
-        verbose_name='Reason:',
-        max_length=25,
-        blank=True,
-        choices=REASON_DRUG_MISSED)
+        verbose_name="Reason:", max_length=25, blank=True, choices=REASON_DRUG_MISSED
+    )
 
     missed_reason_other = OtherCharField()
 

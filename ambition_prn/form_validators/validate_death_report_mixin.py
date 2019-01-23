@@ -11,7 +11,7 @@ from edc_constants.constants import DEAD
 
 class ValidateDeathReportMixin:
 
-    death_report_model = 'ambition_prn.deathreport'
+    death_report_model = "ambition_prn.deathreport"
 
     @property
     def death_report_model_cls(self):
@@ -26,28 +26,39 @@ class ValidateDeathReportMixin:
         Note: uses __date field lookup. If using mysql don't forget
         to load timezone info.
         """
-        subject_identifier = self.cleaned_data.get(
-            'subject_identifier') or self.instance.subject_identifier
+        subject_identifier = (
+            self.cleaned_data.get("subject_identifier")
+            or self.instance.subject_identifier
+        )
 
         try:
             death_report = self.death_report_model_cls.objects.get(
-                subject_identifier=subject_identifier)
+                subject_identifier=subject_identifier
+            )
         except ObjectDoesNotExist:
-            if self.cleaned_data.get('termination_reason') == DEAD:
-                raise forms.ValidationError({
-                    'termination_reason':
-                    'Patient is deceased, please complete death report form first.'})
+            if self.cleaned_data.get("termination_reason") == DEAD:
+                raise forms.ValidationError(
+                    {
+                        "termination_reason": "Patient is deceased, please complete "
+                        "death report form first."
+                    }
+                )
         else:
             local_death_datetime = arrow.get(
-                death_report.death_datetime, tz.gettz(settings.TIME_ZONE))
-            if (self.cleaned_data.get('death_date')
-                    and (local_death_datetime.date() != self.cleaned_data.get(
-                        'death_date'))):
+                death_report.death_datetime, tz.gettz(settings.TIME_ZONE)
+            )
+            if self.cleaned_data.get("death_date") and (
+                local_death_datetime.date() != self.cleaned_data.get("death_date")
+            ):
                 expected = local_death_datetime.date().strftime(
-                    convert_php_dateformat(settings.SHORT_DATE_FORMAT))
-                got = self.cleaned_data.get('death_date').strftime(
-                    convert_php_dateformat(settings.SHORT_DATE_FORMAT))
-                raise forms.ValidationError({
-                    'death_date':
-                    'Date does not match Death Report. '
-                    f'Expected {expected}. Got {got}.'})
+                    convert_php_dateformat(settings.SHORT_DATE_FORMAT)
+                )
+                got = self.cleaned_data.get("death_date").strftime(
+                    convert_php_dateformat(settings.SHORT_DATE_FORMAT)
+                )
+                raise forms.ValidationError(
+                    {
+                        "death_date": "Date does not match Death Report. "
+                        f"Expected {expected}. Got {got}."
+                    }
+                )
