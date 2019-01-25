@@ -81,7 +81,8 @@ class StudyTerminationConclusion(
         verbose_name="Reason for study termination",
         max_length=75,
         choices=REASON_STUDY_TERMINATED,
-        help_text=("If included in error, be sure to fill in protocol deviation form."),
+        help_text=(
+            "If included in error, be sure to fill in protocol deviation form."),
     )
 
     death_date = models.DateField(
@@ -174,7 +175,7 @@ class StudyTerminationConclusion(
     second_line_regimen_other = OtherCharField()
 
     arvs_switch_date = models.DateField(
-        verbose_name="ARV switch date",
+        verbose_name="ARV start/switch date",
         blank=True,
         null=True,
         validators=[date_not_future],
