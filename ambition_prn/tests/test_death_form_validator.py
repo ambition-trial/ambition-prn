@@ -21,8 +21,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
         self.assertIn("tb_site", form_validator._errors)
 
     def test_tb_site_ok(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS,
-                        "tb_site": "meningitis"}
+        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -36,8 +35,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
         self.assertIn("cause_of_death_other", form_validator._errors)
 
     def test_cause_of_death_other_ok(self):
-        cleaned_data = {"cause_of_death": OTHER,
-                        "cause_of_death_other": "blah"}
+        cleaned_data = {"cause_of_death": OTHER, "cause_of_death_other": "blah"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -57,8 +55,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
         self.assertIn("tb_site", form_validator._errors)
 
     def test_cause_of_death_study_doc_opinion_no(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS,
-                        "tb_site": "meningitis"}
+        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -72,8 +69,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
         self.assertIn("tb_site", form_validator._errors)
 
     def test_cause_of_death_study_tmg1_tb_site_specified_valid(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS,
-                        "tb_site": "meningitis"}
+        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -87,8 +83,7 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
         self.assertIn("tb_site", form_validator._errors)
 
     def test_cause_of_death_study_tmg2_tb_site_specified_valid(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS,
-                        "tb_site": "meningitis"}
+        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -101,7 +96,8 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
         dte = get_utcnow() + relativedelta(days=4)
 
         subject_identifier = self.create_subject(
-            consent_datetime=dte - relativedelta(days=3))
+            consent_datetime=dte - relativedelta(days=3)
+        )
 
         cleaned_data = {
             "subject_identifier": subject_identifier,

@@ -38,9 +38,9 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
     def tearDownClass(cls):
         super().tearDownClass()
 
-#     def setUp(self):
-#         super().setUp()
-#         import_holidays()
+    #     def setUp(self):
+    #         super().setUp()
+    #         import_holidays()
 
     def test_date_not_required_if_week2_complete(self):
         subject_identifier = self.create_subject()
@@ -204,8 +204,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             cleaned_data=cleaned_data
         )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("readmission_after_initial_discharge",
-                      form_validator._errors)
+        self.assertIn("readmission_after_initial_discharge", form_validator._errors)
 
     def ttest_no_discharged_after_initial_admission_no_readmission_valid(self):
         subject_identifier = self.create_subject()
