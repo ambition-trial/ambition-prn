@@ -21,14 +21,13 @@ if settings.APP_NAME == "ambition_prn":
     from dateutil.tz import gettz
     from edc_appointment.appointment_config import AppointmentConfig
     from edc_appointment.apps import AppConfig as BaseEdcAppointmentAppConfig
-    from edc_constants.constants import FAILED_ELIGIBILITY
     from edc_facility.apps import AppConfig as BaseEdcFacilityAppConfig
     from edc_identifier.apps import AppConfig as BaseEdcIdentifierAppConfig
     from edc_lab.apps import AppConfig as BaseEdcLabAppConfig
     from edc_metadata.apps import AppConfig as BaseEdcMetadataAppConfig
     from edc_protocol.apps import AppConfig as BaseEdcProtocolAppConfig
     from edc_visit_tracking.constants import MISSED_VISIT
-    from edc_visit_tracking.constants import SCHEDULED, UNSCHEDULED, LOST_VISIT
+    from edc_visit_tracking.constants import SCHEDULED, UNSCHEDULED
 
     class EdcProtocolAppConfig(BaseEdcProtocolAppConfig):
         protocol = "BHP092"
@@ -59,7 +58,7 @@ if settings.APP_NAME == "ambition_prn":
     class EdcMetadataAppConfig(BaseEdcMetadataAppConfig):
         reason_field = {"ambition_subject.subjectvisit": "reason"}
         create_on_reasons = [SCHEDULED, UNSCHEDULED]
-        delete_on_reasons = [LOST_VISIT, FAILED_ELIGIBILITY, MISSED_VISIT]
+        delete_on_reasons = [MISSED_VISIT]
 
     class EdcAppointmentAppConfig(BaseEdcAppointmentAppConfig):
         default_appt_type = "hospital"

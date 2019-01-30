@@ -4,4 +4,3 @@ ambition-sites
 ambition-rando
 edc-reportable
 edc-subject-dashboard
-git+https://github.com/treyhunner/django-simple-history@master

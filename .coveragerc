@@ -6,3 +6,5 @@ omit =
     */migrations/*
     */mommy_*
     venv/*
+    runtests.py
+    .tox/*
