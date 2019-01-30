@@ -1,7 +1,6 @@
 from ambition_rando.tests import AmbitionTestCaseMixin
 from django.test import TestCase, tag
 from django.test.utils import override_settings
-from edc_registration.models import RegisteredSubject
 from django_collect_offline.models import OutgoingTransaction
 from django_collect_offline.tests import OfflineTestHelper
 from model_mommy import mommy
@@ -13,8 +12,7 @@ class TestNaturalKey(AmbitionTestCaseMixin, TestCase):
     offline_test_helper = OfflineTestHelper()
 
     def setUp(self):
-        self.subject_identifier = "12345"
-        RegisteredSubject.objects.create(subject_identifier=self.subject_identifier)
+        self.subject_identifier = self.create_subject()
 
     def test_natural_key_attrs(self):
         self.offline_test_helper.offline_test_natural_key_attr("ambition_prn")
