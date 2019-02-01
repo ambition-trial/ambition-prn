@@ -8,3 +8,5 @@ omit =
     venv/*
     runtests.py
     .tox/*
+    .eggs/*
+    /home/travis/virtualenv/*
