@@ -72,7 +72,7 @@ class DeathReportTmgAdmin(ModelAdminMixin, admin.ModelAdmin):
         action_flds.remove("action_identifier")
         fields = tuple(action_flds) + fields
         if obj:
-            fields = fields + ("death_report", )
+            fields = fields + ("death_report",)
         return fields
 
     def status(self, obj=None):
