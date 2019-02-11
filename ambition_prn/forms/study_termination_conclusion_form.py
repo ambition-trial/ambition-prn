@@ -2,13 +2,15 @@ from django import forms
 from edc_action_item.forms import ActionItemFormMixin
 from edc_base.sites.forms import SiteModelFormMixin
 from edc_form_validators import FormValidatorMixin
+from edc_visit_schedule.modelform_mixins import OffScheduleModelFormMixin
 
 from ..form_validators import StudyTerminationConclusionFormValidator
 from ..models import StudyTerminationConclusion
 
 
 class StudyTerminationConclusionForm(
-    SiteModelFormMixin, FormValidatorMixin, ActionItemFormMixin, forms.ModelForm
+    SiteModelFormMixin, FormValidatorMixin, ActionItemFormMixin,
+    OffScheduleModelFormMixin, forms.ModelForm
 ):
 
     form_validator_cls = StudyTerminationConclusionFormValidator

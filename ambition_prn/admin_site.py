@@ -9,3 +9,4 @@ class AdminSite(DjangoAdminSite):
 
 
 ambition_prn_admin = AdminSite(name="ambition_prn_admin")
+ambition_prn_admin.disable_action('delete_selected')
