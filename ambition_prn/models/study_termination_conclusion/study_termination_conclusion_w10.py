@@ -34,8 +34,7 @@ class StudyTerminationConclusionW10(
         verbose_name="Reason for study termination",
         max_length=75,
         choices=REASON_STUDY_TERMINATED_W10,
-        help_text=(
-            "If included in error, be sure to fill in protocol deviation form."),
+        help_text=("If included in error, be sure to fill in protocol deviation form."),
     )
 
     death_date = models.DateField(
