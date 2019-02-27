@@ -9,8 +9,11 @@ from ..form_validators import StudyTerminationConclusionW10FormValidator
 
 
 class StudyTerminationConclusionW10Form(
-    SiteModelFormMixin, FormValidatorMixin, OffScheduleModelFormMixin,
-    ActionItemFormMixin, forms.ModelForm
+    SiteModelFormMixin,
+    FormValidatorMixin,
+    OffScheduleModelFormMixin,
+    ActionItemFormMixin,
+    forms.ModelForm,
 ):
 
     form_validator_cls = StudyTerminationConclusionW10FormValidator
