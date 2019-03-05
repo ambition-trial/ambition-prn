@@ -4,9 +4,9 @@ from edc_action_item.managers import (
     ActionIdentifierManager,
 )
 from edc_action_item.models import ActionModelMixin
-from edc_base.model_mixins import BaseUuidModel
-from edc_base.model_validators import date_not_future
 from edc_identifier.model_mixins import TrackingModelMixin
+from edc_model.models import BaseUuidModel
+from edc_model.validators import date_not_future
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
 from ...constants import STUDY_TERMINATION_CONCLUSION_ACTION_W10

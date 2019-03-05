@@ -8,9 +8,9 @@ import django_revision.revision_field
 import edc_model_fields.fields.hostname_modification_field
 import edc_model_fields.fields.userfield
 import edc_model_fields.fields.uuid_auto_field
-import edc_base.model_validators.date
-import edc_base.sites.managers
-import edc_base.utils
+import edc_model.validators.date
+import edc_sites.models
+import edc_utils
 import edc_protocol.validators
 
 
@@ -28,11 +28,11 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created",
-                    models.DateTimeField(blank=True, default=edc_base.utils.get_utcnow),
+                    models.DateTimeField(blank=True, default=edc_utils.date.get_utcnow),
                 ),
                 (
                     "modified",
-                    models.DateTimeField(blank=True, default=edc_base.utils.get_utcnow),
+                    models.DateTimeField(blank=True, default=edc_utils.date.get_utcnow),
                 ),
                 (
                     "user_created",
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
                     models.DateTimeField(
                         blank=True,
                         null=True,
-                        validators=[edc_base.model_validators.date.datetime_not_future],
+                        validators=[edc_model.validators.date.datetime_not_future],
                         verbose_name="Date and time report closed.",
                     ),
                 ),
@@ -121,10 +121,10 @@ class Migration(migrations.Migration):
                 (
                     "report_datetime",
                     models.DateTimeField(
-                        default=edc_base.utils.get_utcnow,
+                        default=edc_utils.date.get_utcnow,
                         validators=[
                             edc_protocol.validators.datetime_not_before_study_start,
-                            edc_base.model_validators.date.datetime_not_future,
+                            edc_model.validators.date.datetime_not_future,
                         ],
                         verbose_name="Report Date",
                     ),
@@ -199,18 +199,18 @@ class Migration(migrations.Migration):
                 "verbose_name": "Death Report TMG",
                 "verbose_name_plural": "Death Report TMG",
             },
-            managers=[("on_site", edc_base.sites.managers.CurrentSiteManager())],
+            managers=[("on_site", edc_sites.models.CurrentSiteManager())],
         ),
         migrations.CreateModel(
             name="HistoricalDeathReportTmg",
             fields=[
                 (
                     "created",
-                    models.DateTimeField(blank=True, default=edc_base.utils.get_utcnow),
+                    models.DateTimeField(blank=True, default=edc_utils.date.get_utcnow),
                 ),
                 (
                     "modified",
-                    models.DateTimeField(blank=True, default=edc_base.utils.get_utcnow),
+                    models.DateTimeField(blank=True, default=edc_utils.date.get_utcnow),
                 ),
                 (
                     "user_created",
@@ -285,7 +285,7 @@ class Migration(migrations.Migration):
                     models.DateTimeField(
                         blank=True,
                         null=True,
-                        validators=[edc_base.model_validators.date.datetime_not_future],
+                        validators=[edc_model.validators.date.datetime_not_future],
                         verbose_name="Date and time report closed.",
                     ),
                 ),
@@ -298,10 +298,10 @@ class Migration(migrations.Migration):
                 (
                     "report_datetime",
                     models.DateTimeField(
-                        default=edc_base.utils.get_utcnow,
+                        default=edc_utils.date.get_utcnow,
                         validators=[
                             edc_protocol.validators.datetime_not_before_study_start,
-                            edc_base.model_validators.date.datetime_not_future,
+                            edc_model.validators.date.datetime_not_future,
                         ],
                         verbose_name="Report Date",
                     ),
@@ -458,10 +458,10 @@ class Migration(migrations.Migration):
             model_name="deathreport",
             name="report_datetime",
             field=models.DateTimeField(
-                default=edc_base.utils.get_utcnow,
+                default=edc_utils.date.get_utcnow,
                 validators=[
                     edc_protocol.validators.datetime_not_before_study_start,
-                    edc_base.model_validators.date.datetime_not_future,
+                    edc_model.validators.date.datetime_not_future,
                 ],
                 verbose_name="Report Date",
             ),
@@ -520,10 +520,10 @@ class Migration(migrations.Migration):
             model_name="historicaldeathreport",
             name="report_datetime",
             field=models.DateTimeField(
-                default=edc_base.utils.get_utcnow,
+                default=edc_utils.date.get_utcnow,
                 validators=[
                     edc_protocol.validators.datetime_not_before_study_start,
-                    edc_base.model_validators.date.datetime_not_future,
+                    edc_model.validators.date.datetime_not_future,
                 ],
                 verbose_name="Report Date",
             ),

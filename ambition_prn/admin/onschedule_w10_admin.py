@@ -1,4 +1,5 @@
 from django.contrib import admin
+from edc_model_admin import SimpleHistoryAdmin
 
 from ..admin_site import ambition_prn_admin
 from ..models import OnScheduleW10
@@ -6,7 +7,7 @@ from .modeladmin_mixins import ModelAdminMixin
 
 
 @admin.register(OnScheduleW10, site=ambition_prn_admin)
-class OnScheduleW10Admin(ModelAdminMixin, admin.ModelAdmin):
+class OnScheduleW10Admin(ModelAdminMixin, SimpleHistoryAdmin):
 
     instructions = None
     fields = ("subject_identifier", "onschedule_datetime")

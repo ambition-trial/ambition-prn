@@ -4,20 +4,16 @@ from edc_action_item.managers import (
     ActionIdentifierManager,
 )
 from edc_action_item.models import ActionModelMixin
-from edc_base.model_mixins import BaseUuidModel
-from edc_base.sites import SiteModelMixin
-from edc_base.model_validators import datetime_not_future
-from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO, NOT_APPLICABLE
 from edc_identifier.model_mixins import TrackingModelMixin
+from edc_model import REPORT_STATUS
+from edc_model.models import BaseUuidModel
+from edc_model.validators import datetime_not_future
+from edc_sites.models import SiteModelMixin
+from edc_utils import get_utcnow
 
 from ..constants import PROTOCOL_DEVIATION_VIOLATION_ACTION
-from ..choices import (
-    PROTOCOL_VIOLATION,
-    ACTION_REQUIRED,
-    DEVIATION_VIOLATION,
-    REPORT_STATUS,
-)
+from ..choices import PROTOCOL_VIOLATION, ACTION_REQUIRED, DEVIATION_VIOLATION
 
 
 class ProtocolDeviationViolation(

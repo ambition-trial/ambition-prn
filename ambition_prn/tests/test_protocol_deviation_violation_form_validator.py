@@ -1,9 +1,9 @@
 from ambition_rando.tests import AmbitionTestCaseMixin
 from django import forms
 from django.core.exceptions import ValidationError
-from django.test import TestCase, tag
-from edc_base.utils import get_utcnow
+from django.test import TestCase, tag  # noqa
 from edc_constants.constants import YES, NO, OTHER
+from edc_utils import get_utcnow
 
 from ..constants import DEVIATION, VIOLATION, MEDICATION_NONCOMPLIANCE
 from ..form_validators import ProtocolDeviationViolationFormValidator
@@ -80,7 +80,8 @@ class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
         """ Asserts safety_impact has valid
             safety_impact_details provided.
          """
-        cleaned_data = {"safety_impact": YES, "safety_impact_details": "explanation"}
+        cleaned_data = {"safety_impact": YES,
+                        "safety_impact_details": "explanation"}
         protocol_dev = ProtocolDeviationViolationFormValidator(
             cleaned_data=cleaned_data
         )
@@ -106,7 +107,8 @@ class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
         """ Asserts safety_impact has valid
             safety_impact_details provided.
          """
-        cleaned_data = {"safety_impact": NO, "safety_impact_details": "details"}
+        cleaned_data = {"safety_impact": NO,
+                        "safety_impact_details": "details"}
         form_validator = ProtocolDeviationViolationFormValidator(
             cleaned_data=cleaned_data
         )
@@ -199,7 +201,8 @@ class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("corrective_action", form_validator._errors)
 
-        cleaned_data = {"corrective_action_datetime": None, "corrective_action": "blah"}
+        cleaned_data = {"corrective_action_datetime": None,
+                        "corrective_action": "blah"}
         form_validator = ProtocolDeviationViolationFormValidator(
             cleaned_data=cleaned_data
         )

@@ -11,8 +11,8 @@ from edc_model_admin import (
 )
 from edc_metadata import NextFormGetter
 from edc_notification import NotificationModelAdminMixin
+from edc_sites.admin import ModelAdminSiteMixin
 from edc_subject_dashboard import ModelAdminSubjectDashboardMixin
-from edc_base.sites.admin import ModelAdminSiteMixin
 
 
 class ModelAdminMixin(
