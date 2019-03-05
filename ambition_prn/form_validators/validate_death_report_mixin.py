@@ -5,8 +5,8 @@ from django import forms
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from edc_base.utils import convert_php_dateformat
 from edc_constants.constants import DEAD
+from edc_utils import convert_php_dateformat
 
 
 class ValidateDeathReportMixin:

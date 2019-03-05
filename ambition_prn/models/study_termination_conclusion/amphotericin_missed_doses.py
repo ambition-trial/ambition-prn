@@ -1,5 +1,4 @@
-from edc_base.model_managers import HistoricalRecords
-from edc_base.model_mixins import BaseUuidModel
+from edc_model.models import BaseUuidModel, HistoricalRecords
 
 from .missed_doses_model_mixin import MissedDosesManager, MissedDosesModelMixin
 

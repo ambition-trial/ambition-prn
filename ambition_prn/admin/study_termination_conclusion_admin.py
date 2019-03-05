@@ -2,7 +2,7 @@ from copy import copy
 from django.contrib import admin
 from edc_action_item import action_fieldset_tuple, action_fields
 from edc_model_admin import TabularInlineMixin
-from edc_model_admin import audit_fieldset_tuple
+from edc_model_admin import audit_fieldset_tuple, SimpleHistoryAdmin
 
 from ..admin_site import ambition_prn_admin
 from ..forms import AmphotericinMissedDosesForm
@@ -80,7 +80,7 @@ class FlucytosineMissedDosesInline(TabularInlineMixin, admin.TabularInline):
 
 
 @admin.register(StudyTerminationConclusion, site=ambition_prn_admin)
-class StudyTerminationConclusionAdmin(ModelAdminMixin, admin.ModelAdmin):
+class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
 
     form = StudyTerminationConclusionForm
 

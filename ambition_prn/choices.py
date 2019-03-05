@@ -110,12 +110,6 @@ REASON_STUDY_TERMINATED_W10 = (
     ("included_in_error", "Included in error"),
 )
 
-REPORT_STATUS = (
-    (OPEN, "Open. Some information is still pending."),
-    (CLOSED, "Closed. This report is complete"),
-)
-
-
 SECOND_ARV_REGIMEN = (
     (NOT_APPLICABLE, "Not applicable"),
     (
