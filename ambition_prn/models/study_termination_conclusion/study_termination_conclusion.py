@@ -3,10 +3,6 @@ from ambition_subject.model_mixins import BloodTransfusionModelMixin
 from ambition_subject.model_mixins import MedAndDrugInterventionModelMixin
 from ambition_subject.model_mixins import StudyMedicationModelMixin
 from django.db import models
-from edc_action_item.managers import (
-    ActionIdentifierSiteManager,
-    ActionIdentifierManager,
-)
 from edc_action_item.models import ActionModelMixin
 from edc_constants.choices import YES_NO, YES_NO_NA, NOT_APPLICABLE
 from edc_identifier.model_mixins import TrackingModelMixin
@@ -18,9 +14,11 @@ from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 from ...constants import STUDY_TERMINATION_CONCLUSION_ACTION
 from ...choices import FIRST_ARV_REGIMEN, FIRST_LINE_REGIMEN, SECOND_ARV_REGIMEN
 from ...choices import REASON_STUDY_TERMINATED, YES_NO_ALREADY
+from .base_study_termination import BaseStudyTerminationConclusion
 
 
 class StudyTerminationConclusion(
+    BaseStudyTerminationConclusion,
     OffScheduleModelMixin,
     StudyMedicationModelMixin,
     MedAndDrugInterventionModelMixin,
@@ -35,13 +33,6 @@ class StudyTerminationConclusion(
     tracking_identifier_prefix = "ST"
 
     subject_identifier = models.CharField(max_length=50, unique=True)
-
-    last_study_fu_date = models.DateField(
-        verbose_name="Date of last research follow up (if different):",
-        validators=[date_not_future],
-        blank=True,
-        null=True,
-    )
 
     discharged_after_initial_admission = models.CharField(
         verbose_name="Was the patient discharged after initial admission?",
@@ -81,21 +72,8 @@ class StudyTerminationConclusion(
         verbose_name="Reason for study termination",
         max_length=75,
         choices=REASON_STUDY_TERMINATED,
-        help_text=("If included in error, be sure to fill in protocol deviation form."),
-    )
-
-    death_date = models.DateField(
-        verbose_name="Date of Death",
-        validators=[date_not_future],
-        blank=True,
-        null=True,
-    )
-
-    consent_withdrawal_reason = models.CharField(
-        verbose_name="Reason for withdrawing consent",
-        max_length=75,
-        blank=True,
-        null=True,
+        help_text=(
+            "If included in error, be sure to fill in protocol deviation form."),
     )
 
     willing_to_complete_10w = models.CharField(
@@ -195,17 +173,16 @@ class StudyTerminationConclusion(
         Day14Medication, verbose_name="Medicines on study termination day:"
     )
 
-    on_site = ActionIdentifierSiteManager()
-
-    objects = ActionIdentifierManager()
+    on_study_drug = models.CharField(
+        verbose_name="Has the patient started 'study' drug",
+        max_length=25,
+        choices=YES_NO,
+    )
 
     def save(self, *args, **kwargs):
         if not self.last_study_fu_date:
             self.last_study_fu_date = self.offschedule_datetime.date()
         super().save(*args, **kwargs)
-
-    def natural_key(self):
-        return (self.action_identifier,)
 
     class Meta:
         verbose_name = "Study Termination/Conclusion"

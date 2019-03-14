@@ -36,7 +36,8 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_required="readmission_date",
         )
 
-        self.required_if(DEAD, field="termination_reason", field_required="death_date")
+        self.required_if(DEAD, field="termination_reason",
+                         field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
@@ -92,48 +93,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_applicable="first_line_choice",
         )
 
-        self.required_if_true(
-            not self.completed_week2 and self.drug_assignment == SINGLE_DOSE,
-            field_required="ambi_start_date",
-            required_msg="Field is required",
-            not_required_msg="Field is not required",
-        )
-
-        self.required_if_true(
-            not self.completed_week2 and self.drug_assignment == SINGLE_DOSE,
-            field_required="ambi_stop_date",
-            required_msg="Field is required",
-            not_required_msg="Field is not required",
-        )
-
-        self.required_if_true(
-            not self.completed_week2 and self.drug_assignment == CONTROL,
-            field_required="ampho_start_date",
-            required_msg="Field is required",
-            not_required_msg="Field is not required",
-        )
-
-        self.required_if_true(
-            not self.completed_week2 and self.drug_assignment == CONTROL,
-            field_required="ampho_end_date",
-            required_msg="Field is required",
-            not_required_msg="Field is not required",
-        )
-
-        for field in ["flucy_start_date", "flucy_stop_date"]:
-            self.required_if_true(
-                not self.completed_week2,
-                field_required=field,
-                required_msg="Week two not complete. Field is required",
-                not_required_msg="Week two complete. Field is not required",
-            )
-
-        for field in ["flucon_start_date", "flucon_stop_date"]:
-            self.not_required_if_true(
-                self.completed_week2,
-                field=field,
-                msg="Week two complete. Field is not required",
-            )
+        self.validate_part_three()
 
         if self.completed_week2:
             self.m2m_selection_expected(
@@ -184,6 +144,53 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
         self.required_if(YES, field="blood_received", field_required="units")
 
+    def validate_part_three(self):
+        """Raise if on drug but dates not provided.
+        """
+        if self.cleaned_data.get("on_study_drug") == YES:
+            self.required_if_true(
+                not self.completed_week2 and self.assignment == SINGLE_DOSE,
+                field_required="ambi_start_date",
+                required_msg="Field is required",
+                not_required_msg="Field is not required",
+            )
+
+            self.required_if_true(
+                not self.completed_week2 and self.assignment == SINGLE_DOSE,
+                field_required="ambi_stop_date",
+                required_msg="Field is required",
+                not_required_msg="Field is not required",
+            )
+
+            self.required_if_true(
+                not self.completed_week2 and self.assignment == CONTROL,
+                field_required="ampho_start_date",
+                required_msg="Field is required",
+                not_required_msg="Field is not required",
+            )
+
+            self.required_if_true(
+                not self.completed_week2 and self.assignment == CONTROL,
+                field_required="ampho_end_date",
+                required_msg="Field is required",
+                not_required_msg="Field is not required",
+            )
+
+            for field in ["flucy_start_date", "flucy_stop_date"]:
+                self.required_if_true(
+                    not self.completed_week2,
+                    field_required=field,
+                    required_msg="Week two not complete. Field is required",
+                    not_required_msg="Week two complete. Field is not required",
+                )
+
+            for field in ["flucon_start_date", "flucon_stop_date"]:
+                self.not_required_if_true(
+                    self.completed_week2,
+                    field=field,
+                    msg="Week two complete. Field is not required",
+                )
+
     @property
     def week2_model_cls(self):
         return django_apps.get_model(self.week2_model)
@@ -202,9 +209,10 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
         return completed_week2
 
     @property
-    def drug_assignment(self):
-        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
+    def assignment(self):
+        RandomizationList = django_apps.get_model(
+            "ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
-        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
-        row = {"drug_assignment": obj.drug_assignment}
-        return get_drug_assignment(row)
+        obj = RandomizationList.objects.get(
+            subject_identifier=subject_identifier)
+        return get_drug_assignment({"drug_assignment": obj.drug_assignment})
