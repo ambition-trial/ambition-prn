@@ -33,10 +33,6 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
     def tearDownClass(cls):
         super().tearDownClass()
 
-    #     def setUp(self):
-    #         super().setUp()
-    #         import_holidays()
-
     def test_date_not_required_if_week2_complete(self):
         subject_identifier = self.create_subject()
         week2_date_fields = [
@@ -57,6 +53,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             with self.subTest(date_field=date_field):
                 cleaned_data = {
                     "subject_identifier": subject_identifier,
+                    "on_study_drug": YES,
                     date_field: get_utcnow(),
                 }
                 form_validator = StudyTerminationConclusionFormValidator(
@@ -78,6 +75,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             with self.subTest(date_field=date_field):
                 cleaned_data = {
                     "subject_identifier": subject_identifier,
+                    "on_study_drug": YES,
                     date_field: None,
                 }
                 form_validator = StudyTerminationConclusionFormValidator(
@@ -95,6 +93,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             with self.subTest(date_field=date_field):
                 cleaned_data = {
                     "subject_identifier": subject_identifier,
+                    "on_study_drug": YES,
                     date_field: None,
                 }
                 form_validator = StudyTerminationConclusionFormValidator(
@@ -561,3 +560,48 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             form_validator.validate()
         except ValidationError as e:
             self.fail(f"ValidationError unexpectedly raised. Got{e}")
+
+    @tag("1")
+    def test_not_required_if_not_on_study_drug(self):
+        subject_identifier = self.create_subject()
+        subject_identifier2 = self.create_subject()
+
+        for date_field in [
+            "ambi_start_date",
+            "ambi_stop_date",
+            "flucy_start_date",
+            "flucy_stop_date",
+        ]:
+            with self.subTest(date_field=date_field):
+                cleaned_data = {
+                    "subject_identifier": subject_identifier,
+                    "on_study_drug": NO,
+                    date_field: None,
+                }
+                form_validator = StudyTerminationConclusionFormValidator(
+                    cleaned_data=cleaned_data
+                )
+                try:
+                    form_validator.validate()
+                except ValidationError:
+                    self.fail('ValidationError unexpectedly raised')
+        subject_identifier = subject_identifier2
+        for date_field in [
+            "ampho_start_date",
+            "ampho_end_date",
+            "flucy_start_date",
+            "flucy_stop_date",
+        ]:
+            with self.subTest(date_field=date_field):
+                cleaned_data = {
+                    "subject_identifier": subject_identifier,
+                    "on_study_drug": NO,
+                    date_field: None,
+                }
+                form_validator = StudyTerminationConclusionFormValidator(
+                    cleaned_data=cleaned_data
+                )
+                try:
+                    form_validator.validate()
+                except ValidationError:
+                    self.fail('ValidationError unexpectedly raised')
