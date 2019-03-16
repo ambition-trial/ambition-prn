@@ -139,6 +139,7 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
             "Part3: Study medication",
             {
                 "fields": (
+                    "on_study_drug",
                     ("ampho_start_date", "ampho_end_date"),
                     ("flucon_start_date", "flucon_stop_date"),
                     ("flucy_start_date", "flucy_stop_date"),
@@ -197,7 +198,8 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
 
     list_filter = ("offschedule_datetime", "last_study_fu_date")
 
-    search_fields = ("subject_identifier", "action_identifier", "tracking_identifier")
+    search_fields = ("subject_identifier",
+                     "action_identifier", "tracking_identifier")
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)

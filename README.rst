@@ -1,4 +1,4 @@
-|pypi| |travis| |coverage|
+|pypi| |travis| |codecov| |downloads|
 
 ambition-prn
 ------------
@@ -12,5 +12,8 @@ PRN forms such as offstudy, protocol violation, etc
 .. |travis| image:: https://travis-ci.com/ambition-trial/ambition-prn.svg?branch=develop
     :target: https://travis-ci.com/ambition-trial/ambition-prn
     
-.. |coverage| image:: https://coveralls.io/repos/github/ambition-trial/ambition-prn/badge.svg?branch=develop
-    :target: https://coveralls.io/github/ambition-trial/ambition-prn?branch=develop
+.. |codecov| image:: https://codecov.io/gh/ambition-trial/ambition-prn/branch/develop/graph/badge.svg
+  :target: https://codecov.io/gh/ambition-trial/ambition-prn
+
+.. |downloads| image:: https://pepy.tech/badge/ambition-prn
+   :target: https://pepy.tech/project/ambition-prn
