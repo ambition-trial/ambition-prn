@@ -93,7 +93,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_applicable="first_line_choice",
         )
 
-        self.validate_part_three()
+        self.validate_study_drug_start_and_stop_dates()
 
         if self.completed_week2:
             self.m2m_selection_expected(
@@ -144,7 +144,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
         self.required_if(YES, field="blood_received", field_required="units")
 
-    def validate_part_three(self):
+    def validate_study_drug_start_and_stop_dates(self):
         """Raise if on drug but dates not provided.
         """
         if self.cleaned_data.get("on_study_drug") == YES:
