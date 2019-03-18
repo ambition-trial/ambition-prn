@@ -36,7 +36,8 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_required="readmission_date",
         )
 
-        self.required_if(DEAD, field="termination_reason", field_required="death_date")
+        self.required_if(DEAD, field="termination_reason",
+                         field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
@@ -145,6 +146,8 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     def validate_study_drug_start_and_stop_dates(self):
         """Raise if on drug but dates not provided.
+
+        See PART 3 in Admin
         """
         if self.completed_week2 or self.cleaned_data.get("on_study_drug") == NO:
 
@@ -161,10 +164,10 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
             for field_required in fields_not_required:
                 self.not_required_if(
-                    NO, field="on_study_drug", field_required=field_required
+                    YES, NO, field="on_study_drug", field_required=field_required
                 )
 
-        elif self.cleaned_data.get("on_study_drug") == YES:
+        elif not self.completed_week2 and self.cleaned_data.get("on_study_drug") == YES:
             self.required_if_true(
                 not self.completed_week2 and self.assignment == SINGLE_DOSE,
                 field_required="ambi_start_date",
@@ -227,7 +230,9 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     @property
     def assignment(self):
-        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
+        RandomizationList = django_apps.get_model(
+            "ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
-        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
+        obj = RandomizationList.objects.get(
+            subject_identifier=subject_identifier)
         return get_drug_assignment({"drug_assignment": obj.drug_assignment})

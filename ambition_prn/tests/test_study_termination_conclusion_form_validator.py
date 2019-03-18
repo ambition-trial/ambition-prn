@@ -33,8 +33,15 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
     def tearDownClass(cls):
         super().tearDownClass()
 
+    @tag("1")
     def test_date_not_required_if_week2_complete(self):
+
         subject_identifier = self.create_subject()
+        subject_visit = SubjectVisit.objects.create(
+            subject_identifier=subject_identifier
+        )
+        Week2.objects.create(subject_visit=subject_visit)
+
         week2_date_fields = [
             "ambi_start_date",
             "ambi_stop_date",
@@ -45,10 +52,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             "flucon_start_date",
             "flucon_stop_date",
         ]
-        subject_visit = SubjectVisit.objects.create(
-            subject_identifier=subject_identifier
-        )
-        Week2.objects.create(subject_visit=subject_visit)
+
         for date_field in week2_date_fields:
             with self.subTest(date_field=date_field):
                 cleaned_data = {
@@ -198,7 +202,8 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             cleaned_data=cleaned_data
         )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("readmission_after_initial_discharge", form_validator._errors)
+        self.assertIn("readmission_after_initial_discharge",
+                      form_validator._errors)
 
     def ttest_no_discharged_after_initial_admission_no_readmission_valid(self):
         subject_identifier = self.create_subject()
@@ -560,6 +565,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         except ValidationError as e:
             self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
+    @tag("1")
     def test_not_required_if_not_on_study_drug(self):
         subject_identifier = self.create_subject()
         subject_identifier2 = self.create_subject()
