@@ -5,11 +5,9 @@ from edc_model_admin import (
     ModelAdminFormInstructionsMixin,
     ModelAdminFormAutoNumberMixin,
     ModelAdminAuditFieldsMixin,
-    ModelAdminReadOnlyMixin,
     ModelAdminInstitutionMixin,
     ModelAdminRedirectOnDeleteMixin,
 )
-from edc_metadata import NextFormGetter
 from edc_notification import NotificationModelAdminMixin
 from edc_sites.admin import ModelAdminSiteMixin
 from edc_subject_dashboard import ModelAdminSubjectDashboardMixin
@@ -22,7 +20,6 @@ class ModelAdminMixin(
     ModelAdminFormAutoNumberMixin,
     ModelAdminRevisionMixin,
     ModelAdminAuditFieldsMixin,
-    ModelAdminReadOnlyMixin,
     ModelAdminInstitutionMixin,
     ModelAdminRedirectOnDeleteMixin,
     ModelAdminSubjectDashboardMixin,
@@ -32,7 +29,6 @@ class ModelAdminMixin(
     list_per_page = 10
     date_hierarchy = "modified"
     empty_value_display = "-"
-    next_form_getter_cls = NextFormGetter
     subject_dashboard_url = "subject_dashboard_url"
 
     post_url_on_delete_name = settings.DASHBOARD_URL_NAMES.get(subject_dashboard_url)

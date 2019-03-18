@@ -72,8 +72,7 @@ class StudyTerminationConclusion(
         verbose_name="Reason for study termination",
         max_length=75,
         choices=REASON_STUDY_TERMINATED,
-        help_text=(
-            "If included in error, be sure to fill in protocol deviation form."),
+        help_text=("If included in error, be sure to fill in protocol deviation form."),
     )
 
     willing_to_complete_10w = models.CharField(
