@@ -148,7 +148,8 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
                 "description": (
                     "<h5>Special Instructions</h5>Please only "
                     f"complete the below questions if "
-                    "the patient was terminated from the study "
+                    "the patient started study drug and "
+                    "was terminated from the study "
                     "before the completion of the Week 2 form."
                 ),
             },
@@ -183,6 +184,7 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
         "second_line_regimen": admin.VERTICAL,
         "first_line_choice": admin.VERTICAL,
         "blood_received": admin.VERTICAL,
+        "on_study_drug": admin.VERTICAL,
     }
 
     filter_horizontal = ("antibiotic", "medicines", "drug_intervention")
@@ -198,8 +200,7 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
 
     list_filter = ("offschedule_datetime", "last_study_fu_date")
 
-    search_fields = ("subject_identifier",
-                     "action_identifier", "tracking_identifier")
+    search_fields = ("subject_identifier", "action_identifier", "tracking_identifier")
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)

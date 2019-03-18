@@ -10,19 +10,18 @@ from model_mommy import mommy
 
 from ..forms import StudyTerminationConclusionForm
 from pprint import pprint
+from ambition_prn.models.death_report import DeathReport
 
 
 class TestStudyTerminationConclusion(AmbitionTestCaseMixin, TestCase):
     def setUp(self):
-        subject_screening = mommy.make_recipe(
-            "ambition_screening.subjectscreening")
+        subject_screening = mommy.make_recipe("ambition_screening.subjectscreening")
 
         options = {
             "screening_identifier": subject_screening.screening_identifier,
             "consent_datetime": get_utcnow,
         }
-        consent = mommy.make_recipe(
-            "ambition_subject.subjectconsent", **options)
+        consent = mommy.make_recipe("ambition_subject.subjectconsent", **options)
 
         self.subject_identifier = consent.subject_identifier
 
@@ -48,9 +47,17 @@ class TestStudyTerminationConclusion(AmbitionTestCaseMixin, TestCase):
         except ObjectDoesNotExist:
             self.fail("ActionItem unexpectedly does not exist")
 
-    def test_study_termination_form(self):
 
-        data = {"subject_identifier": self.subject_identifier}
-        form = StudyTerminationConclusionForm(data=data)
-        form.is_valid()
-        pprint(form.errors)
+#     @tag('1')
+#     def test_study_termination_form(self):
+#         options = {
+#             "subject_identifier": self.subject_identifier,
+#             "death_datetime": get_utcnow,
+#         }
+#         death_report = mommy.make_recipe(
+#             "ambition_prn.deathreport", **options)
+#
+#         data = {"subject_identifier": self.subject_identifier}
+#         form = StudyTerminationConclusionForm(data=data)
+#         form.is_valid()
+#         pprint(form.errors)

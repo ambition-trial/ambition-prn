@@ -3,7 +3,7 @@ from ambition_rando.utils import get_drug_assignment
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
 from edc_constants.constants import DEAD, NONE, OTHER
-from edc_constants.constants import YES, NOT_APPLICABLE
+from edc_constants.constants import YES, NO, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
 from ..constants import CONSENT_WITHDRAWAL
@@ -36,8 +36,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_required="readmission_date",
         )
 
-        self.required_if(DEAD, field="termination_reason",
-                         field_required="death_date")
+        self.required_if(DEAD, field="termination_reason", field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
@@ -147,7 +146,25 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
     def validate_study_drug_start_and_stop_dates(self):
         """Raise if on drug but dates not provided.
         """
-        if self.cleaned_data.get("on_study_drug") == YES:
+        if self.completed_week2 or self.cleaned_data.get("on_study_drug") == NO:
+
+            fields_not_required = [
+                "ampho_start_date",
+                "ampho_end_date",
+                "flucon_start_date",
+                "flucon_stop_date",
+                "flucy_start_date",
+                "flucy_stop_date",
+                "ambi_start_date",
+                "ambi_stop_date",
+            ]
+
+            for field_required in fields_not_required:
+                self.not_required_if(
+                    NO, field="on_study_drug", field_required=field_required
+                )
+
+        elif self.cleaned_data.get("on_study_drug") == YES:
             self.required_if_true(
                 not self.completed_week2 and self.assignment == SINGLE_DOSE,
                 field_required="ambi_start_date",
@@ -210,9 +227,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     @property
     def assignment(self):
-        RandomizationList = django_apps.get_model(
-            "ambition_rando.randomizationlist")
+        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
-        obj = RandomizationList.objects.get(
-            subject_identifier=subject_identifier)
+        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
         return get_drug_assignment({"drug_assignment": obj.drug_assignment})

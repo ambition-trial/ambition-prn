@@ -80,8 +80,7 @@ class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
         """ Asserts safety_impact has valid
             safety_impact_details provided.
          """
-        cleaned_data = {"safety_impact": YES,
-                        "safety_impact_details": "explanation"}
+        cleaned_data = {"safety_impact": YES, "safety_impact_details": "explanation"}
         protocol_dev = ProtocolDeviationViolationFormValidator(
             cleaned_data=cleaned_data
         )
@@ -107,8 +106,7 @@ class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
         """ Asserts safety_impact has valid
             safety_impact_details provided.
          """
-        cleaned_data = {"safety_impact": NO,
-                        "safety_impact_details": "details"}
+        cleaned_data = {"safety_impact": NO, "safety_impact_details": "details"}
         form_validator = ProtocolDeviationViolationFormValidator(
             cleaned_data=cleaned_data
         )
@@ -201,8 +199,7 @@ class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("corrective_action", form_validator._errors)
 
-        cleaned_data = {"corrective_action_datetime": None,
-                        "corrective_action": "blah"}
+        cleaned_data = {"corrective_action_datetime": None, "corrective_action": "blah"}
         form_validator = ProtocolDeviationViolationFormValidator(
             cleaned_data=cleaned_data
         )
