@@ -2,15 +2,17 @@ from copy import copy
 from django.contrib import admin
 from edc_action_item import action_fieldset_tuple, action_fields
 from edc_model_admin import audit_fieldset_tuple, SimpleHistoryAdmin
+from edc_model_admin.dashboard import ModelAdminSubjectDashboardMixin
 
 from ..admin_site import ambition_prn_admin
 from ..forms import ProtocolDeviationViolationForm
 from ..models import ProtocolDeviationViolation
-from .modeladmin_mixins import ModelAdminMixin
 
 
 @admin.register(ProtocolDeviationViolation, site=ambition_prn_admin)
-class ProtocolDeviationViolationAdmin(ModelAdminMixin, SimpleHistoryAdmin):
+class ProtocolDeviationViolationAdmin(
+    ModelAdminSubjectDashboardMixin, SimpleHistoryAdmin
+):
 
     form = ProtocolDeviationViolationForm
 
@@ -105,7 +107,7 @@ class ProtocolDeviationViolationAdmin(ModelAdminMixin, SimpleHistoryAdmin):
         fields = super().get_readonly_fields(request, obj)
         action_flds = copy(list(action_fields))
         action_flds.remove("action_identifier")
-        fields = tuple(action_flds) + fields
+        fields = list(action_flds) + list(fields)
         return fields
 
     def status(self, obj=None):
