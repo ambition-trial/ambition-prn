@@ -3,6 +3,7 @@ from django.contrib import admin
 from edc_action_item import action_fieldset_tuple, action_fields
 from edc_model_admin import TabularInlineMixin
 from edc_model_admin import audit_fieldset_tuple, SimpleHistoryAdmin
+from edc_model_admin.dashboard import ModelAdminSubjectDashboardMixin
 
 from ..admin_site import ambition_prn_admin
 from ..forms import AmphotericinMissedDosesForm
@@ -13,7 +14,6 @@ from ..forms import StudyTerminationConclusionForm
 from ..models import FluconazoleMissedDoses, AmphotericinMissedDoses
 from ..models import FlucytosineMissedDoses, SignificantDiagnoses
 from ..models import StudyTerminationConclusion
-from .modeladmin_mixins import ModelAdminMixin
 
 
 class SignificantDiagnosesInline(TabularInlineMixin, admin.TabularInline):
@@ -80,7 +80,9 @@ class FlucytosineMissedDosesInline(TabularInlineMixin, admin.TabularInline):
 
 
 @admin.register(StudyTerminationConclusion, site=ambition_prn_admin)
-class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
+class StudyTerminationConclusionAdmin(
+    ModelAdminSubjectDashboardMixin, SimpleHistoryAdmin
+):
 
     form = StudyTerminationConclusionForm
 
@@ -206,5 +208,5 @@ class StudyTerminationConclusionAdmin(ModelAdminMixin, SimpleHistoryAdmin):
         fields = super().get_readonly_fields(request, obj)
         action_flds = copy(list(action_fields))
         action_flds.remove("action_identifier")
-        fields = tuple(action_flds) + fields
+        fields = list(action_flds) + list(fields)
         return fields

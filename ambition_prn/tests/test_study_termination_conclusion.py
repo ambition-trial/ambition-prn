@@ -3,14 +3,10 @@ from ambition_visit_schedule.constants import DAY1
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase, tag  # noqa
 from edc_action_item.models.action_item import ActionItem
-from edc_appointment.models.appointment import Appointment
+from edc_appointment.models import Appointment
 from edc_utils import get_utcnow
 from edc_visit_tracking.constants import SCHEDULED
 from model_mommy import mommy
-
-from ..forms import StudyTerminationConclusionForm
-from pprint import pprint
-from ambition_prn.models.death_report import DeathReport
 
 
 class TestStudyTerminationConclusion(AmbitionTestCaseMixin, TestCase):
