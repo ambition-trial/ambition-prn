@@ -1,6 +1,9 @@
 import arrow
 
 from ambition_lists.models import OtherDrug
+from ambition_prn.constants import CONSENT_WITHDRAWAL
+from ambition_prn.form_validators import StudyTerminationConclusionFormValidator as Base
+from ambition_prn.models import DeathReport
 from ambition_rando.tests import AmbitionTestCaseMixin
 from datetime import date
 from django import forms
@@ -12,10 +15,7 @@ from edc_form_validators import M2M_SELECTION_ONLY, M2M_INVALID_SELECTION
 from edc_list_data import site_list_data
 from edc_utils import get_utcnow
 
-from ..constants import CONSENT_WITHDRAWAL
-from ..form_validators import StudyTerminationConclusionFormValidator as Base
-from ..models import DeathReport
-from .models import Week2, SubjectVisit
+from ..models import Week2, SubjectVisit
 
 
 class StudyTerminationConclusionFormValidator(Base):
@@ -202,7 +202,8 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             cleaned_data=cleaned_data
         )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("readmission_after_initial_discharge", form_validator._errors)
+        self.assertIn("readmission_after_initial_discharge",
+                      form_validator._errors)
 
     def ttest_no_discharged_after_initial_admission_no_readmission_valid(self):
         subject_identifier = self.create_subject()
