@@ -1,4 +1,4 @@
-from ambition_auth.group_names import TMG
+from ambition_permissions.group_names import TMG
 from ambition_prn.constants import DEATH_REPORT_TMG_ACTION
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import m2m_changed

@@ -30,21 +30,18 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         subject_identifier = self.create_subject()
         action = DeathReportAction(subject_identifier=subject_identifier)
         self.assertEqual(ActionItem.objects.all().count(), 1)
-        action_item = ActionItem.objects.get(
-            action_identifier=action.action_identifier)
+        action_item = ActionItem.objects.get(action_identifier=action.action_identifier)
 
         # fill on death report
         death_report = mommy.make_recipe(
             "ambition_prn.deathreport", subject_identifier=subject_identifier
         )
-        self.assertEqual(action.action_identifier,
-                         death_report.action_identifier)
+        self.assertEqual(action.action_identifier, death_report.action_identifier)
 
         # attempt to create a new action
         action = DeathReportAction(subject_identifier=subject_identifier)
         # show it just picks up existing action
-        self.assertEqual(action.action_identifier,
-                         action_item.action_identifier)
+        self.assertEqual(action.action_identifier, action_item.action_identifier)
 
         # try to fill in another death report, raises IntegrityError
         self.assertRaises(
@@ -58,8 +55,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
 
         subject_identifier = self.create_subject()
         action = DeathReportAction(subject_identifier=subject_identifier)
-        action_item = ActionItem.objects.get(
-            action_identifier=action.action_identifier)
+        action_item = ActionItem.objects.get(action_identifier=action.action_identifier)
         action_item_model_wrapper = ActionItemModelWrapper(action_item)
         helper = ActionItemHelper(
             action_item=action_item_model_wrapper.object,
@@ -67,8 +63,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         )
 
         self.assertTrue(
-            helper.reference_url.startswith(
-                f"/admin/ambition_prn/deathreport/add/")
+            helper.reference_url.startswith(f"/admin/ambition_prn/deathreport/add/")
         )
 
         death_report = mommy.make_recipe(
@@ -77,8 +72,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
 
         action = DeathReportAction(subject_identifier=subject_identifier)
 
-        action_item = ActionItem.objects.get(
-            action_identifier=action.action_identifier)
+        action_item = ActionItem.objects.get(action_identifier=action.action_identifier)
         action_item_model_wrapper = ActionItemModelWrapper(action_item)
         helper = ActionItemHelper(
             action_item=action_item_model_wrapper.object,
@@ -96,12 +90,10 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         mommy.make_recipe(
             "ambition_prn.deathreport", subject_identifier=subject_identifier
         )
-        names = [
-            obj.action_type.name for obj in ActionItem.objects.filter(status=NEW)]
+        names = [obj.action_type.name for obj in ActionItem.objects.filter(status=NEW)]
         names.sort()
         self.assertEqual(
-            names, ["submit-death-report-tmg",
-                    "submit-study-termination-conclusion"]
+            names, ["submit-death-report-tmg", "submit-study-termination-conclusion"]
         )
 
     def test_death_report_closes_action(self):
@@ -110,15 +102,13 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
         death_report = mommy.make_recipe(
             "ambition_prn.deathreport", subject_identifier=subject_identifier
         )
-        obj = ActionItem.objects.get(
-            action_identifier=death_report.action_identifier)
+        obj = ActionItem.objects.get(action_identifier=death_report.action_identifier)
         self.assertEqual(obj.status, CLOSED)
 
     def test_add_tmg_death_report_action_cause_matches(self):
 
         subject_identifier = self.create_subject()
-        death_report_action = DeathReportAction(
-            subject_identifier=subject_identifier)
+        death_report_action = DeathReportAction(subject_identifier=subject_identifier)
         death_report = mommy.make_recipe(
             "ambition_prn.deathreport",
             subject_identifier=subject_identifier,
@@ -145,11 +135,9 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             related_action_item=death_report_action.action_item,
             parent_action_item=death_report_action.action_item,
         )
-        self.assertEqual(death_report_tmg.parent_action_item,
-                         death_report.action_item)
+        self.assertEqual(death_report_tmg.parent_action_item, death_report.action_item)
 
-        self.assertEqual(death_report_tmg.related_action_item,
-                         death_report.action_item)
+        self.assertEqual(death_report_tmg.related_action_item, death_report.action_item)
 
         # assert a second TMG Death Report Action is NOT created
         # because the cause of death matches
@@ -163,8 +151,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
     def test_add_two_tmg_death_report_action_cause_not_matching(self):
 
         subject_identifier = self.create_subject()
-        death_report_action = DeathReportAction(
-            subject_identifier=subject_identifier)
+        death_report_action = DeathReportAction(subject_identifier=subject_identifier)
 
         death_report = mommy.make_recipe(
             "ambition_prn.deathreport",
@@ -189,8 +176,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
 
         # the death action item links the two NEW action items
         self.assertEqual(
-            ActionItem.objects.filter(
-                parent_action_item=action_item_death).count(), 2
+            ActionItem.objects.filter(parent_action_item=action_item_death).count(), 2
         )
 
         # as well as the parent_action_item
@@ -408,8 +394,7 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             )
 
         self.assertEqual(
-            ActionItem.objects.filter(
-                action_type__name=DeathReportAction.name).count(),
+            ActionItem.objects.filter(action_type__name=DeathReportAction.name).count(),
             10,
         )
         self.assertEqual(
@@ -419,10 +404,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             10,
         )
 
-        subject_identifier = RegisteredSubject.objects.all()[
-            0].subject_identifier
-        death_report = DeathReport.objects.get(
-            subject_identifier=subject_identifier)
+        subject_identifier = RegisteredSubject.objects.all()[0].subject_identifier
+        death_report = DeathReport.objects.get(subject_identifier=subject_identifier)
         self.assertEqual(
             ActionItem.objects.filter(
                 subject_identifier=subject_identifier,
@@ -486,10 +469,8 @@ class TestDeathReport(AmbitionTestCaseMixin, TestCase):
             11,
         )
 
-        subject_identifier = RegisteredSubject.objects.all()[
-            1].subject_identifier
-        death_report = DeathReport.objects.get(
-            subject_identifier=subject_identifier)
+        subject_identifier = RegisteredSubject.objects.all()[1].subject_identifier
+        death_report = DeathReport.objects.get(subject_identifier=subject_identifier)
         mommy.make_recipe(
             "ambition_prn.deathreporttmg",
             subject_identifier=subject_identifier,
