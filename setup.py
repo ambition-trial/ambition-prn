@@ -36,7 +36,6 @@ setup(
         'django_collect_offline',
         'django_collect_offline-files',
         'edc-action-item',
-        'edc-base',
         'ambition_ae',
         'ambition-lists',
         'edc_notification',
