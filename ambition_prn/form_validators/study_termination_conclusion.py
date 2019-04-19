@@ -36,7 +36,8 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_required="readmission_date",
         )
 
-        self.required_if(DEAD, field="termination_reason", field_required="death_date")
+        self.required_if(DEAD, field="termination_reason",
+                         field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
@@ -148,8 +149,9 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
         See PART 3 in Admin
         """
-        if self.completed_week2 or self.cleaned_data.get("on_study_drug") == NO:
-
+        if ((self.completed_week2
+                and self.cleaned_data.get("on_study_drug") == NOT_APPLICABLE)
+                or self.cleaned_data.get("on_study_drug") == NO):
             fields_not_required = [
                 "ampho_start_date",
                 "ampho_end_date",
@@ -163,7 +165,8 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
             for field_required in fields_not_required:
                 self.not_required_if(
-                    YES, NO, field="on_study_drug", field_required=field_required
+                    YES, NO, NOT_APPLICABLE,
+                    field="on_study_drug", field_required=field_required
                 )
 
         elif not self.completed_week2 and self.cleaned_data.get("on_study_drug") == YES:
@@ -229,7 +232,9 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     @property
     def assignment(self):
-        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
+        RandomizationList = django_apps.get_model(
+            "ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
-        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
+        obj = RandomizationList.objects.get(
+            subject_identifier=subject_identifier)
         return get_drug_assignment({"drug_assignment": obj.drug_assignment})
