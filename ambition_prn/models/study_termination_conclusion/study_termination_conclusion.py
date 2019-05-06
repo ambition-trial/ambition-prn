@@ -72,7 +72,8 @@ class StudyTerminationConclusion(
         verbose_name="Reason for study termination",
         max_length=75,
         choices=REASON_STUDY_TERMINATED,
-        help_text=("If included in error, be sure to fill in protocol deviation form."),
+        help_text=(
+            "If included in error, be sure to fill in protocol deviation form."),
     )
 
     willing_to_complete_10w = models.CharField(
@@ -175,7 +176,8 @@ class StudyTerminationConclusion(
     on_study_drug = models.CharField(
         verbose_name="Has the patient started 'study' drug",
         max_length=25,
-        choices=YES_NO,
+        choices=YES_NO_NA,
+        default=NOT_APPLICABLE,
     )
 
     def save(self, *args, **kwargs):
