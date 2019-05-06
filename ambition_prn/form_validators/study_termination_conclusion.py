@@ -95,6 +95,8 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
         self.validate_study_drug_start_and_stop_dates()
 
+        self.validate_each_study_drug_start_and_stop_date()
+
         if self.completed_week2:
             self.m2m_selection_expected(
                 NOT_APPLICABLE,
@@ -144,74 +146,60 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
         self.required_if(YES, field="blood_received", field_required="units")
 
+    def validate_study_drug_start_stop_dates_after_wk2(self):
+        if self.completed_week2:
+            self.applicable(NOT_APPLICABLE, field_applicable="on_study_drug",
+                            applicable_msg="Week 2 is not complete.",
+                            not_applicable_msg="Week 2 is complete.")
+
+            if self.cleaned_data.get("on_study_drug") in [NO, NOT_APPLICABLE]:
+                fields = [
+                    "ampho_start_date",
+                    "ampho_end_date",
+                    "flucon_start_date",
+                    "flucon_stop_date",
+                    "flucy_start_date",
+                    "flucy_stop_date",
+                    "ambi_start_date",
+                    "ambi_stop_date",
+                ]
+                for fld in fields:
+                    self.required_if("", field="on_study_drug",
+                                     field_required=fld)
+
     def validate_study_drug_start_and_stop_dates(self):
         """Raise if on drug but dates not provided.
 
         See PART 3 in Admin
         """
-        if ((self.completed_week2
-                and self.cleaned_data.get("on_study_drug") == NOT_APPLICABLE)
-                or self.cleaned_data.get("on_study_drug") == NO):
-            fields_not_required = [
-                "ampho_start_date",
-                "ampho_end_date",
-                "flucon_start_date",
-                "flucon_stop_date",
-                "flucy_start_date",
-                "flucy_stop_date",
-                "ambi_start_date",
-                "ambi_stop_date",
-            ]
 
-            for field_required in fields_not_required:
-                self.not_required_if(
-                    YES, NO, NOT_APPLICABLE,
-                    field="on_study_drug", field_required=field_required
-                )
-
-        elif not self.completed_week2 and self.cleaned_data.get("on_study_drug") == YES:
+        if self.cleaned_data.get("on_study_drug") == YES:
+            print("YES", "assignment=", self.assignment)
             self.required_if_true(
-                not self.completed_week2 and self.assignment == SINGLE_DOSE,
+                self.assignment == SINGLE_DOSE,
                 field_required="ambi_start_date",
-                required_msg="Field is required",
-                not_required_msg="Field is not required",
             )
 
             self.required_if_true(
-                not self.completed_week2 and self.assignment == SINGLE_DOSE,
+                self.assignment == SINGLE_DOSE,
                 field_required="ambi_stop_date",
-                required_msg="Field is required",
-                not_required_msg="Field is not required",
             )
 
             self.required_if_true(
-                not self.completed_week2 and self.assignment == CONTROL,
+                self.assignment == CONTROL,
                 field_required="ampho_start_date",
-                required_msg="Field is required",
-                not_required_msg="Field is not required",
             )
 
             self.required_if_true(
-                not self.completed_week2 and self.assignment == CONTROL,
+                self.assignment == CONTROL,
                 field_required="ampho_end_date",
-                required_msg="Field is required",
-                not_required_msg="Field is not required",
             )
 
-            for field in ["flucy_start_date", "flucy_stop_date"]:
-                self.required_if_true(
-                    not self.completed_week2,
-                    field_required=field,
-                    required_msg="Week two not complete. Field is required",
-                    not_required_msg="Week two complete. Field is not required",
-                )
-
-            for field in ["flucon_start_date", "flucon_stop_date"]:
-                self.not_required_if_true(
-                    self.completed_week2,
-                    field=field,
-                    msg="Week two complete. Field is not required",
-                )
+    def validate_each_study_drug_start_and_stop_date(self):
+        self.require_together("ampho_start_date", "ampho_end_date")
+        self.require_together("flucon_start_date", "flucon_stop_date")
+        self.require_together("flucy_start_date", "flucy_stop_date")
+        self.require_together("ambi_start_date", "ambi_stop_date")
 
     @property
     def week2_model_cls(self):

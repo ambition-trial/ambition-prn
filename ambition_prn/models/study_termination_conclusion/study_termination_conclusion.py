@@ -177,6 +177,7 @@ class StudyTerminationConclusion(
         verbose_name="Has the patient started 'study' drug",
         max_length=25,
         choices=YES_NO_NA,
+        default=NOT_APPLICABLE,
     )
 
     def save(self, *args, **kwargs):
