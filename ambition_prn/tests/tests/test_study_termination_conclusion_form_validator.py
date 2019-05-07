@@ -78,7 +78,8 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         # NOT_APPLICABLE is bad for on_study_drug
         cleaned_data = {
             "subject_identifier": subject_identifier,
-            "on_study_drug": NOT_APPLICABLE}
+            "on_study_drug": NOT_APPLICABLE,
+        }
         form_validator = StudyTerminationConclusionFormValidator(
             cleaned_data=cleaned_data
         )
@@ -90,7 +91,8 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             with self.subTest(response=response):
                 cleaned_data = {
                     "subject_identifier": subject_identifier,
-                    "on_study_drug": response}
+                    "on_study_drug": response,
+                }
                 form_validator = StudyTerminationConclusionFormValidator(
                     cleaned_data=cleaned_data
                 )
@@ -270,8 +272,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             cleaned_data=cleaned_data
         )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("readmission_after_initial_discharge",
-                      form_validator._errors)
+        self.assertIn("readmission_after_initial_discharge", form_validator._errors)
 
     def ttest_no_discharged_after_initial_admission_no_readmission_valid(self):
         subject_identifier = self.create_subject()
