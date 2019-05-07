@@ -36,8 +36,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_required="readmission_date",
         )
 
-        self.required_if(DEAD, field="termination_reason",
-                         field_required="death_date")
+        self.required_if(DEAD, field="termination_reason", field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
@@ -148,9 +147,12 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     def validate_study_drug_start_stop_dates_after_wk2(self):
         if self.completed_week2:
-            self.applicable(NOT_APPLICABLE, field_applicable="on_study_drug",
-                            applicable_msg="Week 2 is not complete.",
-                            not_applicable_msg="Week 2 is complete.")
+            self.applicable(
+                NOT_APPLICABLE,
+                field_applicable="on_study_drug",
+                applicable_msg="Week 2 is not complete.",
+                not_applicable_msg="Week 2 is complete.",
+            )
 
             if self.cleaned_data.get("on_study_drug") in [NO, NOT_APPLICABLE]:
                 fields = [
@@ -164,8 +166,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
                     "ambi_stop_date",
                 ]
                 for fld in fields:
-                    self.required_if("", field="on_study_drug",
-                                     field_required=fld)
+                    self.required_if("", field="on_study_drug", field_required=fld)
 
     def validate_study_drug_start_and_stop_dates(self):
         """Raise if on drug but dates not provided.
@@ -176,23 +177,19 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
         if self.cleaned_data.get("on_study_drug") == YES:
             print("YES", "assignment=", self.assignment)
             self.required_if_true(
-                self.assignment == SINGLE_DOSE,
-                field_required="ambi_start_date",
+                self.assignment == SINGLE_DOSE, field_required="ambi_start_date"
             )
 
             self.required_if_true(
-                self.assignment == SINGLE_DOSE,
-                field_required="ambi_stop_date",
+                self.assignment == SINGLE_DOSE, field_required="ambi_stop_date"
             )
 
             self.required_if_true(
-                self.assignment == CONTROL,
-                field_required="ampho_start_date",
+                self.assignment == CONTROL, field_required="ampho_start_date"
             )
 
             self.required_if_true(
-                self.assignment == CONTROL,
-                field_required="ampho_end_date",
+                self.assignment == CONTROL, field_required="ampho_end_date"
             )
 
     def validate_each_study_drug_start_and_stop_date(self):
@@ -220,9 +217,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     @property
     def assignment(self):
-        RandomizationList = django_apps.get_model(
-            "ambition_rando.randomizationlist")
+        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
-        obj = RandomizationList.objects.get(
-            subject_identifier=subject_identifier)
+        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
         return get_drug_assignment({"drug_assignment": obj.drug_assignment})
