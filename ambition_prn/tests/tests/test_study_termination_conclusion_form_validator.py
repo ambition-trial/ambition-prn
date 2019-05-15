@@ -24,6 +24,7 @@ class StudyTerminationConclusionFormValidator(Base):
     week2_model = "ambition_prn.week2"
 
 
+@tag("1")
 class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCase):
     @classmethod
     def setUpClass(cls):
@@ -34,7 +35,6 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
     def tearDownClass(cls):
         super().tearDownClass()
 
-    @tag("1")
     def test_date_not_required_if_week2_complete(self):
 
         subject_identifier = self.create_subject()
@@ -634,7 +634,6 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         except ValidationError as e:
             self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
-    @tag("1")
     def test_not_required_if_not_on_study_drug(self):
         subject_identifier = self.create_subject()
         subject_identifier2 = self.create_subject()
