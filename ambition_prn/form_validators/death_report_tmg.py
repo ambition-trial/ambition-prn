@@ -26,13 +26,14 @@ class DeathReportTmgFormValidator(FormValidator):
 
         if self.cleaned_data.get("cause_of_death"):
             if death_report.cause_of_death == OTHER:
-                cause_of_death = (death_report.cause_of_death_other or "").strip()
+                cause_of_death = (
+                    death_report.cause_of_death_other or "").strip().lower()
             else:
                 cause_of_death = death_report.cause_of_death
             if self.cleaned_data.get("cause_of_death") == OTHER:
                 tmg_cause_of_death = (
                     self.cleaned_data.get("cause_of_death_other") or ""
-                ).strip()
+                ).strip().lower()
             else:
                 tmg_cause_of_death = self.cleaned_data.get("cause_of_death")
 
