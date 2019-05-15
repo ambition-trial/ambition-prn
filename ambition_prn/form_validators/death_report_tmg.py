@@ -25,10 +25,21 @@ class DeathReportTmgFormValidator(FormValidator):
         )
 
         if self.cleaned_data.get("cause_of_death"):
-            if self.cleaned_data.get(
-                "cause_of_death_agreed"
-            ) == NO and death_report.cause_of_death == self.cleaned_data.get(
-                "cause_of_death"
+            if death_report.cause_of_death == OTHER:
+                cause_of_death = (
+                    death_report.cause_of_death_other or "").strip().lower()
+            else:
+                cause_of_death = death_report.cause_of_death
+            if self.cleaned_data.get("cause_of_death") == OTHER:
+                tmg_cause_of_death = (
+                    self.cleaned_data.get("cause_of_death_other") or ""
+                ).strip().lower()
+            else:
+                tmg_cause_of_death = self.cleaned_data.get("cause_of_death")
+
+            if (
+                self.cleaned_data.get("cause_of_death_agreed") == NO
+                and cause_of_death == tmg_cause_of_death
             ):
                 raise forms.ValidationError(
                     {
@@ -38,10 +49,9 @@ class DeathReportTmgFormValidator(FormValidator):
                         )
                     }
                 )
-            elif self.cleaned_data.get(
-                "cause_of_death_agreed"
-            ) == YES and death_report.cause_of_death != self.cleaned_data.get(
-                "cause_of_death"
+            elif (
+                self.cleaned_data.get("cause_of_death_agreed") == YES
+                and cause_of_death != tmg_cause_of_death
             ):
                 raise forms.ValidationError(
                     {
