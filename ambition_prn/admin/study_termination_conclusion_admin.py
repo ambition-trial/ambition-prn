@@ -142,7 +142,7 @@ class StudyTerminationConclusionAdmin(
             {
                 "fields": (
                     "on_study_drug",
-                    ("ampho_start_date", "ampho_end_date"),
+                    ("ampho_start_date", "ampho_stop_date"),
                     ("flucon_start_date", "flucon_stop_date"),
                     ("flucy_start_date", "flucy_stop_date"),
                     ("ambi_start_date", "ambi_stop_date"),

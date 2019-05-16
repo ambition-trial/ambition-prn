@@ -24,7 +24,6 @@ class StudyTerminationConclusionFormValidator(Base):
     week2_model = "ambition_prn.week2"
 
 
-@tag("1")
 class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCase):
     @classmethod
     def setUpClass(cls):
@@ -37,7 +36,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
 
     def test_date_not_required_if_week2_complete(self):
 
-        subject_identifier = self.create_subject()
+        subject_identifier = self.get_control_subject()
         subject_visit = SubjectVisit.objects.create(
             subject_identifier=subject_identifier
         )
@@ -48,7 +47,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             "ambi_start_date",
             "ambi_stop_date",
             "ampho_start_date",
-            "ampho_end_date",
+            "ampho_stop_date",
             "flucy_start_date",
             "flucy_stop_date",
             "flucon_start_date",
@@ -68,14 +67,13 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
                 self.assertRaises(ValidationError, form_validator.validate)
                 self.assertIn(date_field, form_validator._errors)
 
-    @tag("2")
     def test_date_required_if_week2_not_complete(self):
         """If not week 2, expect YES or NO and responses
         for each date.
         """
         subject_identifier = self.create_subject()
 
-        # NOT_APPLICABLE is bad for on_study_drug
+        # NOT_APPLICABLE not allowed for on_study_drug
         cleaned_data = {
             "subject_identifier": subject_identifier,
             "on_study_drug": NOT_APPLICABLE,
@@ -86,7 +84,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("on_study_drug", form_validator._errors)
 
-        # YES, NO is good for on_study_drug
+        # YES, NO is accepted for on_study_drug
         for response in [YES, NO]:
             with self.subTest(response=response):
                 cleaned_data = {
@@ -109,6 +107,8 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             "ambi_stop_date",
             "flucy_start_date",
             "flucy_stop_date",
+            "flucon_start_date",
+            "flucon_stop_date",
         ]:
             with self.subTest(date_field=date_field):
                 cleaned_data = {
@@ -124,17 +124,11 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
                 except ValidationError:
                     self.fail("ValidationError unexpectedly raised")
 
-    @tag("2")
     def test_date_required_if_week2_not_complete_single_dose(self):
         """If YES and SINGLE_DOSE... expect date fields.
         """
         subject_identifier = self.get_single_dose_subject()
-        single_dose_fields = [
-            "ambi_start_date",
-            "ambi_stop_date",
-            "flucy_start_date",
-            "flucy_stop_date",
-        ]
+        single_dose_fields = ["ambi_start_date", "ambi_stop_date"]
 
         for date_field in single_dose_fields:
             with self.subTest(date_field=date_field):
@@ -150,17 +144,11 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
                     self.assertRaises(ValidationError, form_validator.validate)
                     self.assertIn(date_field, form_validator._errors)
 
-    @tag("2")
     def test_date_required_if_week2_not_complete_control(self):
         """If YES and CONTROL... expect date fields.
         """
         subject_identifier = self.get_control_subject()
-        control_fields = [
-            "ampho_start_date",
-            "ampho_stop_date",
-            "flucy_start_date",
-            "flucy_stop_date",
-        ]
+        control_fields = ["ampho_start_date", "ampho_stop_date"]
 
         for date_field in control_fields:
             with self.subTest(date_field=date_field):
@@ -274,7 +262,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("readmission_after_initial_discharge", form_validator._errors)
 
-    def ttest_no_discharged_after_initial_admission_no_readmission_valid(self):
+    def test_no_discharged_after_initial_admission_no_readmission_valid(self):
         subject_identifier = self.create_subject()
         cleaned_data = {
             "subject_identifier": subject_identifier,
@@ -660,7 +648,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         subject_identifier = subject_identifier2
         for date_field in [
             "ampho_start_date",
-            "ampho_end_date",
+            "ampho_stop_date",
             "flucy_start_date",
             "flucy_stop_date",
         ]:
