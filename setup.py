@@ -33,13 +33,13 @@ setup(
     zip_safe=False,
     keywords='django ambition edc PRN',
     install_requires=[
-        'django_collect_offline',
-        'django_collect_offline-files',
+        'django-collect-offline',
+        'django-collect-offline-files',
         'edc-action-item',
-        'ambition_ae',
+        'ambition-ae',
         'ambition-lists',
-        'edc_notification',
-        'ambition_subject',
+        'edc-notification',
+        'ambition-subject',
     ],
     classifiers=[
         'Environment :: Web Environment',

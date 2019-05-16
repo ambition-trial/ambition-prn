@@ -44,7 +44,6 @@ class TestStudyTerminationConclusion(AmbitionTestCaseMixin, TestCase):
             self.fail("ActionItem unexpectedly does not exist")
 
 
-#     @tag('1')
 #     def test_study_termination_form(self):
 #         options = {
 #             "subject_identifier": self.subject_identifier,

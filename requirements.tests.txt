@@ -5,3 +5,4 @@ ambition-rando
 edc-reportable
 edc-subject-dashboard
 ambition_dashboard
+ambition_reports
