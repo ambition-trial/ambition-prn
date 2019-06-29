@@ -184,6 +184,6 @@ class StudyTerminationConclusion(
             self.last_study_fu_date = self.offschedule_datetime.date()
         super().save(*args, **kwargs)
 
-    class Meta:
+    class Meta(OffScheduleModelMixin.Meta):
         verbose_name = "Study Termination/Conclusion"
         verbose_name_plural = "Study Terminations/Conclusions"
