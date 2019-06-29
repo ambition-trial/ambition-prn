@@ -13,3 +13,6 @@ class OnSchedule(OnScheduleModelMixin, BaseUuidModel):
     objects = SubjectIdentifierManager()
 
     history = HistoricalRecords()
+
+    class Meta(OnScheduleModelMixin.Meta):
+        pass

@@ -30,6 +30,6 @@ class StudyTerminationConclusionW10(
         help_text=("If included in error, be sure to fill in protocol deviation form."),
     )
 
-    class Meta:
+    class Meta(OffScheduleModelMixin.Meta):
         verbose_name = "W10 Study Termination/Conclusion"
         verbose_name_plural = "W10 Study Terminations/Conclusions"

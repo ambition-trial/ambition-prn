@@ -146,3 +146,8 @@ class ProtocolDeviationViolation(
     class Meta:
         verbose_name = "Protocol Deviation/Violation"
         verbose_name_plural = "Protocol Deviations/Violations"
+        indexes = [
+            models.Index(
+                fields=["subject_identifier", "action_identifier", "site", "id"]
+            )
+        ]

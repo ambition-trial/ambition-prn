@@ -91,3 +91,8 @@ class DeathReportTmg(
     class Meta:
         verbose_name = "Death Report TMG"
         verbose_name_plural = "Death Report TMG"
+        indexes = [
+            models.Index(
+                fields=["subject_identifier", "action_identifier", "site", "id"]
+            )
+        ]
