@@ -8,6 +8,7 @@ from edc_form_validators import FormValidator
 
 from ..constants import CONSENT_WITHDRAWAL
 from .validate_death_report_mixin import ValidateDeathReportMixin
+from django import forms
 
 
 class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormValidator):
@@ -91,6 +92,28 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field="first_line_regimen",
             field_applicable="first_line_choice",
         )
+
+        # redmine # 117
+        arvs_switch_date = self.cleaned_data.get("arvs_switch_date")
+        if (
+            self.cleaned_data.get("first_line_regimen") != NOT_APPLICABLE
+            or self.cleaned_data.get("first_line_choice") != NOT_APPLICABLE
+            or self.cleaned_data.get("second_line_regimen") != NOT_APPLICABLE
+        ):
+            if not arvs_switch_date:
+                raise forms.ValidationError(
+                    {"arvs_switch_date": "This field is required."}
+                )
+        offschedule_datetime = self.cleaned_data.get("offschedule_datetime")
+        if arvs_switch_date and offschedule_datetime:
+            if arvs_switch_date > offschedule_datetime.date():
+                raise forms.ValidationError(
+                    {
+                        "arvs_switch_date": (
+                            "May not be after date patient terminated on study."
+                        )
+                    }
+                )
 
         self.applicable_if_true(
             not self.completed_week2,
