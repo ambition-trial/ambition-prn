@@ -95,10 +95,13 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
         # redmine # 117
         arvs_switch_date = self.cleaned_data.get("arvs_switch_date")
+        first_line_regimen = self.cleaned_data.get("first_line_regimen")
+        first_line_choice = self.cleaned_data.get("first_line_choice")
+        second_line_regimen = self.cleaned_data.get("second_line_regimen")
         if (
-            self.cleaned_data.get("first_line_regimen") != NOT_APPLICABLE
-            or self.cleaned_data.get("first_line_choice") != NOT_APPLICABLE
-            or self.cleaned_data.get("second_line_regimen") != NOT_APPLICABLE
+            (first_line_regimen and first_line_regimen != NOT_APPLICABLE)
+            or (first_line_choice and first_line_choice != NOT_APPLICABLE)
+            or (second_line_regimen and second_line_regimen != NOT_APPLICABLE)
         ):
             if not arvs_switch_date:
                 raise forms.ValidationError(
