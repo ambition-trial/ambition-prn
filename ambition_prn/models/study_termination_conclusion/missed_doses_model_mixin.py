@@ -28,5 +28,11 @@ class MissedDosesModelMixin(models.Model):
 
     missed_reason_other = OtherCharField()
 
+    def __str__(self):
+        return (
+            f"{self.study_termination_conclusion}: "
+            f"Missed {self.get_day_missed_display()}"
+        )
+
     class Meta:
         abstract = True
