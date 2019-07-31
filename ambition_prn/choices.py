@@ -1,5 +1,4 @@
 from edc_constants.constants import UNKNOWN, OTHER, DEAD, YES, NO, NOT_APPLICABLE
-from edc_constants.constants import OPEN, CLOSED
 
 from .constants import AZT_3TC_with_ATZ_r_or_Lopinavir_r
 from .constants import (

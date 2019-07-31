@@ -1,48 +1,12 @@
-from django.core.validators import MinValueValidator
 from django.db import models
-from edc_action_item.managers import (
-    ActionIdentifierSiteManager,
-    ActionIdentifierManager,
-)
-from edc_action_item.models import ActionModelMixin
-from edc_constants.choices import YES_NO
+from edc_adverse_event.model_mixins import DeathReportModelMixin
 from edc_constants.constants import NOT_APPLICABLE
-from edc_identifier.model_mixins import TrackingModelMixin
 from edc_model.models import BaseUuidModel
-from edc_model.validators import datetime_not_future
-from edc_protocol.validators import datetime_not_before_study_start
-from edc_sites.models import SiteModelMixin
-from edc_utils import get_utcnow
 
-from ..constants import DEATH_REPORT_ACTION
 from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
 
 
-class DeathReport(SiteModelMixin, ActionModelMixin, TrackingModelMixin, BaseUuidModel):
-
-    action_name = DEATH_REPORT_ACTION
-
-    tracking_identifier_prefix = "DR"
-
-    subject_identifier = models.CharField(max_length=50, unique=True)
-
-    report_datetime = models.DateTimeField(
-        verbose_name="Report Date",
-        validators=[datetime_not_before_study_start, datetime_not_future],
-        default=get_utcnow,
-    )
-
-    death_datetime = models.DateTimeField(
-        validators=[datetime_not_future], verbose_name="Date and Time of Death"
-    )
-
-    study_day = models.IntegerField(
-        validators=[MinValueValidator(1)], verbose_name="Study day"
-    )
-
-    death_as_inpatient = models.CharField(
-        choices=YES_NO, max_length=5, verbose_name="Death as inpatient"
-    )
+class DeathReport(DeathReportModelMixin, BaseUuidModel):
 
     cause_of_death = models.CharField(
         max_length=50,
@@ -54,13 +18,6 @@ class DeathReport(SiteModelMixin, ActionModelMixin, TrackingModelMixin, BaseUuid
         ),
     )
 
-    cause_of_death_other = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True,
-        verbose_name='If "Other" above, please specify',
-    )
-
     tb_site = models.CharField(
         verbose_name="If cause of death is TB, specify site of TB disease",
         max_length=25,
@@ -68,19 +25,5 @@ class DeathReport(SiteModelMixin, ActionModelMixin, TrackingModelMixin, BaseUuid
         default=NOT_APPLICABLE,
     )
 
-    narrative = models.TextField(verbose_name="Narrative")
-
-    on_site = ActionIdentifierSiteManager()
-
-    objects = ActionIdentifierManager()
-
-    def natural_key(self):
-        return (self.action_identifier,)
-
-    class Meta:
-        verbose_name = "Death Report"
-        indexes = [
-            models.Index(
-                fields=["subject_identifier", "action_identifier", "site", "id"]
-            )
-        ]
+    class Meta(DeathReportModelMixin.Meta):
+        pass

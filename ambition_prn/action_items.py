@@ -1,10 +1,10 @@
-from ambition_ae.constants import AE_INITIAL_ACTION, AE_FOLLOWUP_ACTION
 from ambition_subject.constants import BLOOD_RESULTS_ACTION
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils.safestring import mark_safe
 from edc_action_item import ActionWithNotification, site_action_items
 from edc_constants.constants import CLOSED, HIGH_PRIORITY
+from edc_adverse_event.constants import AE_INITIAL_ACTION, AE_FOLLOWUP_ACTION
 
 from .constants import DEATH_REPORT_ACTION, DEATH_REPORT_TMG_ACTION
 from .constants import PROTOCOL_DEVIATION_VIOLATION_ACTION
