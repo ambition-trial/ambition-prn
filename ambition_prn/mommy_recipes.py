@@ -1,14 +1,15 @@
+from edc_adverse_event.mommy_recipes import causeofdeath
 from edc_constants.constants import YES, NO
 from faker import Faker
-from model_mommy.recipe import Recipe
+from model_mommy.recipe import Recipe, foreign_key
 
-from .constants import CRYTOCOCCAL_MENINGITIS
 from .models import (
     DeathReport,
+    DeathReportTmg,
+    ProtocolDeviationViolation,
     StudyTerminationConclusion,
     StudyTerminationConclusionW10,
 )
-from .models import ProtocolDeviationViolation, DeathReportTmg
 
 fake = Faker()
 
@@ -16,7 +17,7 @@ deathreport = Recipe(
     DeathReport,
     study_day=1,
     death_as_inpatient=YES,
-    cause_of_death=CRYTOCOCCAL_MENINGITIS,
+    cause_of_death=foreign_key(causeofdeath),
     cause_of_death_other=None,
     action_identifier=None,
     tracking_identifier=None,
@@ -43,7 +44,7 @@ protocoldeviationviolation = Recipe(
 deathreporttmg = Recipe(
     DeathReportTmg,
     action_identifier=None,
-    cause_of_death=CRYTOCOCCAL_MENINGITIS,
+    cause_of_death=foreign_key(causeofdeath),
     cause_of_death_agreed=YES,
     tracking_identifier=None,
 )

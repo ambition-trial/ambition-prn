@@ -7,17 +7,27 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase, tag  # noqa
 from edc_constants.constants import OTHER
 from edc_utils import get_utcnow
+from edc_adverse_event.models.cause_of_death import CauseOfDeath
+from edc_list_data.site_list_data import site_list_data
 
 
+@tag("1")
 class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
+    @classmethod
+    def setUpClass(cls):
+        site_list_data.autodiscover()
+        super().setUpClass()
+
     def test_tb_site_missing(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": None}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": None}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("tb_site", form_validator._errors)
 
     def test_tb_site_ok(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -25,13 +35,18 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
             self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_cause_of_death_other_missing(self):
-        cleaned_data = {"cause_of_death": OTHER, "cause_of_death_other": None}
+        cause_of_death = CauseOfDeath.objects.get(short_name=OTHER)
+        cleaned_data = {"cause_of_death": cause_of_death, "cause_of_death_other": None}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("cause_of_death_other", form_validator._errors)
 
     def test_cause_of_death_other_ok(self):
-        cleaned_data = {"cause_of_death": OTHER, "cause_of_death_other": "blah"}
+        cause_of_death = CauseOfDeath.objects.get(short_name=OTHER)
+        cleaned_data = {
+            "cause_of_death": cause_of_death,
+            "cause_of_death_other": "blah",
+        }
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -39,19 +54,23 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
             self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_cause_of_death_study_doc_opinion_other_none(self):
-        cleaned_data = {"cause_of_death": OTHER, "cause_of_death_other": None}
+        cause_of_death = CauseOfDeath.objects.get(short_name=OTHER)
+        cleaned_data = {"cause_of_death": cause_of_death, "cause_of_death_other": None}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("cause_of_death_other", form_validator._errors)
 
     def test_cause_of_death_study_doctor_tb_no_site_specified_invalid(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": None}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": None}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("tb_site", form_validator._errors)
 
+    @tag("2")
     def test_cause_of_death_study_doc_opinion_no(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -59,13 +78,15 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
             self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_cause_of_death_study_tmg1_tb_no_site_specified_invalid(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": None}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": None}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("tb_site", form_validator._errors)
 
     def test_cause_of_death_study_tmg1_tb_site_specified_valid(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -73,13 +94,15 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
             self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_cause_of_death_study_tmg2_tb_no_site_specified_invalid(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": None}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": None}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("tb_site", form_validator._errors)
 
     def test_cause_of_death_study_tmg2_tb_site_specified_valid(self):
-        cleaned_data = {"cause_of_death": TUBERCULOSIS, "tb_site": "meningitis"}
+        cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
+        cleaned_data = {"cause_of_death": cause_of_death, "tb_site": "meningitis"}
         form_validator = DeathReportFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()

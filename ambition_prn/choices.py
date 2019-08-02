@@ -19,19 +19,19 @@ ACTION_REQUIRED = (
 )
 
 
-CAUSE_OF_DEATH = (
-    (CRYTOCOCCAL_MENINGITIS, "Cryptococcal meningitis"),
-    ("Cryptococcal_meningitis_relapse_IRIS", "Cryptococcal meningitis relapse/IRIS"),
-    (TUBERCULOSIS, "TB"),
-    ("bacteraemia", "Bacteraemia"),
-    ("bacterial_pneumonia", "Bacterial pneumonia"),
-    (MALIGNANCY, "Malignancy"),
-    ("art_toxicity", "ART toxicity"),
-    ("IRIS_non_CM", "IRIS non-CM"),
-    ("diarrhea_wasting", "Diarrhea/wasting"),
-    (UNKNOWN, "Unknown"),
-    (OTHER, "Other"),
-)
+# CAUSE_OF_DEATH = (
+#     (CRYTOCOCCAL_MENINGITIS, "Cryptococcal meningitis"),
+#     ("Cryptococcal_meningitis_relapse_IRIS", "Cryptococcal meningitis relapse/IRIS"),
+#     (TUBERCULOSIS, "TB"),
+#     ("bacteraemia", "Bacteraemia"),
+#     ("bacterial_pneumonia", "Bacterial pneumonia"),
+#     (MALIGNANCY, "Malignancy"),
+#     ("art_toxicity", "ART toxicity"),
+#     ("IRIS_non_CM", "IRIS non-CM"),
+#     ("diarrhea_wasting", "Diarrhea/wasting"),
+#     (UNKNOWN, "Unknown"),
+#     (OTHER, "Other"),
+# )
 
 
 DEVIATION_VIOLATION = (

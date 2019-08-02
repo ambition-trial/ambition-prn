@@ -8,9 +8,6 @@ from ..constants import TUBERCULOSIS
 class DeathReportTmgFormValidator(FormValidator):
     def clean(self):
 
-        death_report = (
-            self.cleaned_data.get("death_report") or self.instance.death_report
-        )
         self.required_if(
             CLOSED,
             field="report_status",
@@ -24,25 +21,10 @@ class DeathReportTmgFormValidator(FormValidator):
             other_stored_value=OTHER,
         )
 
-        if self.cleaned_data.get("cause_of_death"):
-            if death_report.cause_of_death == OTHER:
-                cause_of_death = (
-                    (death_report.cause_of_death_other or "").strip().lower()
-                )
-            else:
-                cause_of_death = death_report.cause_of_death
-            if self.cleaned_data.get("cause_of_death") == OTHER:
-                tmg_cause_of_death = (
-                    (self.cleaned_data.get("cause_of_death_other") or "")
-                    .strip()
-                    .lower()
-                )
-            else:
-                tmg_cause_of_death = self.cleaned_data.get("cause_of_death")
-
+        if self.cause_of_death:
             if (
                 self.cleaned_data.get("cause_of_death_agreed") == NO
-                and cause_of_death == tmg_cause_of_death
+                and self.death_report_cause_of_death == self.tmg_cause_of_death
             ):
                 raise forms.ValidationError(
                     {
@@ -54,7 +36,7 @@ class DeathReportTmgFormValidator(FormValidator):
                 )
             elif (
                 self.cleaned_data.get("cause_of_death_agreed") == YES
-                and cause_of_death != tmg_cause_of_death
+                and self.cause_of_death != self.tmg_cause_of_death
             ):
                 raise forms.ValidationError(
                     {
@@ -83,3 +65,33 @@ class DeathReportTmgFormValidator(FormValidator):
         self.required_if(
             CLOSED, field="report_status", field_required="report_closed_datetime"
         )
+
+    @property
+    def cause_of_death(self):
+        try:
+            return self.cleaned_data.get("cause_of_death").short_name
+        except AttributeError:
+            return None
+
+    @property
+    def death_report_cause_of_death(self):
+        death_report = (
+            self.cleaned_data.get("death_report") or self.instance.death_report
+        )
+        if death_report.cause_of_death.short_name == OTHER:
+            death_report_cause_of_death = (
+                (death_report.cause_of_death_other or "").strip().lower()
+            )
+        else:
+            death_report_cause_of_death = death_report.cause_of_death.short_name
+        return death_report_cause_of_death
+
+    @property
+    def tmg_tmg_cause_of_death(self):
+        if self.cause_of_death == OTHER:
+            tmg_cause_of_death = (
+                (self.cleaned_data.get("cause_of_death_other") or "").strip().lower()
+            )
+        else:
+            tmg_cause_of_death = self.cause_of_death
+        return tmg_cause_of_death
