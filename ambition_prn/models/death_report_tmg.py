@@ -5,8 +5,9 @@ from edc_action_item.managers import (
     ActionIdentifierManager,
 )
 from edc_action_item.models import ActionModelMixin
+from edc_adverse_event.models import CauseOfDeath
 from edc_constants.choices import YES_NO
-from edc_constants.constants import NOT_APPLICABLE
+from edc_constants.constants import NOT_APPLICABLE, QUESTION_RETIRED
 from edc_identifier.model_mixins import TrackingModelMixin
 from edc_model.models import BaseUuidModel, ReportStatusModelMixin
 from edc_model.validators.date import datetime_not_future
@@ -15,7 +16,7 @@ from edc_sites.models import SiteModelMixin
 from edc_utils import get_utcnow
 
 from ..constants import DEATH_REPORT_TMG_ACTION
-from ..choices import CAUSE_OF_DEATH, TB_SITE_DEATH
+from ..choices import TB_SITE_DEATH
 from .death_report import DeathReport
 
 
@@ -39,10 +40,22 @@ class DeathReportTmg(
         default=get_utcnow,
     )
 
-    cause_of_death = models.CharField(
+    cause_of_death = models.ForeignKey(
+        CauseOfDeath,
+        on_delete=PROTECT,
+        verbose_name=("Main cause of death"),
+        help_text=(
+            "Main cause of death in the opinion of the "
+            "local study doctor and local PI"
+        ),
+        null=True,
+    )
+
+    cause_of_death_old = models.CharField(
         verbose_name="Main cause of death",
         max_length=50,
-        choices=CAUSE_OF_DEATH,
+        # choices=CAUSE_OF_DEATH,
+        default=QUESTION_RETIRED,
         blank=True,
         null=True,
         help_text="Main cause of death in the opinion of TMG member",
@@ -87,6 +100,8 @@ class DeathReportTmg(
 
     def natural_key(self):
         return (self.action_identifier,)
+
+    natural_key.dependencies = ["edc_adverse_event.causeofdeath"]
 
     class Meta:
         verbose_name = "Death Report TMG"
