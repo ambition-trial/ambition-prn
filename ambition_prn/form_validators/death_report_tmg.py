@@ -87,7 +87,7 @@ class DeathReportTmgFormValidator(FormValidator):
         return death_report_cause_of_death
 
     @property
-    def tmg_tmg_cause_of_death(self):
+    def tmg_cause_of_death(self):
         if self.cause_of_death == OTHER:
             tmg_cause_of_death = (
                 (self.cleaned_data.get("cause_of_death_other") or "").strip().lower()
