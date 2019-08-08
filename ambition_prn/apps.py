@@ -4,7 +4,7 @@ from django.conf import settings
 
 class AppConfig(DjangoApponfig):
     name = "ambition_prn"
-    verbose_name = "Ambition Subject PRN Forms"
+    verbose_name = "Ambition PRN Forms"
     has_exportable_data = True
     include_in_administration_section = True
 
