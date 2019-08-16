@@ -1,5 +1,6 @@
 from ambition_rando.constants import SINGLE_DOSE, CONTROL
 from ambition_rando.utils import get_drug_assignment
+from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
 from edc_constants.constants import DEAD, NONE, OTHER
@@ -8,7 +9,6 @@ from edc_form_validators import FormValidator
 
 from ..constants import CONSENT_WITHDRAWAL
 from .validate_death_report_mixin import ValidateDeathReportMixin
-from django import forms
 
 
 class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormValidator):

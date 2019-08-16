@@ -83,7 +83,8 @@ class DeathReportAction(ActionWithNotification):
             next_actions = []
 
         # STUDY_TERMINATION_CONCLUSION_ACTION
-        on_schedule_w10_model_cls = django_apps.get_model("ambition_prn.onschedulew10")
+        on_schedule_w10_model_cls = django_apps.get_model(
+            "ambition_prn.onschedulew10")
         off_schedule_w10_cls = django_apps.get_model(
             "ambition_prn.studyterminationconclusionw10"
         )
@@ -96,7 +97,8 @@ class DeathReportAction(ActionWithNotification):
             )
         except ObjectDoesNotExist:
             try:
-                off_schedule_cls.objects.get(subject_identifier=self.subject_identifier)
+                off_schedule_cls.objects.get(
+                    subject_identifier=self.subject_identifier)
             except ObjectDoesNotExist:
                 next_actions.append(STUDY_TERMINATION_CONCLUSION_ACTION)
         else:
@@ -122,17 +124,24 @@ class DeathReportTmgAction(ActionWithNotification):
     color_style = "info"
     show_link_to_changelist = True
     admin_site_name = "ambition_prn_admin"
-    instructions = mark_safe(f"This report is to be completed by the TMG only.")
-    #     try:
-    #         email_recipients = [settings.EMAIL_CONTACTS.get('tmg')]
-    #     except AttributeError:
-    #         email_recipients = []
+    instructions = mark_safe(
+        f"This report is to be completed by the TMG only.")
+
+    def reopen_action_item_on_change(self):
+        """Do not reopen if status is CLOSED.
+        """
+        return self.reference_obj.report_status != CLOSED
+
+    @property
+    def matching_cause_of_death(self):
+        """Returns True if cause_of_death on TMG Death Report matches
+        cause_of_death on Death Report.
+        """
+        return (self.reference_obj.death_report.cause_of_death
+                == self.reference_obj.cause_of_death)
 
     def close_action_item_on_save(self):
-        if (
-            self.reference_obj.death_report.cause_of_death
-            == self.reference_obj.cause_of_death
-        ):
+        if self.matching_cause_of_death:
             self.delete_children_if_new(parent_action_item=self.action_item)
         return self.reference_obj.report_status == CLOSED
 
