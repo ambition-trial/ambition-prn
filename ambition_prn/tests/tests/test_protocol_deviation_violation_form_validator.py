@@ -4,11 +4,42 @@ from ambition_rando.tests import AmbitionTestCaseMixin
 from django import forms
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag  # noqa
-from edc_constants.constants import YES, NO, OTHER
+from edc_constants.constants import YES, NO, OTHER, NOT_APPLICABLE
 from edc_utils import get_utcnow
 
 
 class TestDeviationViolationFormValidator(AmbitionTestCaseMixin, TestCase):
+    def test_report_type_deviation(self):
+        """If deviation, safety_impact and safety_impact_details
+        are not applicable.
+         """
+
+        cleaned_data = {
+            "violation_datetime": get_utcnow(),
+            "violation_type": MEDICATION_NONCOMPLIANCE,
+            "violation_description": "test description",
+            "violation_reason": "test violation reason",
+            "report_type": DEVIATION,
+        }
+
+        cleaned_data.update({"safety_impact": NO, "safety_impact_details": NO})
+
+        form_validator = ProtocolDeviationViolationFormValidator(
+            cleaned_data=cleaned_data
+        )
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn("safety_impact", form_validator._errors)
+
+        cleaned_data.update(
+            {"safety_impact": NOT_APPLICABLE, "safety_impact_details": NO}
+        )
+
+        form_validator = ProtocolDeviationViolationFormValidator(
+            cleaned_data=cleaned_data
+        )
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn("safety_impact_details", form_validator._errors)
+
     def test_report_type(self):
         """ violation_datetime is not required if it's
         a protocol deviation
