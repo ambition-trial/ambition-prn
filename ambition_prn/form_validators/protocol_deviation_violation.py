@@ -1,5 +1,5 @@
-from edc_form_validators import FormValidator
 from edc_constants.constants import YES, OTHER, CLOSED
+from edc_form_validators import FormValidator
 
 from ..constants import VIOLATION
 
@@ -7,10 +7,12 @@ from ..constants import VIOLATION
 class ProtocolDeviationViolationFormValidator(FormValidator):
     def clean(self):
 
-        self.validate_other_specify(
-            field="violation_type",
-            other_specify_field="violation_type_other",
-            other_stored_value=OTHER,
+        self.applicable_if(
+            VIOLATION, field="report_type", field_applicable="safety_impact"
+        )
+
+        self.applicable_if(
+            VIOLATION, field="report_type", field_applicable="study_outcomes_impact"
         )
 
         self.required_if(
@@ -29,6 +31,12 @@ class ProtocolDeviationViolationFormValidator(FormValidator):
 
         self.applicable_if(
             VIOLATION, field="report_type", field_applicable="violation_type"
+        )
+
+        self.validate_other_specify(
+            field="violation_type",
+            other_specify_field="violation_type_other",
+            other_stored_value=OTHER,
         )
 
         self.required_if(
@@ -50,28 +58,3 @@ class ProtocolDeviationViolationFormValidator(FormValidator):
         self.required_if(
             CLOSED, field="report_status", field_required="report_closed_datetime"
         )
-
-
-#         self.not_required_if(
-#             OPEN,
-#             field='report_status',
-#             field_required='corrective_action_datetime',
-#             inverse=False)
-#
-#         self.not_required_if(
-#             OPEN,
-#             field='report_status',
-#             field_required='corrective_action',
-#             inverse=False)
-#
-#         self.not_required_if(
-#             OPEN,
-#             field='report_status',
-#             field_required='preventative_action_datetime',
-#             inverse=False)
-#
-#         self.not_required_if(
-#             OPEN,
-#             field='report_status',
-#             field_required='preventative_action',
-#             inverse=False)

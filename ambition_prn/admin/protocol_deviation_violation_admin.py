@@ -29,17 +29,6 @@ class ProtocolDeviationViolationAdmin(
             },
         ),
         (
-            "Assessment to confirm violation/deviation",
-            {
-                "fields": (
-                    "safety_impact",
-                    "safety_impact_details",
-                    "study_outcomes_impact",
-                    "study_outcomes_impact_details",
-                )
-            },
-        ),
-        (
             "Details of protocol violation",
             {
                 "description": (
@@ -47,6 +36,10 @@ class ProtocolDeviationViolationAdmin(
                     "this is a protocol violation."
                 ),
                 "fields": (
+                    "safety_impact",
+                    "safety_impact_details",
+                    "study_outcomes_impact",
+                    "study_outcomes_impact_details",
                     "violation_datetime",
                     "violation_type",
                     "violation_type_other",

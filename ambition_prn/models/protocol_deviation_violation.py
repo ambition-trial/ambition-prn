@@ -4,7 +4,7 @@ from edc_action_item.managers import (
     ActionIdentifierManager,
 )
 from edc_action_item.models import ActionModelMixin
-from edc_constants.choices import YES_NO, NOT_APPLICABLE
+from edc_constants.choices import YES_NO, YES_NO_NA, NOT_APPLICABLE
 from edc_identifier.model_mixins import TrackingModelMixin
 from edc_model import REPORT_STATUS
 from edc_model.models import BaseUuidModel
@@ -48,7 +48,8 @@ class ProtocolDeviationViolation(
         verbose_name="Could this occurrence have an impact on safety of the "
         "participant?",
         max_length=25,
-        choices=YES_NO,
+        choices=YES_NO_NA,
+        default=NOT_APPLICABLE,
     )
 
     safety_impact_details = models.TextField(
@@ -58,7 +59,8 @@ class ProtocolDeviationViolation(
     study_outcomes_impact = models.CharField(
         verbose_name="Could this occurrence have an impact on study outcomes?",
         max_length=25,
-        choices=YES_NO,
+        choices=YES_NO_NA,
+        default=NOT_APPLICABLE,
     )
 
     study_outcomes_impact_details = models.TextField(
