@@ -1,8 +1,8 @@
 from edc_constants.constants import TUBERCULOSIS, MALIGNANCY
+from edc_consent.constants import CONSENT_WITHDRAWAL
 
 AZT_3TC_with_ATZ_r_or_Lopinavir_r = "AZT_3TC_with_ATZ_r_or_Lopinavir_r"
 AZT_3TC_with_EFV_NVP_or_DTG = "AZT_3TC_with_EFV_NVP_or_DTG"
-CONSENT_WITHDRAWAL = "consent_withdrawn"
 CRYTOCOCCAL_MENINGITIS = "cryptococcal_meningitis"
 CRYTOCOCCAL_MENINGITIS = "cryptococcal_meningitis"
 DEATH_REPORT_ACTION = "submit-death-report"
