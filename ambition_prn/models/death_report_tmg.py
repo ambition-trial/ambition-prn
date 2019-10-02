@@ -8,7 +8,10 @@ from edc_action_item.models import ActionModelMixin
 from edc_adverse_event.models import CauseOfDeath
 from edc_constants.choices import YES_NO
 from edc_constants.constants import NOT_APPLICABLE, QUESTION_RETIRED
-from edc_identifier.model_mixins import TrackingModelMixin
+from edc_identifier.model_mixins import (
+    TrackingModelMixin,
+    NonUniqueSubjectIdentifierFieldMixin,
+)
 from edc_model.models import BaseUuidModel, ReportStatusModelMixin
 from edc_model.validators.date import datetime_not_future
 from edc_protocol.validators import datetime_not_before_study_start
@@ -21,6 +24,7 @@ from .death_report import DeathReport
 
 
 class DeathReportTmg(
+    NonUniqueSubjectIdentifierFieldMixin,
     ActionModelMixin,
     TrackingModelMixin,
     ReportStatusModelMixin,
