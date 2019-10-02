@@ -1,6 +1,9 @@
 from django.db import models
 from edc_action_item.models import ActionModelMixin
-from edc_identifier.model_mixins import TrackingModelMixin
+from edc_identifier.model_mixins import (
+    TrackingModelMixin,
+    NonUniqueSubjectIdentifierFieldMixin,
+)
 from edc_model.models import BaseUuidModel
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 
@@ -10,6 +13,7 @@ from .base_study_termination import BaseStudyTerminationConclusion
 
 
 class StudyTerminationConclusionW10(
+    NonUniqueSubjectIdentifierFieldMixin,
     BaseStudyTerminationConclusion,
     OffScheduleModelMixin,
     ActionModelMixin,

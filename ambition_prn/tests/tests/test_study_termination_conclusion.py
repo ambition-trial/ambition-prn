@@ -42,17 +42,3 @@ class TestStudyTerminationConclusion(AmbitionTestCaseMixin, TestCase):
             ActionItem.objects.get(action_identifier=obj.action_identifier)
         except ObjectDoesNotExist:
             self.fail("ActionItem unexpectedly does not exist")
-
-
-#     def test_study_termination_form(self):
-#         options = {
-#             "subject_identifier": self.subject_identifier,
-#             "death_datetime": get_utcnow,
-#         }
-#         death_report = mommy.make_recipe(
-#             "ambition_prn.deathreport", **options)
-#
-#         data = {"subject_identifier": self.subject_identifier}
-#         form = StudyTerminationConclusionForm(data=data)
-#         form.is_valid()
-#         pprint(form.errors)
