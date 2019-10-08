@@ -1,5 +1,5 @@
 from ambition_permissions.group_names import TMG
-from ambition_prn.constants import DEATH_REPORT_TMG_ACTION
+from edc_adverse_event.constants import DEATH_REPORT_TMG_ACTION
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import m2m_changed
 from django.db.models.signals import post_save

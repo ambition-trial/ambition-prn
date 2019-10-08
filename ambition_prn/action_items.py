@@ -8,7 +8,8 @@ from edc_adverse_event.action_items import (
 from edc_adverse_event.constants import AE_FOLLOWUP_ACTION, DEATH_REPORT_ACTION
 from edc_constants.constants import HIGH_PRIORITY
 from edc_prn.action_items import (
-    ProtocolDeviationViolationAction as BaseProtocolDeviationViolationAction)
+    ProtocolDeviationViolationAction as BaseProtocolDeviationViolationAction,
+)
 
 from .constants import STUDY_TERMINATION_CONCLUSION_ACTION
 from .constants import STUDY_TERMINATION_CONCLUSION_ACTION_W10

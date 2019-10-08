@@ -6,6 +6,7 @@ from model_mommy.recipe import Recipe, foreign_key
 from .models import (
     DeathReport,
     DeathReportTmg,
+    DeathReportTmgSecond,
     ProtocolDeviationViolation,
     StudyTerminationConclusion,
     StudyTerminationConclusionW10,
@@ -43,6 +44,14 @@ protocoldeviationviolation = Recipe(
 
 deathreporttmg = Recipe(
     DeathReportTmg,
+    action_identifier=None,
+    cause_of_death=foreign_key(causeofdeath),
+    cause_of_death_agreed=YES,
+    tracking_identifier=None,
+)
+
+deathreporttmgsecond = Recipe(
+    DeathReportTmgSecond,
     action_identifier=None,
     cause_of_death=foreign_key(causeofdeath),
     cause_of_death_agreed=YES,
