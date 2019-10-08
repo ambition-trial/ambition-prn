@@ -1,5 +1,5 @@
 from ambition_rando.constants import SINGLE_DOSE, CONTROL
-from ambition_rando.utils import get_drug_assignment
+from ambition_rando.utils import get_assignment
 from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
@@ -248,4 +248,4 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
         RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
         obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
-        return get_drug_assignment({"drug_assignment": obj.drug_assignment})
+        return get_assignment({"assignment": obj.assignment})
