@@ -11,7 +11,6 @@ from edc_adverse_event.models.cause_of_death import CauseOfDeath
 from edc_list_data.site_list_data import site_list_data
 
 
-@tag("1")
 class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
     @classmethod
     def setUpClass(cls):
@@ -67,7 +66,6 @@ class TestDeathFormValidations(AmbitionTestCaseMixin, TestCase):
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("tb_site", form_validator._errors)
 
-    @tag("2")
     def test_cause_of_death_study_doc_opinion_no(self):
         cause_of_death = CauseOfDeath.objects.get(short_name=TUBERCULOSIS)
         cleaned_data = {"cause_of_death": cause_of_death, "tb_site": "meningitis"}
