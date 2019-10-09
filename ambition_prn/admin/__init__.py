@@ -1,5 +1,6 @@
 from .death_report_admin import DeathReportAdmin
 from .death_report_tmg_admin import DeathReportTmgAdmin
+from .death_report_tmg_second_admin import DeathReportTmgSecondAdmin
 from .onschedule_admin import OnScheduleAdmin
 from .onschedule_w10_admin import OnScheduleW10Admin
 from .protocol_deviation_violation_admin import ProtocolDeviationViolationAdmin
