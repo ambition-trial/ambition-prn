@@ -9,7 +9,8 @@ from ambition_prn.choices import TB_SITE_DEATH
 
 class DeathReportTmg(DeathReportTmgModelMixin, BaseUuidModel):
 
-    death_report = models.ForeignKey(f"ambition_prn.deathreport", on_delete=PROTECT)
+    death_report = models.ForeignKey(
+        f"ambition_prn.deathreport", on_delete=PROTECT)
 
     cause_of_death_old = models.CharField(
         verbose_name="Main cause of death",
@@ -38,3 +39,5 @@ class DeathReportTmgSecond(DeathReportTmg):
 
     class Meta:
         proxy = True
+        verbose_name = "Death Report TMG (Second)"
+        verbose_name_plural = "Death Report TMG (Second)"
