@@ -1,8 +1,10 @@
+from django import forms
+from edc_adverse_event.modelform_mixins import DeathReportTmgModelFormMixin
+
 from ..models import DeathReportTmgSecond
-from .death_report_tmg_form import DeathReportTmgForm
 
 
-class DeathReportTmgSecondForm(DeathReportTmgForm):
+class DeathReportTmgSecondForm(DeathReportTmgModelFormMixin, forms.ModelForm):
     class Meta:
         model = DeathReportTmgSecond
         fields = "__all__"

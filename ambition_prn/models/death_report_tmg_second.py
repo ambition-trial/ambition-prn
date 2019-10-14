@@ -1,14 +1,16 @@
-from ambition_prn.choices import TB_SITE_DEATH
 from django.db import models
-from django.db.models.deletion import PROTECT
-from edc_adverse_event.model_mixins import DeathReportTmgModelMixin
+from edc_adverse_event.model_mixins import DeathReportTmgSecondModelMixin
+from edc_model.models.base_uuid_model import BaseUuidModel
 from edc_constants.constants import QUESTION_RETIRED, NOT_APPLICABLE
-from edc_model.models import BaseUuidModel
+
+from ..choices import TB_SITE_DEATH
 
 
-class DeathReportTmg(DeathReportTmgModelMixin, BaseUuidModel):
+class DeathReportTmgSecond(DeathReportTmgSecondModelMixin, BaseUuidModel):
 
-    death_report = models.ForeignKey(f"ambition_prn.deathreport", on_delete=PROTECT)
+    death_report = models.ForeignKey(
+        f"ambition_prn.deathreport", on_delete=models.PROTECT
+    )
 
     cause_of_death_old = models.CharField(
         verbose_name="Main cause of death",
@@ -27,5 +29,5 @@ class DeathReportTmg(DeathReportTmgModelMixin, BaseUuidModel):
         blank=True,
     )
 
-    class Meta(DeathReportTmgModelMixin.Meta):
+    class Meta(DeathReportTmgSecondModelMixin.Meta):
         pass
