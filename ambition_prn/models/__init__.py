@@ -1,5 +1,6 @@
 from .death_report import DeathReport
-from .death_report_tmg import DeathReportTmg, DeathReportTmgSecond
+from .death_report_tmg import DeathReportTmg
+from .death_report_tmg_second import DeathReportTmgSecond
 from .onschedule import OnSchedule
 from .onschedule_w10 import OnScheduleW10
 from .protocol_deviation_violation import ProtocolDeviationViolation

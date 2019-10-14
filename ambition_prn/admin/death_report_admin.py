@@ -1,8 +1,7 @@
-from copy import copy
 from django.contrib import admin
-from edc_action_item import action_fieldset_tuple, action_fields
+from edc_action_item import action_fieldset_tuple
+from edc_adverse_event.modeladmin_mixins import DeathReportModelAdminMixin
 from edc_model_admin import audit_fieldset_tuple, SimpleHistoryAdmin
-from edc_model_admin.dashboard import ModelAdminSubjectDashboardMixin
 
 from ..admin_site import ambition_prn_admin
 from ..forms import DeathReportForm
@@ -10,7 +9,7 @@ from ..models import DeathReport
 
 
 @admin.register(DeathReport, site=ambition_prn_admin)
-class DeathReportAdmin(ModelAdminSubjectDashboardMixin, SimpleHistoryAdmin):
+class DeathReportAdmin(DeathReportModelAdminMixin, SimpleHistoryAdmin):
 
     form = DeathReportForm
 
@@ -47,24 +46,3 @@ class DeathReportAdmin(ModelAdminSubjectDashboardMixin, SimpleHistoryAdmin):
         "cause_of_death": admin.VERTICAL,
         "tb_site": admin.VERTICAL,
     }
-
-    list_display = (
-        "subject_identifier",
-        "dashboard",
-        "report_datetime",
-        "cause_of_death",
-        "death_datetime",
-        "action_item",
-        "parent_action_item",
-    )
-
-    list_filter = ("report_datetime", "death_datetime", "cause_of_death")
-
-    search_fields = ["subject_identifier", "action_identifier", "tracking_identifier"]
-
-    def get_readonly_fields(self, request, obj=None):
-        fields = super().get_readonly_fields(request, obj)
-        action_flds = copy(list(action_fields))
-        action_flds.remove("action_identifier")
-        fields = list(action_flds) + list(fields)
-        return fields
