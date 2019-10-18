@@ -3,12 +3,12 @@ from ambition_rando.utils import get_assignment
 from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
+from edc_adverse_event.form_validators import ValidateDeathReportMixin
 from edc_constants.constants import DEAD, NONE, OTHER
 from edc_constants.constants import YES, NO, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
 from ..constants import CONSENT_WITHDRAWAL
-from .validate_death_report_mixin import ValidateDeathReportMixin
 
 
 class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormValidator):
@@ -37,7 +37,8 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_required="readmission_date",
         )
 
-        self.required_if(DEAD, field="termination_reason", field_required="death_date")
+        self.required_if(DEAD, field="termination_reason",
+                         field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
@@ -245,7 +246,9 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     @property
     def assignment(self):
-        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
+        RandomizationList = django_apps.get_model(
+            "ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
-        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
+        obj = RandomizationList.objects.get(
+            subject_identifier=subject_identifier)
         return get_assignment({"assignment": obj.assignment})

@@ -1,8 +1,8 @@
-from edc_form_validators import FormValidator
+from edc_adverse_event.form_validators import ValidateDeathReportMixin
 from edc_constants.constants import DEAD
+from edc_form_validators import FormValidator
 
 from ..constants import CONSENT_WITHDRAWAL
-from .validate_death_report_mixin import ValidateDeathReportMixin
 
 
 class StudyTerminationConclusionW10FormValidator(
@@ -12,7 +12,8 @@ class StudyTerminationConclusionW10FormValidator(
 
         self.validate_death_report_if_deceased()
 
-        self.required_if(DEAD, field="termination_reason", field_required="death_date")
+        self.required_if(DEAD, field="termination_reason",
+                         field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,

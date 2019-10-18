@@ -1,11 +1,6 @@
-from ambition_permissions.group_names import TMG
-from edc_adverse_event.constants import DEATH_REPORT_TMG_ACTION
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.signals import m2m_changed
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from edc_constants.constants import YES, NO
-from edc_notification.models import Notification
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from edc_visit_schedule.subject_schedule import NotOnScheduleError
 
@@ -43,30 +38,3 @@ def study_termination_conclusion_on_post_save(sender, instance, raw, created, **
                     )
                 except NotOnScheduleError:
                     pass
-
-
-@receiver(
-    m2m_changed, weak=False, dispatch_uid="update_prn_notifications_for_tmg_group"
-)
-def update_prn_notifications_for_tmg_group(
-    action, instance, reverse, model, pk_set, using, **kwargs
-):
-
-    try:
-        instance.userprofile
-    except AttributeError:
-        pass
-    else:
-        try:
-            tmg_death_notification = Notification.objects.get(
-                name=DEATH_REPORT_TMG_ACTION
-            )
-        except ObjectDoesNotExist:
-            pass
-        else:
-            try:
-                instance.groups.get(name=TMG)
-            except ObjectDoesNotExist:
-                instance.userprofile.email_notifications.remove(tmg_death_notification)
-            else:
-                instance.userprofile.email_notifications.add(tmg_death_notification)

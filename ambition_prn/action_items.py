@@ -1,10 +1,5 @@
 from ambition_subject.constants import BLOOD_RESULTS_ACTION
 from edc_action_item import ActionWithNotification, site_action_items
-from edc_adverse_event.action_items import (
-    DeathReportAction as BaseDeathReportAction,
-    DeathReportTmgAction as BaseDeathReportTmgAction,
-    DeathReportTmgSecondAction as BaseDeathReportTmgSecondAction,
-)
 from edc_adverse_event.constants import AE_FOLLOWUP_ACTION, DEATH_REPORT_ACTION
 from edc_constants.constants import HIGH_PRIORITY
 from edc_prn.action_items import (
@@ -46,27 +41,6 @@ class ProtocolDeviationViolationAction(BaseProtocolDeviationViolationAction):
     admin_site_name = "ambition_prn_admin"
 
 
-class DeathReportAction(BaseDeathReportAction):
-    reference_model = "ambition_prn.deathreport"
-    death_report_tmg_model = "ambition_prn.deathreporttmg"
-    admin_site_name = "ambition_prn_admin"
-
-
-class DeathReportTmgAction(BaseDeathReportTmgAction):
-    reference_model = "ambition_prn.deathreporttmg"
-    related_reference_model = "ambition_prn.deathreport"
-    admin_site_name = "ambition_prn_admin"
-
-
-class DeathReportTmgSecondAction(BaseDeathReportTmgSecondAction):
-    reference_model = "ambition_prn.deathreporttmgsecond"
-    related_reference_model = "ambition_prn.deathreport"
-    admin_site_name = "ambition_prn_admin"
-
-
-site_action_items.register(DeathReportAction)
-site_action_items.register(DeathReportTmgAction)
-site_action_items.register(DeathReportTmgSecondAction)
 site_action_items.register(ProtocolDeviationViolationAction)
 site_action_items.register(StudyTerminationConclusionAction)
 site_action_items.register(StudyTerminationConclusionW10Action)

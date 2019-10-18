@@ -4,7 +4,6 @@ from ambition_lists.models import OtherDrug
 from ambition_rando.constants import SINGLE_DOSE, CONTROL
 from ambition_prn.constants import CONSENT_WITHDRAWAL
 from ambition_prn.form_validators import StudyTerminationConclusionFormValidator as Base
-from ambition_prn.models import DeathReport
 from ambition_rando.tests import AmbitionTestCaseMixin
 from datetime import date
 from django import forms
@@ -260,7 +259,8 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             cleaned_data=cleaned_data
         )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("readmission_after_initial_discharge", form_validator._errors)
+        self.assertIn("readmission_after_initial_discharge",
+                      form_validator._errors)
 
     def test_no_discharged_after_initial_admission_no_readmission_valid(self):
         subject_identifier = self.create_subject()
@@ -303,95 +303,6 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         )
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn("readmission_date", form_validator._errors)
-
-    def test_died_no_death_date_invalid(self):
-        subject_identifier = self.create_subject()
-        DeathReport.objects.create(
-            subject_identifier=subject_identifier,
-            death_datetime=get_utcnow(),
-            study_day=1,
-        )
-
-        cleaned_data = {
-            "subject_identifier": subject_identifier,
-            "termination_reason": DEAD,
-            "death_date": None,
-        }
-        form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data
-        )
-        self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("death_date", form_validator._errors)
-
-    def test_died_death_date_mismatch(self):
-        subject_identifier = self.create_subject()
-        DeathReport.objects.create(
-            subject_identifier=subject_identifier,
-            death_datetime=get_utcnow(),
-            study_day=1,
-        )
-
-        cleaned_data = {
-            "subject_identifier": subject_identifier,
-            "termination_reason": DEAD,
-            "death_date": date(2011, 1, 1),
-        }
-        form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data
-        )
-        self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("death_date", form_validator._errors)
-
-    @override_settings(TIME_ZONE="Africa/Kampala")
-    def test_died_death_date_ok(self):
-        from dateutil import tz
-        from datetime import datetime
-
-        subject_identifier = self.create_subject()
-
-        dte1 = arrow.get(datetime(2018, 8, 12, 0, 0, 0), tz.tzutc())
-        dte2 = date(2018, 8, 12)
-        DeathReport.objects.create(
-            subject_identifier=subject_identifier,
-            death_datetime=dte1.datetime,
-            study_day=1,
-        )
-
-        cleaned_data = {
-            "subject_identifier": subject_identifier,
-            "termination_reason": DEAD,
-            "death_date": dte2,
-        }
-        form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data
-        )
-        try:
-            form_validator.validate()
-        except forms.ValidationError as e:
-            self.fail(f"ValidationError unexpectedly raised. Got{e}")
-
-    def test_died_death_date_change(self):
-        dte = get_utcnow()
-        subject_identifier = self.create_subject()
-
-        DeathReport.objects.create(
-            subject_identifier=subject_identifier,
-            death_datetime=get_utcnow(),
-            study_day=1,
-        )
-
-        cleaned_data = {
-            "subject_identifier": subject_identifier,
-            "termination_reason": DEAD,
-            "death_date": dte.date(),
-        }
-        form_validator = StudyTerminationConclusionFormValidator(
-            cleaned_data=cleaned_data
-        )
-        try:
-            form_validator.validate()
-        except forms.ValidationError as e:
-            self.fail(f"ValidationError unexpectedly raised. Got{e}")
 
     def test_twilling_to_complete_10w_withdrawal_of_consent(self):
         """ Asserts willing_to_complete_10w when termination reason
