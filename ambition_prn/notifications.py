@@ -24,11 +24,3 @@ class ProtocolViolationNotification(NewModelNotification):
     name = "protocol_violation"
     display_name = "a protocol violation has occurred"
     model = "ambition_prn.protocolviolation"
-
-
-@register()
-class DeathNotification(NewModelNotification):
-
-    name = "death"
-    display_name = "a death has been reported"
-    model = "ambition_prn.deathreport"

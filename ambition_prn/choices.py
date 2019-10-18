@@ -1,4 +1,4 @@
-from edc_constants.constants import UNKNOWN, OTHER, DEAD, YES, NO, NOT_APPLICABLE
+from edc_constants.constants import OTHER, DEAD, YES, NO, NOT_APPLICABLE
 
 from .constants import AZT_3TC_with_ATZ_r_or_Lopinavir_r
 from .constants import (
@@ -6,8 +6,7 @@ from .constants import (
     TDF_3TC_FTC_with_ATZ_r_or_Lopinavir_r,
 )
 from .constants import TDF_3TC_FTC_with_EFV_or_NVP
-from .constants import TUBERCULOSIS, DEVIATION, VIOLATION, CONSENT_WITHDRAWAL
-from .constants import CRYTOCOCCAL_MENINGITIS, MALIGNANCY
+from .constants import DEVIATION, VIOLATION, CONSENT_WITHDRAWAL
 
 ACTION_REQUIRED = (
     ("remain_on_study", "Participant to remain on trial"),
@@ -119,13 +118,6 @@ SECOND_ARV_REGIMEN = (
     (OTHER, "Other"),
 )
 
-
-TB_SITE_DEATH = (
-    ("meningitis", "Meningitis"),
-    ("pulmonary", "Pulmonary"),
-    ("disseminated", "Disseminated"),
-    (NOT_APPLICABLE, "Not applicable"),
-)
 
 YES_NO_ALREADY = (
     (YES, "Yes"),

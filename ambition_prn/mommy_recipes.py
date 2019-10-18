@@ -1,31 +1,14 @@
-from edc_adverse_event.mommy_recipes import causeofdeath
-from edc_constants.constants import YES, NO
+from edc_constants.constants import NO
 from faker import Faker
-from model_mommy.recipe import Recipe, foreign_key
+from model_mommy.recipe import Recipe
 
 from .models import (
-    DeathReport,
-    DeathReportTmg,
-    DeathReportTmgSecond,
     ProtocolDeviationViolation,
     StudyTerminationConclusion,
     StudyTerminationConclusionW10,
 )
 
 fake = Faker()
-
-deathreport = Recipe(
-    DeathReport,
-    study_day=1,
-    death_as_inpatient=YES,
-    cause_of_death=foreign_key(causeofdeath),
-    cause_of_death_other=None,
-    action_identifier=None,
-    tracking_identifier=None,
-)
-#     tb_site='meningitis',
-#     narrative=(
-#         'adverse event resulted in death due to cryptococcal meningitis'))
 
 studyterminationconclusion = Recipe(
     StudyTerminationConclusion,
@@ -40,20 +23,4 @@ studyterminationconclusionw10 = Recipe(
 
 protocoldeviationviolation = Recipe(
     ProtocolDeviationViolation, action_identifier=None, tracking_identifier=None
-)
-
-deathreporttmg = Recipe(
-    DeathReportTmg,
-    action_identifier=None,
-    cause_of_death=foreign_key(causeofdeath),
-    cause_of_death_agreed=YES,
-    tracking_identifier=None,
-)
-
-deathreporttmgsecond = Recipe(
-    DeathReportTmgSecond,
-    action_identifier=None,
-    cause_of_death=foreign_key(causeofdeath),
-    cause_of_death_agreed=YES,
-    tracking_identifier=None,
 )

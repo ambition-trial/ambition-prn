@@ -3,8 +3,6 @@ from edc_consent.constants import CONSENT_WITHDRAWAL
 
 AZT_3TC_with_ATZ_r_or_Lopinavir_r = "AZT_3TC_with_ATZ_r_or_Lopinavir_r"
 AZT_3TC_with_EFV_NVP_or_DTG = "AZT_3TC_with_EFV_NVP_or_DTG"
-CRYTOCOCCAL_MENINGITIS = "cryptococcal_meningitis"
-CRYTOCOCCAL_MENINGITIS = "cryptococcal_meningitis"
 DEVIATION = "protocol_deviation"
 MEDICATION_NONCOMPLIANCE = "medication_noncompliance"
 PROTOCOL_DEVIATION_VIOLATION_ACTION = "submit-protocol-deviation-violation"
