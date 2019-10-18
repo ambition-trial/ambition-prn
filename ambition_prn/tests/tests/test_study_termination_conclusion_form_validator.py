@@ -259,8 +259,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
             cleaned_data=cleaned_data
         )
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn("readmission_after_initial_discharge",
-                      form_validator._errors)
+        self.assertIn("readmission_after_initial_discharge", form_validator._errors)
 
     def test_no_discharged_after_initial_admission_no_readmission_valid(self):
         subject_identifier = self.create_subject()

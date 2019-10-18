@@ -12,8 +12,7 @@ class StudyTerminationConclusionW10FormValidator(
 
         self.validate_death_report_if_deceased()
 
-        self.required_if(DEAD, field="termination_reason",
-                         field_required="death_date")
+        self.required_if(DEAD, field="termination_reason", field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,

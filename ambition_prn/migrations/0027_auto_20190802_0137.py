@@ -32,8 +32,7 @@ def update_cause_of_death(apps, schema_editor):
     CauseOfDeath = apps.get_model("edc_adverse_event.CauseOfDeath")
     DeathReport = apps.get_model("ambition_prn.DeathReport")
     for obj in DeathReport.objects.all():
-        cause_of_death = CauseOfDeath.objects.get(
-            short_name=obj.cause_of_death_old)
+        cause_of_death = CauseOfDeath.objects.get(short_name=obj.cause_of_death_old)
         obj.cause_of_death = cause_of_death
         obj.save()
 
@@ -43,6 +42,5 @@ class Migration(migrations.Migration):
     dependencies = [("ambition_prn", "0026_auto_20190802_0137")]
 
     operations = [
-        migrations.RunPython(update_cause_of_death, hints={
-                             "target_db": "default"})
+        migrations.RunPython(update_cause_of_death, hints={"target_db": "default"})
     ]

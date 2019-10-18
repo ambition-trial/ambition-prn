@@ -23,8 +23,7 @@ class TestNaturalKey(AmbitionTestCaseMixin, TestCase):
         self.offline_test_helper.offline_test_natural_key_attr("ambition_prn")
 
     def test_get_by_natural_key_attr(self):
-        self.offline_test_helper.offline_test_get_by_natural_key_attr(
-            "ambition_prn")
+        self.offline_test_helper.offline_test_get_by_natural_key_attr("ambition_prn")
 
     def test_deserialize_protocol_deviation(self):
         self.subject_identifier = self.create_subject()

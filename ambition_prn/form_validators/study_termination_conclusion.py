@@ -37,8 +37,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
             field_required="readmission_date",
         )
 
-        self.required_if(DEAD, field="termination_reason",
-                         field_required="death_date")
+        self.required_if(DEAD, field="termination_reason", field_required="death_date")
 
         self.required_if(
             CONSENT_WITHDRAWAL,
@@ -246,9 +245,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     @property
     def assignment(self):
-        RandomizationList = django_apps.get_model(
-            "ambition_rando.randomizationlist")
+        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
         subject_identifier = self.cleaned_data.get("subject_identifier")
-        obj = RandomizationList.objects.get(
-            subject_identifier=subject_identifier)
+        obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
         return get_assignment({"assignment": obj.assignment})
