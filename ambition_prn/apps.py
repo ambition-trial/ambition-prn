@@ -35,8 +35,7 @@ if settings.APP_NAME == "ambition_prn":
         protocol_name = "Ambition"
         protocol_title = ""
         year = datetime.now().year
-        study_open_datetime = datetime(
-            year, 1, 1, 0, 0, 0, tzinfo=gettz("UTC"))
+        study_open_datetime = datetime(year, 1, 1, 0, 0, 0, tzinfo=gettz("UTC"))
         study_close_datetime = datetime(
             year + 5, 12, 31, 23, 59, 59, tzinfo=gettz("UTC")
         )
