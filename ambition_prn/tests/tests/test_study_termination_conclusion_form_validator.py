@@ -172,7 +172,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         # week 2 not complete, cannot be NOT_APPLICABLE
         cleaned_data = {
             "subject_identifier": subject_identifier,
-            "drug_intervention": OtherDrug.objects.filter(short_name=NOT_APPLICABLE),
+            "drug_intervention": OtherDrug.objects.filter(name=NOT_APPLICABLE),
         }
         form_validator = StudyTerminationConclusionFormValidator(
             cleaned_data=cleaned_data
@@ -185,7 +185,7 @@ class TestStudyTerminationConclusionFormValidator(AmbitionTestCaseMixin, TestCas
         Week2.objects.create(subject_visit=subject_visit)
         cleaned_data = {
             "subject_identifier": subject_identifier,
-            "drug_intervention": OtherDrug.objects.filter(short_name=NOT_APPLICABLE),
+            "drug_intervention": OtherDrug.objects.filter(name=NOT_APPLICABLE),
         }
         form_validator = StudyTerminationConclusionFormValidator(
             cleaned_data=cleaned_data
