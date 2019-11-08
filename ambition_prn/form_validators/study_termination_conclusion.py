@@ -7,6 +7,7 @@ from edc_adverse_event.form_validators import ValidateDeathReportMixin
 from edc_constants.constants import DEAD, NONE, OTHER
 from edc_constants.constants import YES, NO, NOT_APPLICABLE
 from edc_form_validators import FormValidator
+from edc_randomization.utils import get_randomizationlist_model
 
 from ..constants import CONSENT_WITHDRAWAL
 
@@ -245,7 +246,7 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
 
     @property
     def assignment(self):
-        RandomizationList = django_apps.get_model("ambition_rando.randomizationlist")
+        RandomizationList = get_randomizationlist_model()
         subject_identifier = self.cleaned_data.get("subject_identifier")
         obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
         return get_assignment({"assignment": obj.assignment})
