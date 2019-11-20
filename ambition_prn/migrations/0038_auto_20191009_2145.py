@@ -6,6 +6,10 @@ from edc_adverse_event.constants import (
 )
 from edc_visit_schedule.utils import OnScheduleError
 from django.db.models.deletion import ProtectedError
+from edc_action_item.create_or_update_action_type import create_or_update_action_type
+from edc_adverse_event.action_items.death_report_tmg_second_action import (
+    DeathReportTmgSecondAction,
+)
 
 
 def change_action_item_to_tmg_second(apps, schema_editor):
@@ -19,6 +23,8 @@ def change_action_item_to_tmg_second(apps, schema_editor):
     ):
         obj.related_action_item = obj.parent_action_item
         obj.save()
+
+    create_or_update_action_type(**DeathReportTmgSecondAction.as_dict())
 
     action_type = ActionType.objects.get(name=DEATH_REPORT_TMG_SECOND_ACTION)
     ActionItem.objects.filter(
