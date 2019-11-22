@@ -1,10 +1,8 @@
-from ambition_ae.constants import CRYTOCOCCAL_MENINGITIS
 from ambition_rando.tests import AmbitionTestCaseMixin
 from django.test import TestCase, tag
 from django.test.utils import override_settings
 from django_collect_offline.models import OutgoingTransaction
 from django_collect_offline.tests import OfflineTestHelper
-from edc_adverse_event.models.cause_of_death import CauseOfDeath
 from edc_list_data.site_list_data import site_list_data
 from model_mommy import mommy
 

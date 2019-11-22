@@ -9,7 +9,6 @@ from datetime import date
 from django import forms
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag  # noqa
-from django.test.utils import override_settings
 from edc_constants.constants import YES, NO, OTHER, NOT_APPLICABLE, DEAD
 from edc_form_validators import M2M_SELECTION_ONLY, M2M_INVALID_SELECTION
 from edc_list_data import site_list_data

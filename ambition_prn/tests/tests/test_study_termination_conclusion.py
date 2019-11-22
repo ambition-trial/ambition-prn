@@ -16,6 +16,7 @@ class TestStudyTerminationConclusion(AmbitionTestCaseMixin, TestCase):
         options = {
             "screening_identifier": subject_screening.screening_identifier,
             "consent_datetime": get_utcnow,
+            "user_created": "erikvw",
         }
         consent = mommy.make_recipe("ambition_subject.subjectconsent", **options)
 
