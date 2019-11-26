@@ -1,5 +1,4 @@
 from ambition_rando.constants import SINGLE_DOSE, CONTROL
-from ambition_rando.utils import get_assignment
 from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,11 +9,13 @@ from edc_form_validators import FormValidator
 from edc_randomization.utils import get_randomizationlist_model
 
 from ..constants import CONSENT_WITHDRAWAL
+from edc_randomization.site_randomizers import site_randomizers
 
 
 class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormValidator):
 
     week2_model = "ambition_subject.week2"
+    randomizer_name = "ambition"
 
     def clean(self):
 
@@ -249,4 +250,6 @@ class StudyTerminationConclusionFormValidator(ValidateDeathReportMixin, FormVali
         RandomizationList = get_randomizationlist_model()
         subject_identifier = self.cleaned_data.get("subject_identifier")
         obj = RandomizationList.objects.get(subject_identifier=subject_identifier)
-        return get_assignment({"assignment": obj.assignment})
+        return site_randomizers.get(self.randomizer_name).get_assignment(
+            {"assignment": obj.assignment}
+        )
