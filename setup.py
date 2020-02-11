@@ -5,14 +5,14 @@ from setuptools import setup
 from setuptools import find_packages
 from os.path import join, abspath, dirname, normpath
 
-with open(join(dirname(__file__), 'README.rst')) as readme:
+with open(join(dirname(__file__), "README.rst")) as readme:
     README = readme.read()
 
-with open(join(dirname(__file__), 'VERSION')) as f:
+with open(join(dirname(__file__), "VERSION")) as f:
     VERSION = f.read()
 
 tests_require = []
-with open(join(dirname(abspath(__file__)), 'requirements.txt')) as f:
+with open(join(dirname(abspath(__file__)), "requirements.txt")) as f:
     for line in f:
         tests_require.append(line.strip())
 
@@ -20,40 +20,40 @@ with open(join(dirname(abspath(__file__)), 'requirements.txt')) as f:
 os.chdir(normpath(join(abspath(__file__), os.pardir)))
 
 setup(
-    name='ambition-prn',
+    name="ambition-prn",
     version=VERSION,
-    author=u'Erik van Widenfelt',
-    author_email='ew2789@gmail.com',
+    author=u"Erik van Widenfelt",
+    author_email="ew2789@gmail.com",
     packages=find_packages(),
     include_package_data=True,
-    url='https://github.com/ambition-trial/ambition-prn',
-    license='GPL license, see LICENSE',
-    description='PRN forms such as offstudy, protocol violation, etc',
+    url="https://github.com/ambition-trial/ambition-prn",
+    license="GPL license, see LICENSE",
+    description="PRN forms such as offstudy, protocol violation, etc",
     long_description=README,
     zip_safe=False,
-    keywords='django ambition edc PRN',
+    keywords="django ambition edc PRN",
     install_requires=[
-        'django-collect-offline',
-        'django-collect-offline-files',
-        'edc-action-item',
-        'edc-adverse-event',
-        'ambition-ae',
-        'ambition-lists',
-        'edc-notification',
-        'ambition-subject',
+        "django-collect-offline",
+        "django-collect-offline-files",
+        "edc-action-item",
+        "edc-adverse-event",
+        "ambition-ae",
+        "ambition-lists",
+        "edc-notification",
+        "ambition-subject",
     ],
     classifiers=[
-        'Environment :: Web Environment',
-        'Framework :: Django',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.7',
-        'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        "Environment :: Web Environment",
+        "Framework :: Django",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.7",
+        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
     python_requires=">=3.7",
     tests_require=tests_require,
-    test_suite='runtests.main',
+    test_suite="runtests.main",
 )

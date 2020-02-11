@@ -26,7 +26,6 @@ class ProtocolDeviationViolation(
     TrackingModelMixin,
     BaseUuidModel,
 ):
-
     action_name = PROTOCOL_DEVIATION_VIOLATION_ACTION
 
     tracking_identifier_prefix = "PD"
@@ -142,7 +141,7 @@ class ProtocolDeviationViolation(
         blank=True,
         null=True,
         validators=[datetime_not_future],
-        verbose_name=("Date and time report closed."),
+        verbose_name="Date and time report closed.",
     )
 
     on_site = ActionIdentifierSiteManager()
