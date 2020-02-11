@@ -3,11 +3,11 @@ from edc_action_item.managers import (
     ActionIdentifierSiteManager,
     ActionIdentifierManager,
 )
+from edc_action_item.models import ActionModelMixin
 from edc_model.validators.date import date_not_future
 
 
-class BaseStudyTerminationConclusion(models.Model):
-
+class BaseStudyTerminationConclusion(ActionModelMixin, models.Model):
     last_study_fu_date = models.DateField(
         verbose_name="Date of last research follow up (if different):",
         validators=[date_not_future],

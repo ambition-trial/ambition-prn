@@ -1,5 +1,4 @@
 from django.db import models
-from edc_action_item.models import ActionModelMixin
 from edc_identifier.model_mixins import (
     TrackingModelMixin,
     NonUniqueSubjectIdentifierFieldMixin,
@@ -16,11 +15,9 @@ class StudyTerminationConclusionW10(
     NonUniqueSubjectIdentifierFieldMixin,
     BaseStudyTerminationConclusion,
     OffScheduleModelMixin,
-    ActionModelMixin,
     TrackingModelMixin,
     BaseUuidModel,
 ):
-
     action_name = STUDY_TERMINATION_CONCLUSION_ACTION_W10
 
     tracking_identifier_prefix = "ST"

@@ -3,7 +3,6 @@ from ambition_subject.model_mixins import BloodTransfusionModelMixin
 from ambition_subject.model_mixins import MedAndDrugInterventionModelMixin
 from ambition_subject.model_mixins import StudyMedicationModelMixin
 from django.db import models
-from edc_action_item.models import ActionModelMixin
 from edc_constants.choices import YES_NO, YES_NO_NA, NOT_APPLICABLE
 from edc_identifier.model_mixins import (
     TrackingModelMixin,
@@ -27,11 +26,9 @@ class StudyTerminationConclusion(
     StudyMedicationModelMixin,
     MedAndDrugInterventionModelMixin,
     BloodTransfusionModelMixin,
-    ActionModelMixin,
     TrackingModelMixin,
     BaseUuidModel,
 ):
-
     action_name = STUDY_TERMINATION_CONCLUSION_ACTION
 
     tracking_identifier_prefix = "ST"

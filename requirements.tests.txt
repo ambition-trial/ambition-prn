@@ -1,5 +1,5 @@
 faker
-model-mommy
+model-bakery
 ambition-sites
 ambition-rando
 edc-reportable
